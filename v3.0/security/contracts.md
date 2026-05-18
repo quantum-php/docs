@@ -1,47 +1,34 @@
 # Authenticatable Contract
 
-The `AuthenticatableInterface` is the contract that any model must fulfill to be usable by Quantum's authentication system. This ensures that the `AuthFactory` adapters can consistently retrieve user identity and authorization metadata.
+The `AuthServiceInterface` is the contract that any authentication service must fulfill to integrate with Quantum's authentication system.
 
 ## Contract Definition
 
-Any class, usually a Data Object or Model, used for authentication must implement `Quantum\Auth\Contracts\AuthenticatableInterface`.
-
-### Required Methods
+The actual interface definition in the source code is:
 
 ```php
-interface AuthenticatableInterface {
+interface AuthServiceInterface
+{
     /**
-     * Get the unique identifier for the user.
-     * @return mixed
+     * Get
      */
-    public function getAuthIdentifier();
+    public function get(string $field, ?string $value): ?User;
 
     /**
-     * Get the password hash or credential for verification.
-     * @return string
+     * Add
      */
-    public function getAuthPassword();
+    public function add(array $data): User;
 
     /**
-     * Get the authentication salt (if supported by the adapter).
-     * @return string|null
+     * Update
      */
-    public function getAuthSalt();
+    public function update(string $field, ?string $value, array $data): ?User;
+
+    /**
+     * User Schema
+     */
+    public function userSchema(): array;
 }
 ```
 
-## Implementation Guide
-
-While simple models can implement this directly, it is standard practice in Quantum to use the `AuthTrait` to handle identifier and password boilerplate.
-
-```php
-use Quantum\Auth\Traits\AuthTrait;
-use Quantum\Auth\Contracts\AuthenticatableInterface;
-
-class User implements AuthenticatableInterface {
-    use AuthTrait;
-    // ...
-}
-```
-
-By using the `AuthTrait`, your model gains standard property methods which align with the expected data layer of the `SessionAuthAdapter` and `JwtAuthAdapter`.
+This interface ensures that the authentication system can consistently interact with the `User` object and schema across different storage or service implementations.
