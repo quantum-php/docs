@@ -28,7 +28,8 @@
 * [Modules Overview](v3.0/core-concepts/modules.md)
 
 ### Packages
-* [Auth](v3.0/packages/auth/overview.md)
+* [Auth]()
+  * [Overview](v3.0/packages/auth/overview.md)
   * [Adapters](v3.0/packages/auth/adapters.md)
   * [Contracts](v3.0/packages/auth/contracts.md)
 
