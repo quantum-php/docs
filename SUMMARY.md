@@ -34,6 +34,8 @@
   * [Contracts](v3.0/packages/auth/contracts.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+* Archive
+  * [Overview](v3.0/packages/archive/overview.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
