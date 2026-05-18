@@ -28,9 +28,9 @@
 * [Modules Overview](v3.0/core-concepts/modules.md)
 
 ### Packages
-* [Auth Overview](v3.0/packages/auth/overview.md)
-* [Auth Adapters](v3.0/packages/auth/adapters.md)
-* [Auth Contracts](v3.0/packages/auth/contracts.md)
+* [Auth](v3.0/packages/auth/overview.md)
+  * [Adapters](v3.0/packages/auth/adapters.md)
+  * [Contracts](v3.0/packages/auth/contracts.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
