@@ -48,6 +48,12 @@
   * [Contracts](v3.0/packages/debugger/contracts.md)
   * [Helpers](v3.0/packages/debugger/helpers.md)
   * [Usage](v3.0/packages/debugger/usage.md)
+* Environment
+  * [Overview](v3.0/packages/environment/overview.md)
+  * [Architecture](v3.0/packages/environment/architecture.md)
+  * [Contracts](v3.0/packages/environment/contracts.md)
+  * [Helpers](v3.0/packages/environment/helpers.md)
+  * [Usage](v3.0/packages/environment/usage.md)
 * Encryption
   * [Overview](v3.0/packages/encryption/overview.md)
   * [Architecture](v3.0/packages/encryption/architecture.md)
