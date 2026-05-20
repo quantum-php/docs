@@ -48,6 +48,13 @@
   * [Contracts](v3.0/packages/debugger/contracts.md)
   * [Helpers](v3.0/packages/debugger/helpers.md)
   * [Usage](v3.0/packages/debugger/usage.md)
+* Encryption
+  * [Overview](v3.0/packages/encryption/overview.md)
+  * [Architecture](v3.0/packages/encryption/architecture.md)
+  * [Adapters](v3.0/packages/encryption/adapters.md)
+  * [Contracts](v3.0/packages/encryption/contracts.md)
+  * [Helpers](v3.0/packages/encryption/helpers.md)
+  * [Usage](v3.0/packages/encryption/usage.md)
 * Di
   * [Overview](v3.0/packages/di/overview.md)
   * [Architecture](v3.0/packages/di/architecture.md)
