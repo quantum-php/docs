@@ -54,6 +54,10 @@
   * [Contracts](v3.0/packages/environment/contracts.md)
   * [Helpers](v3.0/packages/environment/helpers.md)
   * [Usage](v3.0/packages/environment/usage.md)
+* Hasher
+  * [Overview](v3.0/packages/hasher/overview.md)
+  * [Contracts](v3.0/packages/hasher/contracts.md)
+  * [Usage](v3.0/packages/hasher/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
