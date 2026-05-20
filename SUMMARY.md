@@ -62,6 +62,9 @@
   * [Request](v3.0/packages/http/request.md)
   * [Response](v3.0/packages/http/response.md)
   * [Helpers](v3.0/packages/http/helpers.md)
+* Jwt
+  * [Overview](v3.0/packages/jwt/overview.md)
+  * [Usage](v3.0/packages/jwt/usage.md)
 * Environment
   * [Overview](v3.0/packages/environment/overview.md)
   * [Architecture](v3.0/packages/environment/architecture.md)
