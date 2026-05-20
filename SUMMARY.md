@@ -48,6 +48,11 @@
   * [Contracts](v3.0/packages/debugger/contracts.md)
   * [Helpers](v3.0/packages/debugger/helpers.md)
   * [Usage](v3.0/packages/debugger/usage.md)
+* Hook
+  * [Overview](v3.0/packages/hook/overview.md)
+  * [Architecture](v3.0/packages/hook/architecture.md)
+  * [Helpers](v3.0/packages/hook/helpers.md)
+  * [Usage](v3.0/packages/hook/usage.md)
 * Environment
   * [Overview](v3.0/packages/environment/overview.md)
   * [Architecture](v3.0/packages/environment/architecture.md)
