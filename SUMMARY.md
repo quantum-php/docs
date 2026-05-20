@@ -36,6 +36,12 @@
   * [Overview](v3.0/packages/cache/overview.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
+* Debugger
+  * [Overview](v3.0/packages/debugger/overview.md)
+  * [Architecture](v3.0/packages/debugger/architecture.md)
+  * [Contracts](v3.0/packages/debugger/contracts.md)
+  * [Helpers](v3.0/packages/debugger/helpers.md)
+  * [Usage](v3.0/packages/debugger/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
