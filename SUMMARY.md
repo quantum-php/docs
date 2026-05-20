@@ -53,6 +53,28 @@
   * [Architecture](v3.0/packages/hook/architecture.md)
   * [Helpers](v3.0/packages/hook/helpers.md)
   * [Usage](v3.0/packages/hook/usage.md)
+* Environment
+  * [Overview](v3.0/packages/environment/overview.md)
+  * [Architecture](v3.0/packages/environment/architecture.md)
+  * [Contracts](v3.0/packages/environment/contracts.md)
+  * [Helpers](v3.0/packages/environment/helpers.md)
+  * [Usage](v3.0/packages/environment/usage.md)
+* Hasher
+  * [Overview](v3.0/packages/hasher/overview.md)
+  * [Contracts](v3.0/packages/hasher/contracts.md)
+  * [Usage](v3.0/packages/hasher/usage.md)
+* Encryption
+  * [Overview](v3.0/packages/encryption/overview.md)
+  * [Architecture](v3.0/packages/encryption/architecture.md)
+  * [Adapters](v3.0/packages/encryption/adapters.md)
+  * [Contracts](v3.0/packages/encryption/contracts.md)
+  * [Helpers](v3.0/packages/encryption/helpers.md)
+  * [Usage](v3.0/packages/encryption/usage.md)
+* Di
+  * [Overview](v3.0/packages/di/overview.md)
+  * [Architecture](v3.0/packages/di/architecture.md)
+  * [Contracts](v3.0/packages/di/contracts.md)
+  * [Usage](v3.0/packages/di/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
