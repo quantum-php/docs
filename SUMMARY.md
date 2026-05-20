@@ -36,6 +36,12 @@
   * [Overview](v3.0/packages/cache/overview.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
+* Database
+  * [Overview](v3.0/packages/database/overview.md)
+  * [Adapters](v3.0/packages/database/adapters.md)
+  * [Contracts](v3.0/packages/database/contracts.md)
+  * [Schema Builder](v3.0/packages/database/schema-builder.md)
+  * [Usage](v3.0/packages/database/usage.md)
 * Debugger
   * [Overview](v3.0/packages/debugger/overview.md)
   * [Architecture](v3.0/packages/debugger/architecture.md)
