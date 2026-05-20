@@ -53,6 +53,10 @@
   * [Architecture](v3.0/packages/hook/architecture.md)
   * [Helpers](v3.0/packages/hook/helpers.md)
   * [Usage](v3.0/packages/hook/usage.md)
+* HttpClient
+  * [Overview](v3.0/packages/httpclient/overview.md)
+  * [Architecture](v3.0/packages/httpclient/architecture.md)
+  * [Usage](v3.0/packages/httpclient/usage.md)
 * Environment
   * [Overview](v3.0/packages/environment/overview.md)
   * [Architecture](v3.0/packages/environment/architecture.md)
