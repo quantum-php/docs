@@ -57,6 +57,11 @@
   * [Overview](v3.0/packages/httpclient/overview.md)
   * [Architecture](v3.0/packages/httpclient/architecture.md)
   * [Usage](v3.0/packages/httpclient/usage.md)
+* Http
+  * [Overview](v3.0/packages/http/overview.md)
+  * [Request](v3.0/packages/http/request.md)
+  * [Response](v3.0/packages/http/response.md)
+  * [Helpers](v3.0/packages/http/helpers.md)
 * Environment
   * [Overview](v3.0/packages/environment/overview.md)
   * [Architecture](v3.0/packages/environment/architecture.md)
