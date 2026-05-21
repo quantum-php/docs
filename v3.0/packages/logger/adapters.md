@@ -18,9 +18,11 @@ The adapter expects `logging.single.path` to point to a file path, for example:
 
 ### Contract
 
-At construction time, the adapter checks only whether the path has a file extension.
+At construction time, the adapter checks that the configured path looks like a file path (has an extension).
 
 If it does not, the adapter throws `LoggerException::logPathIsNotFile(...)`.
+
+The adapter does not pre-create directories for you; the target path must be writable by your runtime.
 
 Use `single` when you want one append-only log file.
 
@@ -49,6 +51,8 @@ At runtime it writes to:
 At construction time, the adapter requires the configured path to already be a directory.
 
 If it is not, the adapter throws `LoggerException::logPathIsNotDirectory(...)`.
+
+The daily filename is chosen when the adapter instance is created. In long-running processes, rotate/re-resolve the logger after date rollover if you need strict day-boundary files.
 
 Use `daily` when you want automatic file splitting by day.
 

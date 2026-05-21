@@ -45,13 +45,7 @@ When `is_debug_mode()` is true, the factory ignores the requested adapter and th
 
 ### Threshold filtering is bypassed
 
-`Logger::log()` reports every message in debug mode:
-
-```php
-if (is_debug_mode() || LoggerConfig::getLogLevel($level) >= LoggerConfig::getAppLogLevel()) {
-    $this->adapter->report($level, $message, $context);
-}
-```
+In debug mode, Logger reports every message regardless of the configured threshold.
 
 So debug mode is not just a different backend. It is also a different filtering policy.
 
@@ -65,16 +59,14 @@ This matters because the threshold is not stored per logger instance.
 
 ## Message formatting pipeline
 
-File adapters share `LoggerTrait::report()`.
+File adapters use a shared formatter that:
 
-That path:
-
-1. formats the line with a timestamp and capitalized level
+1. prepends a timestamp and capitalized level
 2. JSON-encodes array messages
 3. appends `context['trace']` when present
 4. appends the final string to the target file
 
-All other context keys are ignored by the file adapters.
+All other context keys are ignored by file adapters.
 
 ## Message adapter flow
 
