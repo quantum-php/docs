@@ -27,11 +27,11 @@ $message = t('custom.info', ['new']);
 
 Behavior:
 
-- resolves the shared `Lang` instance through `LangFactory`
-- delegates to `Lang::getTranslation()`
+- reads from the shared language service used by the current app container
 - returns the key unchanged when no translation exists
+- applies placeholder substitution when `$params` is provided
 
-`$params` can be a string or an array and is forwarded to `_message(...)`.
+`$params` can be a string or an array.
 
 ## `_t()`
 
@@ -51,4 +51,4 @@ This is mainly convenient in views when you want immediate output instead of ass
 
 - The helpers do not load translations by themselves. They rely on the shared `Lang` instance already being loaded, which normally happens during web app bootstrap when multilingual support is enabled.
 - If translations were not loaded yet, lookups fall back to the key string.
-- Because the helpers use the shared factory-managed instance, any manual mutation on that instance affects later helper calls in the same container.
+- Helpers use the same shared language instance across the request/container lifecycle, so manual runtime changes to that instance affect later helper calls.

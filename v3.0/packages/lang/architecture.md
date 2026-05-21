@@ -41,18 +41,13 @@ There is one routing-specific adjustment: when the current route has a prefix an
 
 ### Header fallback
 
-Header detection uses `server()->acceptedLang()`, which:
+Header-based detection accepts only the primary language from the first `Accept-Language` entry, normalized to a two-letter code.
 
-- reads `HTTP_ACCEPT_LANGUAGE`
-- takes only the first comma-separated entry
-- lowercases it
-- keeps only the first two characters
-
-So `es-ES, en;q=0.8` becomes `es`.
+Example: `es-ES, en;q=0.8` resolves to `es`.
 
 ## Translation loading model
 
-`Translator::loadTranslations()` is idempotent. Once translations are loaded, later calls return immediately until `flush()` is called.
+Translation files are loaded once per language instance and reused until you explicitly call `flush()`.
 
 Loading order is:
 
@@ -70,13 +65,13 @@ loads both files into the `messages` namespace. Because module files are importe
 
 ## Translation lookup contract
 
-`Translator::get($key, $params)` behaves like this:
+`t($key, $params)` behaves like this:
 
-- if the key exists, return the stored string
-- if params were passed, run the value through `_message(...)`
+- if the key exists, return the translated string
+- if params are passed, apply placeholder substitution
 - if the key does not exist, return the original key
 
-The package does not return `null` for a missing translation key in normal lookup flow.
+Missing keys fall back to the key string (not `null`) in normal lookup flow.
 
 ## Stateful caveat: reported lang vs translator lang
 

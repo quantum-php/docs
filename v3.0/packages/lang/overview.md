@@ -65,7 +65,7 @@ If a key is missing, `t()` returns the key string unchanged instead of throwing 
 ## Important constraints
 
 - If no shared or module translation files exist for the selected language, `load()` throws `LangException`.
-- `Accept-Language` handling only uses the first language entry and keeps its first two characters.
+- `Accept-Language` handling uses the first entry and resolves it to a two-letter language code.
 - `Lang::setLang()` changes the reported current language, but it does not rebuild the underlying `Translator`. Changing the language after construction does not automatically switch translation files.
 - `flush()` clears loaded translations, but it reloads using the translator's original language on the next `load()` call.
 - The package only supports PHP array translation files.

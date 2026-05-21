@@ -15,10 +15,10 @@ return [
 
 Practical notes:
 
-- `enabled` controls whether the web app bootstrap calls `load()`
+- `enabled` controls whether web bootstrap loads translations
 - `supported` is the allowlist for query, URL, and header detection
-- `default` is required as the final fallback
-- `url_segment` is 1-based because request segments include a synthetic zero segment internally
+- `default` is the required fallback when request detection yields no supported language
+- `url_segment` is the URL segment index used for language detection (for example, `1` for `/es/articles`)
 
 ## Add translation files
 
@@ -108,4 +108,4 @@ Use this only when you intentionally need to clear the in-memory translation sto
 - `setLang()` updates the visible language code, not the translator source language.
 - Missing translation files fail loudly during `load()`, but missing keys do not.
 - Only the active module is scanned for module translations during a request.
-- Header detection uses only the first two-letter language code from the first `Accept-Language` entry.
+- Header detection uses only the primary two-letter language code from the first `Accept-Language` entry.
