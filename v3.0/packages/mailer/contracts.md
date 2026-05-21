@@ -68,6 +68,6 @@ Success then depends on whether the package can write a `.eml` file to `shared/e
 
 ## Message ID contract
 
-The shared trait caches the generated message ID in static adapter state.
+In long-running processes, the package can reuse the same generated message ID across multiple sends from the same adapter class.
 
-So a long-running process can reuse the same generated message ID across multiple sends from the same adapter class. If your workflow depends on a new ID per message, do not rely on the package to provide that automatically.
+If your workflow depends on a new ID per message, do not rely on the package to provide that automatically.
