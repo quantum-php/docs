@@ -28,26 +28,22 @@ Generation is only a scaffold step. The templates do not produce a finished migr
 
 ## Upgrade flow
 
-`applyMigrations(MigrationManager::UPGRADE)` works like this:
+`applyMigrations(MigrationManager::UPGRADE)`:
 
-1. read the active database driver from `db()->getConfigs()`
-2. reject unsupported drivers
-3. ensure the `migrations` tracking table exists, creating it if needed
-4. scan `migrations/*.php`
-5. skip files already recorded in the tracking table
-6. require each pending file, instantiate its class, and call `up($tableFactory)`
-7. insert each applied migration name into the tracking table
-
-Pending files are sorted by the timestamp suffix taken from the filename, so older timestamps run first.
+1. validates that the active database driver is supported
+2. ensures the `migrations` tracking table exists
+3. scans `migrations/*.php` and filters out already-applied entries
+4. runs each pending migration `up()` in timestamp order (oldest first)
+5. records applied migration names in the tracking table
 
 ## Downgrade flow
 
-`applyMigrations(MigrationManager::DOWNGRADE, $step)` reads the applied rows from the tracking table, rebuilds file paths from the stored migration names, and calls `down($tableFactory)` in reverse timestamp order.
+`applyMigrations(MigrationManager::DOWNGRADE, $step)` resolves applied migrations from the tracking table and runs `down()` in reverse timestamp order (newest first).
 
 Behavior to know:
 
 - without `$step`, the manager attempts to revert every recorded migration
-- with `$step`, it selects only the most recently applied migrations
+- with `$step`, it reverts only the most recently applied migrations
 - if the tracking table does not exist, downgrade fails immediately
 
 ## Tracking table

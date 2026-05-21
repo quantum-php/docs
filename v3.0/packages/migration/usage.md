@@ -65,7 +65,7 @@ $manager = new MigrationManager();
 $rolledBack = $manager->applyMigrations(MigrationManager::DOWNGRADE, 1);
 ```
 
-Passing `1` reverts the latest applied migration. Omitting the step argument makes the manager attempt to revert all recorded migrations.
+Passing `1` reverts the latest applied migration. Omitting the step argument makes the manager attempt to revert all recorded migrations, newest first.
 
 ## Practical guidance
 
@@ -73,4 +73,5 @@ Passing `1` reverts the latest applied migration. Omitting the step argument mak
 - Finish generated rename and drop templates before running them.
 - Make `down()` real whenever you expect to roll a migration back.
 - Be careful with long sequences: the package does not wrap the full migration batch in its own transaction.
+- Plan rollback strategy per migration (especially for destructive schema changes), because partial failures can leave schema and tracking records temporarily out of sync.
 - Remember that this package relies on the relational `TableFactory` API, so use it with SQL drivers only.
