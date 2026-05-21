@@ -113,6 +113,11 @@
   * [Architecture](v3.0/packages/middleware/architecture.md)
   * [Contracts](v3.0/packages/middleware/contracts.md)
   * [Usage](v3.0/packages/middleware/usage.md)
+* Paginator
+  * [Overview](v3.0/packages/paginator/overview.md)
+  * [Adapters](v3.0/packages/paginator/adapters.md)
+  * [Contracts](v3.0/packages/paginator/contracts.md)
+  * [Usage](v3.0/packages/paginator/usage.md)
 * Mailer
   * [Overview](v3.0/packages/mailer/overview.md)
   * [Architecture](v3.0/packages/mailer/architecture.md)
