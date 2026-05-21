@@ -92,6 +92,10 @@
   * [Architecture](v3.0/packages/di/architecture.md)
   * [Contracts](v3.0/packages/di/contracts.md)
   * [Usage](v3.0/packages/di/usage.md)
+* Loader
+  * [Overview](v3.0/packages/loader/overview.md)
+  * [Architecture](v3.0/packages/loader/architecture.md)
+  * [Usage](v3.0/packages/loader/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
