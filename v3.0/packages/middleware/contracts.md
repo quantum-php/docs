@@ -39,7 +39,7 @@ Although the abstract base class does not define a constructor, `MiddlewareManag
 new $middlewareClass($request)
 ```
 
-In practice, custom middleware classes should support construction with the current request object if they define their own constructor.
+In practice, if your middleware defines a constructor, it must accept the current request object as passed by the manager.
 
 ## Naming and placement contract
 
@@ -57,4 +57,4 @@ The package guarantees one dedicated middleware-specific exception path:
 
 - missing middleware class -> `MiddlewareException::middlewareNotFound(...)`
 
-The package also enforces the base-class requirement after instantiation, so a class that does not extend `Quantum\Middleware\Middleware` will fail before it can run.
+The package also enforces the base-class requirement after instantiation, so a class that does not extend `Quantum\Middleware\Middleware` fails before it can run.

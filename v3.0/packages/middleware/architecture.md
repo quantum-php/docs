@@ -8,13 +8,13 @@ The package builds a simple request pipeline from a matched route.
 
 `MiddlewareManager` is the orchestrator.
 
-On construction it pulls three things from the matched route:
+On construction it captures three route inputs:
 
 - the route object itself
 - the route middleware list
 - whether the route has a rate-limit definition
 
-It stores the route middleware names as a numeric queue with `array_values(...)`, so execution order follows the route's declared order.
+Middleware execution order follows the route's declared middleware order.
 
 ### `Middleware`
 
@@ -32,15 +32,13 @@ If the route has no rate-limit definition, this stage is skipped entirely.
 
 ### 2. Module stage
 
-The manager then walks the route middleware queue recursively:
+The manager then executes route middleware in order:
 
-1. read the current middleware name
-2. resolve the concrete class name
-3. instantiate the middleware with the current request
-4. advance the queue pointer
-5. call `apply()` and pass a closure that continues the remaining queue
+1. resolve the current middleware class name
+2. instantiate it with the current request
+3. call `apply()` and pass a closure that continues the remaining middleware
 
-When the queue is empty, the manager calls the terminal handler.
+When no middleware remains, the terminal handler runs.
 
 ## Class resolution model
 
