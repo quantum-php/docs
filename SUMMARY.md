@@ -62,6 +62,14 @@
   * [Request](v3.0/packages/http/request.md)
   * [Response](v3.0/packages/http/response.md)
   * [Helpers](v3.0/packages/http/helpers.md)
+* Lang
+  * [Overview](v3.0/packages/lang/overview.md)
+  * [Architecture](v3.0/packages/lang/architecture.md)
+  * [Helpers](v3.0/packages/lang/helpers.md)
+  * [Usage](v3.0/packages/lang/usage.md)
+* Jwt
+  * [Overview](v3.0/packages/jwt/overview.md)
+  * [Usage](v3.0/packages/jwt/usage.md)
 * Environment
   * [Overview](v3.0/packages/environment/overview.md)
   * [Architecture](v3.0/packages/environment/architecture.md)
@@ -89,6 +97,29 @@
   * [Architecture](v3.0/packages/migration/architecture.md)
   * [Contracts](v3.0/packages/migration/contracts.md)
   * [Usage](v3.0/packages/migration/usage.md)
+* Middleware
+  * [Overview](v3.0/packages/middleware/overview.md)
+  * [Architecture](v3.0/packages/middleware/architecture.md)
+  * [Contracts](v3.0/packages/middleware/contracts.md)
+  * [Usage](v3.0/packages/middleware/usage.md)
+* Mailer
+  * [Overview](v3.0/packages/mailer/overview.md)
+  * [Architecture](v3.0/packages/mailer/architecture.md)
+  * [Adapters](v3.0/packages/mailer/adapters.md)
+  * [Contracts](v3.0/packages/mailer/contracts.md)
+  * [Helpers](v3.0/packages/mailer/helpers.md)
+  * [Usage](v3.0/packages/mailer/usage.md)
+* Logger
+  * [Overview](v3.0/packages/logger/overview.md)
+  * [Architecture](v3.0/packages/logger/architecture.md)
+  * [Adapters](v3.0/packages/logger/adapters.md)
+  * [Contracts](v3.0/packages/logger/contracts.md)
+  * [Helpers](v3.0/packages/logger/helpers.md)
+  * [Usage](v3.0/packages/logger/usage.md)
+* Loader
+  * [Overview](v3.0/packages/loader/overview.md)
+  * [Architecture](v3.0/packages/loader/architecture.md)
+  * [Usage](v3.0/packages/loader/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
