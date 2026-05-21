@@ -92,6 +92,11 @@
   * [Architecture](v3.0/packages/di/architecture.md)
   * [Contracts](v3.0/packages/di/contracts.md)
   * [Usage](v3.0/packages/di/usage.md)
+* Module
+  * [Overview](v3.0/packages/module/overview.md)
+  * [Architecture](v3.0/packages/module/architecture.md)
+  * [Contracts](v3.0/packages/module/contracts.md)
+  * [Usage](v3.0/packages/module/usage.md)
 * Model
   * [Overview](v3.0/packages/model/overview.md)
   * [Architecture](v3.0/packages/model/architecture.md)
