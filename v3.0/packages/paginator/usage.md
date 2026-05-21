@@ -110,6 +110,12 @@ That means:
 
 The built-in HTML renderer avoids showing previous and next buttons at those boundaries, but direct helper calls still return those links.
 
+### Avoid repeated page fetch calls in the same render path
+
+`data()`, `firstItem()`, and `lastItem()` can trigger their own data retrieval work.
+
+Fetch once and reuse the result when possible, especially with the model adapter.
+
 ### Use built-in HTML only in request-aware contexts
 
 Pagination URLs come from the current request URI. If there is no meaningful request context, generate your own links instead of relying on `getPagination()` or the page-link helpers.
