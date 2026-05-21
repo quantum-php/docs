@@ -39,7 +39,7 @@ modules/<ModuleName>/config/dependencies.php
 
 If the file exists and returns an array, that array is merged into the cumulative dependency map. If the file is missing or does not return an array, the module contributes no bindings.
 
-Because the package uses `array_merge()` while iterating the configured modules, later modules in `shared/config/modules.php` override earlier bindings when they use the same dependency keys.
+When multiple modules declare the same dependency key, modules listed later in `shared/config/modules.php` win and override earlier bindings.
 
 ## Route loading flow
 
@@ -62,13 +62,13 @@ The package does not combine those steps automatically. If you use `ModuleManage
 
 ## Template processing
 
-PHP template files under the template `src/` tree are processed before writing:
+Template PHP files are materialized into runnable module files:
 
 - `*.php.tpl` becomes `*.php`
-- `{{MODULE_NAMESPACE}}` becomes `<module base namespace>\\<ModuleName>`
-- `{{MODULE_NAME}}` becomes the requested module name
+- `{{MODULE_NAMESPACE}}` resolves to `<module base namespace>\\<ModuleName>`
+- `{{MODULE_NAME}}` resolves to the requested module name
 
-Asset files are copied without placeholder replacement.
+Asset files are copied as-is (no placeholder replacement).
 
 ## Prefix defaults
 

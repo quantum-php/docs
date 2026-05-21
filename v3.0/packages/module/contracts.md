@@ -7,7 +7,7 @@
 - resolves a filesystem service through `FileSystemFactory::get()`
 - immediately registers merged module dependencies with the DI container
 
-Treat construction as a boot step, not a passive object creation.
+Treat construction as a boot step, not passive object creation.
 
 ### `loadModulesRoutes(): array<string, Closure>`
 
@@ -77,7 +77,7 @@ The new module options are:
 That means:
 
 - existing formatting is not preserved
-- the package expects the config file to stay PHP-returnable after each write
+- the config file must remain valid PHP that returns an array after each write
 
 ## Exceptions exposed by the package
 
