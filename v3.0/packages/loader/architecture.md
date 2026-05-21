@@ -28,24 +28,20 @@ Because the module default comes from the current request, the same `new Setup('
 
 ## File path resolution flow
 
-`Loader::resolveFilePath()` builds the primary path in this order:
+Loader resolves one primary path first, then optional shared fallback.
 
-1. start with `modules/<module>/` when a module is present
-2. append `<pathPrefix>/` when provided
-3. append `<fileName>.php`
+Primary path:
 
-Examples:
+- with module: `modules/<module>/<pathPrefix>/<fileName>.php`
+- without module: `<pathPrefix>/<fileName>.php`
 
-- module request + `new Setup('config', 'auth', true, 'Admin')` -> `modules/Admin/config/auth.php`
-- no module + `new Setup('config', 'app')` -> `config/app.php` as the primary path, then shared fallback later
-
-The shared fallback path is not built by `resolveFilePath()`. It is added separately by `fileExists()` and `getFilePath()` when `hierarchical` is true:
+Shared fallback (only when `hierarchical === true`):
 
 ```text
 <base-dir>/shared/<lowercased pathPrefix>/<fileName>.php
 ```
 
-That means fallback only targets the shared directory.
+So `shared/` is fallback-only; it is not the primary lookup location.
 
 ## Fallback behavior
 
@@ -62,17 +58,13 @@ The difference is in the result:
 
 ## Loading behavior
 
-`load()` does not resolve independently. It calls `getFilePath()` and then:
-
-```php
-return require $this->getFilePath();
-```
+`load()` executes the resolved PHP file and returns its result.
 
 Practical effects:
 
 - the target file executes immediately
-- the return value is whatever the file returns
-- missing files fail loudly through `LoaderException`
+- returned value comes from that file
+- missing files raise `LoaderException`
 
 ## Directory loading behavior
 

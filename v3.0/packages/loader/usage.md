@@ -15,7 +15,13 @@ $config = $loader
     ->load();
 ```
 
-With the default hierarchical behavior, this eventually resolves to `shared/config/database.php` when no module-specific file is present.
+With default hierarchical behavior, resolution is:
+
+1. `modules/<current-module>/config/database.php` (if a current module exists)
+2. `config/database.php` (primary path)
+3. `shared/config/database.php` (fallback)
+
+If your project keeps config under `shared/config`, Loader reaches it through step 3.
 
 ## Prefer `fileExists()` when the file is optional
 
@@ -106,7 +112,7 @@ A few caveats matter here:
 
 ## Practical caveats
 
-- `pathPrefix` is lowercased only for the shared fallback path. Module paths use the value you pass in.
-- `load()` assumes the file returns something useful. If the file returns nothing, you get PHP's normal `require` return value.
+- Shared fallback lowercases `pathPrefix`; module/primary paths use the value as provided. Use consistent lowercase directory names to avoid case-related surprises across environments.
+- `load()` returns whatever the target PHP file returns. If the file returns nothing, you get PHP's normal `require` return value.
 - Reuse a `Setup` object only when you want the same resolution rules. It is mutable and can be changed after construction.
 - Reuse a DI-managed `Loader` carefully. Always call `setup()` again before each new load.
