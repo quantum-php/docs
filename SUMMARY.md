@@ -84,6 +84,11 @@
   * [Architecture](v3.0/packages/di/architecture.md)
   * [Contracts](v3.0/packages/di/contracts.md)
   * [Usage](v3.0/packages/di/usage.md)
+* Migration
+  * [Overview](v3.0/packages/migration/overview.md)
+  * [Architecture](v3.0/packages/migration/architecture.md)
+  * [Contracts](v3.0/packages/migration/contracts.md)
+  * [Usage](v3.0/packages/migration/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
