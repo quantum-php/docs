@@ -25,7 +25,7 @@ What happens here:
 4. If the adapter generated a primary key, the model receives it back after save.
 5. If `HasTimestamps` is used, timestamp fields are updated before persistence.
 
-## Query records with one reusable builder
+## Query records with a builder
 
 ```php
 $posts = model(Post::class)
@@ -44,6 +44,8 @@ Useful collection methods:
 - `first()`
 - `last()`
 - `isEmpty()`
+
+Use a fresh model instance for unrelated queries to avoid carrying accidental query state.
 
 ## Prefer a fresh model for unrelated queries
 

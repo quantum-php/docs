@@ -46,15 +46,11 @@ When a forwarded DBAL method returns another `DbalInterface`, `DbModel::__call()
 
 ## Query result flow
 
-Query methods such as `findOne()`, `first()`, and `get()` do not return the raw DBAL rows.
+Query methods such as `findOne()`, `first()`, and `get()` return hydrated model objects, not raw DBAL rows.
 
-Instead they call `wrapToModel()`:
+They go through `wrapToModel()`, which creates a fresh model instance, attaches the ORM object, and hydrates attributes from that ORM result.
 
-1. create a new instance of the requested model class
-2. attach the returned DBAL/ORM object
-3. hydrate model attributes from `asArray()` on that ORM object
-
-This means read results are fresh model objects, separate from the builder instance you used to assemble the query.
+So read results are separate objects from the builder instance used to assemble the query.
 
 ## Collection layer
 
@@ -96,6 +92,4 @@ Because this logic lives on the model, not in the DBAL package, soft-delete beha
 - `hidden`
 - `attributes`
 
-It does not serialize the live ORM instance.
-
-That matters for code paths that serialize joined models internally, especially with the SleekDB join implementation. Query state is runtime-only and should not be treated as persistent model state.
+It does not serialize the live ORM instance. Treat query state as runtime-only, not persistent model state.
