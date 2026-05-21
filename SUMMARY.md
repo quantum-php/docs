@@ -84,6 +84,13 @@
   * [Architecture](v3.0/packages/di/architecture.md)
   * [Contracts](v3.0/packages/di/contracts.md)
   * [Usage](v3.0/packages/di/usage.md)
+* Mailer
+  * [Overview](v3.0/packages/mailer/overview.md)
+  * [Architecture](v3.0/packages/mailer/architecture.md)
+  * [Adapters](v3.0/packages/mailer/adapters.md)
+  * [Contracts](v3.0/packages/mailer/contracts.md)
+  * [Helpers](v3.0/packages/mailer/helpers.md)
+  * [Usage](v3.0/packages/mailer/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
