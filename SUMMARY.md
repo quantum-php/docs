@@ -84,6 +84,13 @@
   * [Architecture](v3.0/packages/di/architecture.md)
   * [Contracts](v3.0/packages/di/contracts.md)
   * [Usage](v3.0/packages/di/usage.md)
+* Logger
+  * [Overview](v3.0/packages/logger/overview.md)
+  * [Architecture](v3.0/packages/logger/architecture.md)
+  * [Adapters](v3.0/packages/logger/adapters.md)
+  * [Contracts](v3.0/packages/logger/contracts.md)
+  * [Helpers](v3.0/packages/logger/helpers.md)
+  * [Usage](v3.0/packages/logger/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
