@@ -59,10 +59,9 @@ $paginator = PaginatorFactory::create(PaginatorType::MODEL, [
 
 ### Query behavior that affects usage
 
-- total counting is calculated from a cloned model instance, so the count step does not overwrite the live query state used later for page data
-- page data is fetched from the live model instance with `limit(...)` and `offset(...)`, so build your query before creating the paginator
-- repeated reads (`data()`, `firstItem()`, `lastItem()`) can re-run page retrieval work
-- when the model has a named class instead of an anonymous wrapper, page results are wrapped back into that model class before being returned
+- Build your filters and sorting first, then create the paginator.
+- `data()`, `firstItem()`, and `lastItem()` may each trigger data loading, so fetch once and reuse when possible.
+- If you paginate a named model class, returned rows are hydrated back into that model type.
 
 ## Shared adapter behavior
 
