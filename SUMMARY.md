@@ -67,6 +67,9 @@
   * [Architecture](v3.0/packages/lang/architecture.md)
   * [Helpers](v3.0/packages/lang/helpers.md)
   * [Usage](v3.0/packages/lang/usage.md)
+* Jwt
+  * [Overview](v3.0/packages/jwt/overview.md)
+  * [Usage](v3.0/packages/jwt/usage.md)
 * Environment
   * [Overview](v3.0/packages/environment/overview.md)
   * [Architecture](v3.0/packages/environment/architecture.md)
