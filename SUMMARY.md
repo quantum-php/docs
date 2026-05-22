@@ -157,6 +157,12 @@
   * [Overview](v3.0/packages/loader/overview.md)
   * [Architecture](v3.0/packages/loader/architecture.md)
   * [Usage](v3.0/packages/loader/usage.md)
+* Transformer
+  * [Overview](v3.0/packages/transformer/overview.md)
+  * [Usage](v3.0/packages/transformer/usage.md)
+  * [Contracts](v3.0/packages/transformer/contracts.md)
+  * [Helpers](v3.0/packages/transformer/helpers.md)
+  * [Architecture](v3.0/packages/transformer/architecture.md)
 * Tracer
   * [Overview](v3.0/packages/tracer/overview.md)
   * [Architecture](v3.0/packages/tracer/architecture.md)
