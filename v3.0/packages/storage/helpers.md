@@ -1,21 +1,19 @@
 # Storage Helpers
 
-The package exposes one global resolver helper.
-
 ## `fs()`
 
 ```php
 function fs(?string $adapter = null): FileSystem
 ```
 
-Use this as the normal entry point for filesystem work.
+Use this as the standard entry point.
 
 ```php
 fs()->put(storage_dir() . '/app.log', 'ready');
 $content = fs()->get(storage_dir() . '/app.log');
 ```
 
-Pass an adapter name when you need a specific backend:
+Pick an adapter explicitly only when needed:
 
 ```php
 $dropbox = fs('dropbox');
@@ -24,11 +22,8 @@ $local = fs('local');
 
 ## Helper behavior
 
-A few helper details matter in real apps:
+- no adapter passed → uses `fs.default`
+- first call lazily imports `config/fs.php`
+- repeated calls reuse cached wrapper per adapter name in the current process
 
-- `fs()` resolves through `FileSystemFactory::get()`
-- the first call lazily imports `config/fs.php` when needed
-- when no adapter is passed, the helper uses `fs.default`
-- repeated calls reuse the cached wrapper for that adapter name in the current process
-
-Because the helper returns the wrapper, not a raw cloud app, OAuth setup and token persistence should live in your own service layer and config rather than in ad hoc helper usage.
+Use configuration + service wiring for cloud OAuth/token setup, not ad hoc helper-side logic.

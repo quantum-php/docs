@@ -1,94 +1,59 @@
 # Storage Contracts
 
-This package stays small at the surface, but a few contracts shape how you can safely build on it.
+This page defines stable behavior you can build against.
 
 ## Wrapper contract
 
-`Quantum\Storage\FileSystem` wraps one adapter instance.
+`fs()` returns `Quantum\Storage\FileSystem`.
 
-```php
-$storage = fs();
-$adapter = $storage->getAdapter();
-```
-
-The wrapper forwards calls only when the active adapter implements that method. Unsupported calls throw a storage exception instead of silently doing nothing.
+The wrapper forwards calls only when supported by the active adapter. Unsupported calls throw a storage exception.
 
 ## Shared filesystem contract
 
-All built-in adapters implement `FilesystemAdapterInterface`, which gives you these core operations:
+All built-in adapters implement core file operations (read, write, delete, exists, metadata, directory operations).
 
-- create and remove directories
-- read and write files
-- append, rename, copy, and delete files
-- check existence, type, size, and last-modified time
-- list directory contents
+Typical return behavior:
 
-The return contract is intentionally simple:
-
-- boolean methods return `true` or `false`
-- read methods usually return content or `false`
-- write methods usually return bytes written or `false`
-
-Cloud adapters prefer `false` on operation failure. Resolution-time problems, unsupported methods, and invalid package setup fail with exceptions.
+- booleans for success/failure checks
+- content or `false` for reads
+- bytes written or `false` for writes
 
 ## Local-only contract
 
-`LocalFilesystemAdapterInterface` extends the shared adapter contract with local filesystem features:
+Methods from `LocalFilesystemAdapterInterface` are local-only features (globbing, readability checks, extension helpers, include helpers).
 
-- globbing
-- readability and writability checks
-- line-based reads
-- filename and extension helpers
-- PHP file inclusion helpers
-
-Those methods are only safe to rely on when you know the active adapter is local.
+Use them only when the adapter is known to be local.
 
 ## Upload validation contract
 
-`UploadedFile::save()` validates uploads in this order:
+`UploadedFile::save()` enforces this flow:
 
-1. PHP upload error must be `UPLOAD_ERR_OK`
-2. the temporary file must exist locally
-3. the extension and detected MIME type must match the active upload policy
-4. local destinations must already exist and be writable
-5. local destinations must not already contain the target file unless `$overwrite` is `true`
+1. upload error must be `UPLOAD_ERR_OK`
+2. temp file must exist
+3. MIME+extension must pass policy
+4. local destination must be valid (exists, writable)
+5. overwrite is blocked unless explicitly enabled
 
-If any of those checks fail, the package throws a file upload or filesystem exception before writing the file.
+Any failed check throws before file write.
 
 ## MIME policy contract
 
-`UploadedFile` starts with a built-in MIME map and then lazily merges `uploads.allowed_mime_types` from `config/uploads.php` when `save()` is called.
+`UploadedFile` starts from built-in MIME rules, then merges `uploads.allowed_mime_types` from config.
 
-You can override that at runtime:
-
-```php
-$file->setAllowedMimeTypes([
-    'image/webp' => ['webp'],
-], merge: true);
-```
-
-Use `merge: false` when you want to replace the whole policy instead of extending it.
+Runtime overrides are supported via `setAllowedMimeTypes()`.
 
 ## Remote upload contract
 
-You can send uploads to a remote adapter by attaching one before `save()`:
+When a remote adapter is attached with `setRemoteFileSystem(...)`:
 
-```php
-$file->setRemoteFileSystem(fs('dropbox')->getAdapter());
-```
+- local destination checks are skipped
+- upload payload is streamed from local temp file
+- destination string is interpreted according to the remote adapter
 
-When a remote adapter is set:
+## Cloud token contract
 
-- the package skips local destination directory checks
-- the upload payload is read from the local temporary file and passed to the remote adapter's `put()` method
-- the destination string is treated as the remote path or remote file identifier expected by that adapter
-
-## Token service contract
-
-Cloud adapter setup requires a service that implements `TokenServiceInterface`:
+Cloud adapters rely on a service implementing `TokenServiceInterface`:
 
 - `getAccessToken(): string`
 - `getRefreshToken(): string`
 - `saveTokens(string $accessToken, ?string $refreshToken = null): bool`
-
-The package uses that service both for the first OAuth token exchange and for automatic access-token refresh after a `401` response from a cloud API.

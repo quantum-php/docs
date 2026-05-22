@@ -1,58 +1,44 @@
 # Storage
 
-The Storage package gives Quantum one API for local files, cloud-backed filesystems, and uploaded files.
+Storage gives Quantum a single API for local files, cloud-backed filesystems, and uploaded files.
 
-Use it when you want to read and write files through `fs()`, or when you need to validate and persist uploaded files without hand-writing the same checks in every controller or service.
+Use it when you want one app-level interface for file operations across `local`, `dropbox`, and `gdrive`.
 
-## When to use it
+## What it provides
 
-Reach for Storage when you need to:
+- `fs()` helper for filesystem access
+- `FileSystem` wrapper around the selected adapter
+- `UploadedFile` for upload validation and persistence
+- adapter selection through `config/fs.php`
 
-- work with local files through a framework wrapper instead of raw PHP functions
-- switch between `local`, `dropbox`, and `gdrive` adapters from configuration
-- save uploaded files with MIME-type validation
-- send uploads to a remote filesystem while keeping the same application-level workflow
+## Quick example
 
-## Package shape
+```php
+fs()->put(storage_dir() . '/exports/users.json', json_encode($users));
 
-The package is built from a few layers:
+if (fs()->exists(storage_dir() . '/exports/users.json')) {
+    $json = fs()->get(storage_dir() . '/exports/users.json');
+}
+```
 
-- `Quantum\Storage\FileSystem` is the wrapper your application code usually talks to
-- `Quantum\Storage\Factories\FileSystemFactory` resolves adapters from `config/fs.php` and caches one wrapper per adapter name
-- adapters implement `Quantum\Storage\Contracts\FilesystemAdapterInterface`
-- `Quantum\Storage\UploadedFile` handles upload validation, naming, and persistence
-- the global `fs()` helper resolves the shared filesystem wrapper
+## Upload example
 
-## Built-in adapters
+```php
+$uploadedFile = new UploadedFile($_FILES['avatar']);
+$uploadedFile->setName('profile-photo');
+$uploadedFile->save(uploads_dir() . '/users');
+```
 
-Storage ships with three adapter names:
+## Operational constraints
 
-- `local`
-- `dropbox`
-- `gdrive`
+- Unknown adapter names fail during resolution.
+- Cloud adapters keep the same wrapper API, but backend semantics differ (especially naming vs ID-based access).
+- `UploadedFile` validation depends on local temporary upload files.
+- Image modifications are best for local saves.
 
-If you call `fs()` without an adapter name, the factory imports `config/fs.php` on demand and uses `fs.default`.
+## Read next
 
-## Upload support
-
-`UploadedFile` is designed for request uploads, but it also works with local temporary files during tests or service-level processing.
-
-Out of the box it allows these MIME/extension pairs:
-
-- `image/jpeg` → `jpg`, `jpeg`
-- `image/png` → `png`
-- `application/pdf` → `pdf`
-
-If `config/uploads.php` exists, its `uploads.allowed_mime_types` entries are merged into that default map before `save()` validates the file.
-
-## Important constraints
-
-A few behaviors matter in real applications:
-
-- `FileSystemFactory` caches one `FileSystem` wrapper per adapter name inside the DI-managed factory service
-- unsupported adapter names fail during resolution instead of falling back silently
-- cloud adapters share the same wrapper API, but Dropbox operations use path-style names while most Google Drive operations work with Drive file or folder IDs
-- `UploadedFile` still depends on the local adapter for extension parsing, MIME detection, and temporary-file reads even when you send the final file to a remote adapter
-- image modifications run after the file is stored and expect a local writable path, so they are a poor fit for direct cloud uploads
-
-For backend differences, see [Adapters](adapters.md). For upload behavior, see [Usage](usage.md) and [Contracts](contracts.md).
+- [Usage](usage.md)
+- [Contracts](contracts.md)
+- [Adapters](adapters.md)
+- [Helpers](helpers.md)
