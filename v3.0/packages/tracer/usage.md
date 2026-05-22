@@ -1,6 +1,6 @@
 # Using Tracer
 
-Most applications only need to register the handler once during bootstrap.
+Register Tracer once during bootstrap.
 
 ## Register the handler
 
@@ -11,21 +11,15 @@ $handler = new ErrorHandler();
 $handler->setup($logger);
 ```
 
-After that, PHP errors covered by `error_reporting()` are raised as `ErrorException`, and uncaught exceptions are routed through Tracer automatically.
-
-## Send CLI output to an existing console stream
+## Attach CLI output when needed
 
 ```php
 $handler->setCliOutput($output);
 ```
 
-Use this in console commands when you want Tracer to write failures into the same Symfony console output object your command already uses.
+Use this in console commands to keep Tracer output on your existing Symfony output stream.
 
-If you skip this step, Tracer creates its own `ConsoleOutput` instance.
-
-## Customize severity resolution or trace formatting
-
-`ErrorHandler` accepts optional collaborators in its constructor:
+## Customize collaborators
 
 ```php
 $handler = new ErrorHandler(
@@ -35,43 +29,29 @@ $handler = new ErrorHandler(
 );
 ```
 
-This is useful when you need different severity rules or a custom web renderer without replacing the whole handler.
-
-## What users see in production
+## Production behavior
 
 ### CLI
 
-Production CLI output is intentionally brief:
-
-```text
-Database connection failed
-```
+Prints message only.
 
 ### Web
 
-Production web requests always return an HTTP 500 page. Tracer first tries to render `errors/500`. If that fails, it sends the plain text body `Internal Server Error`.
+Returns HTTP 500 and renders `errors/500`.
+If view rendering fails, falls back to plain `Internal Server Error`.
 
-## What developers see in debug mode
+## Debug behavior
 
 ### CLI
 
-Debug CLI output includes:
-
-- throwable class
-- message
-- source file and line
-- full trace string
+Prints class, message, file/line, and trace.
 
 ### Web
 
-Debug web requests render `errors/trace` with:
+Renders `errors/trace` with message, severity, and formatted stack trace.
 
-- the exception message
-- the resolved severity label
-- a stack trace with source snippets when local filesystem access is available
+## Common pitfalls
 
-## Practical caveats
-
-- Make sure your project provides `errors/trace` and `errors/500` partials if you want custom error pages.
-- Trace snippets rely on the local storage adapter because `StackTraceFormatter` reads files through `fs()`.
-- Tracer does not choose status codes per exception type. Uncaught web exceptions are always rendered as 500 responses.
+- Missing `errors/trace` or `errors/500` partials causes fallback output.
+- Trace snippets depend on local adapter access to source files.
+- Tracer does not map exception types to custom HTTP status codes.

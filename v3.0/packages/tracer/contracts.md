@@ -1,81 +1,54 @@
 # Tracer Contracts
 
-Tracer has a small public surface, but a few behaviors are important to rely on correctly.
+This page lists behavior you can rely on when integrating Tracer.
 
-## Handler setup contract
+## Setup contract
 
 ```php
 $handler = new ErrorHandler();
 $handler->setup($logger);
 ```
 
-`setup()` must run before you expect Tracer to catch PHP errors or uncaught exceptions.
+`setup()` must run before Tracer can intercept PHP errors and uncaught exceptions.
 
-It also defines the logger used by the web production path. If no logger was set through `setup()`, production web failures still render a 500 page but skip logging.
+## Error conversion contract
 
-## Severity resolution contract
+`handleError()` converts enabled PHP errors into `ErrorException`.
 
-`ExceptionSeverityResolver::resolve()` maps throwables to log levels like this:
+Suppressed or masked severities are ignored (`false` return), so `@` suppression still works.
 
-- `ErrorException` uses its PHP severity when that severity exists in the package map
-- `ParseError` resolves to `critical`
-- `ReflectionException` resolves to `warning`
-- everything else resolves to `error`
+## Severity mapping contract
 
-Known PHP severities map to `error`, `warning`, or `notice`.
+`ExceptionSeverityResolver::resolve()` maps:
 
-## Logger method contract
+- `ParseError` → `critical`
+- `ReflectionException` → `warning`
+- other throwables → `error`
+- `ErrorException` uses mapped PHP severity when available
 
-`ErrorHandler` uses the resolved severity name as a logger method when that method exists:
+## Logging contract
 
-```php
-$logger->$errorType($message, ['trace' => $trace]);
-```
+In web production flow, Tracer logs with resolved severity method when available, otherwise `error()`.
 
-If the logger does not implement that method, Tracer falls back to `error()`.
+Context includes throwable trace text.
 
-The logged context currently includes one key:
+## Web response contract
 
-- `trace` => the throwable trace string
+Uncaught web exceptions always produce HTTP 500.
 
-## HTTP response contract
+Tracer attempts to render:
 
-The web path always sends an HTTP 500 response.
+- debug: `errors/trace`
+- production: `errors/500`
 
-That is true for:
+If rendering fails, fallback response body is `Internal Server Error` with status 500.
 
-- rendered debug trace pages
-- rendered production error pages
-- the plain fallback `Internal Server Error` body used when rendering itself fails
+## Trace view contract
 
-Tracer does not inspect exception types to choose alternative status codes.
+In debug mode, `errors/trace` receives:
 
-## Trace-view contract
+- `stackTrace`
+- `errorMessage`
+- `severity`
 
-In debug mode, `WebExceptionRenderer` renders `errors/trace` and passes three variables:
-
-- `stackTrace`: array of formatted trace entries
-- `errorMessage`: throwable message
-- `severity`: capitalized severity label
-
-Each `stackTrace` entry has this shape:
-
-```php
-[
-    'file' => '/path/to/file.php',
-    'code' => '<ol>...</ol>',
-]
-```
-
-When source extraction is unavailable, `code` is an empty string rather than an exception.
-
-## Source-snippet contract
-
-`StackTraceFormatter` tries to show 10 lines around the target line.
-
-The HTML is already escaped and wrapped in an ordered list. Consumers should treat it as preformatted HTML intended for direct rendering in the trace view.
-
-The highlighted line is marked with:
-
-- `error-line` for the original throwable location
-- `switch-line` for later stack frames
+`stackTrace` entries include file path and preformatted code snippet HTML when available.

@@ -1,28 +1,17 @@
 # Tracer
 
-The Tracer package is Quantum's top-level error handling layer. It turns PHP errors into exceptions, chooses a response path for CLI vs web requests, and renders either a minimal production failure or a developer-focused trace page.
+Tracer is Quantum’s global error-handling layer.
 
-Use it when you need one place to register framework error handling for both console commands and HTTP requests.
+Use it to convert PHP errors into exceptions and render consistent failure output for CLI and web requests.
 
-## What it covers
+## What it provides
 
-The package is built from four pieces:
+- `ErrorHandler` for registration and exception routing
+- `ExceptionSeverityResolver` for log-level mapping
+- `WebExceptionRenderer` for debug/prod web error pages
+- `StackTraceFormatter` for debug trace snippets
 
-- `Quantum\Tracer\ErrorHandler` registers the PHP error and exception handlers
-- `Quantum\Tracer\ExceptionSeverityResolver` maps exceptions to log levels
-- `Quantum\Tracer\WebExceptionRenderer` renders the web error page
-- `Quantum\Tracer\StackTraceFormatter` builds the code snippets shown on the debug trace page
-
-## When to use it
-
-Reach for Tracer when you want to:
-
-- convert PHP runtime errors into catchable exceptions
-- send clean error output to CLI commands in production
-- render a stack-trace page in web debug mode
-- log production web exceptions through the framework logger
-
-## Runtime behavior at a glance
+## Quick setup
 
 ```php
 use Quantum\Tracer\ErrorHandler;
@@ -31,27 +20,30 @@ $handler = new ErrorHandler();
 $handler->setup($logger);
 ```
 
-After `setup()` runs:
+## Runtime behavior
 
-- PHP errors handled by `error_reporting()` are converted into `ErrorException`
-- uncaught throwables are routed to CLI or web handling based on `PHP_SAPI`
-- web requests render an HTTP 500 response
-- production web requests log the exception before rendering the error page
+After setup:
+
+- enabled PHP errors are converted to `ErrorException`
+- uncaught throwables are routed by runtime (`cli` vs web)
+- web failures return HTTP 500
+- production web failures are logged before rendering
 
 ## Debug vs production output
 
-Tracer changes behavior based on `is_debug_mode()`:
+- CLI debug: class, message, file/line, full trace
+- CLI production: message only
+- Web debug: trace page (`errors/trace`)
+- Web production: error page (`errors/500`)
 
-- **CLI + debug on:** prints class name, message, file, line, and full trace
-- **CLI + debug off:** prints only the exception message
-- **Web + debug on:** renders the `errors/trace` partial with stack trace snippets
-- **Web + debug off:** logs the exception and renders the `errors/500` partial
+## Practical constraints
 
-## Important constraints
+- Logging is done in web production flow.
+- Web status code for uncaught exceptions is always 500.
+- Trace code snippets require local filesystem access.
 
-- Logging only happens in the web production path. CLI exceptions are printed, not logged, by `ErrorHandler`.
-- `handleError()` ignores suppressed or masked severities and returns `false` in that case.
-- Debug trace snippets depend on the active storage adapter being local. Non-local storage produces the trace page without source-code excerpts.
-- If the trace or 500 view cannot be rendered, Tracer falls back to a plain `Internal Server Error` response.
+## Read next
 
-For setup and flow details, see [Architecture](architecture.md). For severity mapping and output contracts, see [Contracts](contracts.md). For integration examples, see [Usage](usage.md).
+- [Usage](usage.md)
+- [Contracts](contracts.md)
+- [Architecture](architecture.md)
