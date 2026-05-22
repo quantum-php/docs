@@ -151,6 +151,12 @@
   * [Overview](v3.0/packages/loader/overview.md)
   * [Architecture](v3.0/packages/loader/architecture.md)
   * [Usage](v3.0/packages/loader/usage.md)
+* Session
+  * [Overview](v3.0/packages/session/overview.md)
+  * [Adapters](v3.0/packages/session/adapters.md)
+  * [Contracts](v3.0/packages/session/contracts.md)
+  * [Helpers](v3.0/packages/session/helpers.md)
+  * [Usage](v3.0/packages/session/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
