@@ -123,6 +123,12 @@
   * [Adapters](v3.0/packages/ratelimit/adapters.md)
   * [Contracts](v3.0/packages/ratelimit/contracts.md)
   * [Usage](v3.0/packages/ratelimit/usage.md)
+* Renderer
+  * [Overview](v3.0/packages/renderer/overview.md)
+  * [Architecture](v3.0/packages/renderer/architecture.md)
+  * [Adapters](v3.0/packages/renderer/adapters.md)
+  * [Contracts](v3.0/packages/renderer/contracts.md)
+  * [Usage](v3.0/packages/renderer/usage.md)
 * Mailer
   * [Overview](v3.0/packages/mailer/overview.md)
   * [Architecture](v3.0/packages/mailer/architecture.md)
