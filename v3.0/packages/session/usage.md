@@ -1,6 +1,6 @@
 # Using Sessions
 
-This package is usually used through the `session()` helper.
+Use `session()` as the default API.
 
 ## Store and read values
 
@@ -12,16 +12,14 @@ $userId = session()->get('user.id');
 $all = session()->all();
 ```
 
-Use `delete()` when you want to remove one key and `flush()` when you want to destroy the whole session.
+Remove values when needed:
 
 ```php
 session()->delete('user.name');
 session()->flush();
 ```
 
-## Show flash messages after redirects
-
-Flash values are just normal session entries that delete themselves when read through `getFlash()`.
+## Use flash messages for one-time feedback
 
 ```php
 session()->setFlash('status', 'Post created');
@@ -30,9 +28,9 @@ session()->setFlash('status', 'Post created');
 $status = session()->getFlash('status');
 ```
 
-If you call `get()` instead of `getFlash()`, the value stays in the session.
+`getFlash()` reads and deletes in one call.
 
-## Regenerate the session ID after login
+## Regenerate session ID after login
 
 ```php
 if ($authenticated) {
@@ -41,24 +39,17 @@ if ($authenticated) {
 }
 ```
 
-This is the right time to rotate the session ID and reduce fixation risk.
-
-## Pick a backend explicitly
+## Pick backend explicitly only when necessary
 
 ```php
 $nativeSession = session('native');
 $databaseSession = session('database');
 ```
 
-Use this only when your application genuinely needs different session backends. Most apps should configure `session.default` and call `session()` without arguments.
+Most apps should set `session.default` and call `session()` without args.
 
-## Practical caveats
+## Common pitfalls
 
-Keep these in mind while integrating:
-
-- avoid using empty-like values when you need `has()` checks to succeed
-- the native adapter adds `LAST_ACTIVITY` to the session data, so `all()` is not just your application keys there
-- the database adapter requires a compatible table and working database/model setup before the first request reaches it
-- backend switching changes storage location, not the public API
-
-For backend-specific setup, see [Adapters](adapters.md).
+- `has()` returns `false` for empty-like values (`0`, `false`, `''`, `null`).
+- Native adapter includes framework keys like `LAST_ACTIVITY` in `all()` output.
+- Database adapter requires working DB/model setup before use.

@@ -1,21 +1,19 @@
 # Session Helpers
 
-The package exposes one global resolver helper.
-
 ## `session()`
 
 ```php
 function session(?string $adapter = null): Session
 ```
 
-Use this as the normal entry point for session work.
+Use this as the standard entry point for session operations.
 
 ```php
 session()->set('locale', 'en');
 $locale = session()->get('locale');
 ```
 
-Pass an adapter name when you need a specific backend:
+Pass an adapter name only when you explicitly need one:
 
 ```php
 session('database')->set('cart_id', 'abc123');
@@ -23,11 +21,8 @@ session('database')->set('cart_id', 'abc123');
 
 ## Helper behavior
 
-A few helper details matter in real apps:
+- no adapter passed → uses `session.default`
+- adapter passed → resolves that backend (`native` or `database`)
+- returns a Session wrapper, not a raw adapter
 
-- `session()` resolves through `SessionFactory::get()`
-- the first call loads `config/session.php` when the config has not been imported yet
-- when no adapter is passed, the helper uses `session.default`
-- repeated calls reuse the cached wrapper for that adapter name inside the current process
-
-Because the helper returns the wrapper, not the raw adapter, backend-specific setup should happen through configuration rather than direct adapter construction.
+Prefer backend setup through configuration, not direct adapter construction.

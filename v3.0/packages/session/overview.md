@@ -1,52 +1,16 @@
 # Session
 
-The Session package gives Quantum one consistent API for request-scoped state, flash messages, and session ID management.
+Session provides a consistent API for request-scoped state, flash messages, and session ID management.
 
-Use it when you need to persist data between requests without binding your application code to PHP's raw `$_SESSION` array or to one storage backend.
+Use it when you need to persist small values between requests without coupling your code to raw `$_SESSION` access.
 
-## When to use it
+## What it provides
 
-Reach for Session when you want to:
+- `Quantum\Session\Session` wrapper
+- `session()` helper as the standard entry point
+- adapter selection via config (`native` or `database`)
 
-- store authenticated user state or small workflow state between requests
-- show one-time flash messages after redirects
-- switch between PHP native session storage and a database-backed session store
-- regenerate the session ID after login or other privilege changes
-
-## Package shape
-
-The package is built from a few small parts:
-
-- `Quantum\Session\Session` is the wrapper your application code calls
-- `Quantum\Session\Factories\SessionFactory` resolves and caches one session wrapper per adapter name
-- adapters implement `Quantum\Session\Contracts\SessionStorageInterface`
-- the global `session()` helper resolves the shared wrapper
-
-## Adapter model
-
-Session supports two adapter names:
-
-- `native`
-- `database`
-
-If you do not pass an adapter name, the factory loads `config/session.php` and uses `session.default`.
-
-Each adapter receives its own config block from `session.<adapter-name>`.
-
-## Common operations
-
-The wrapper exposes the same core operations for both adapters:
-
-- `all()`
-- `has(string $key)`
-- `get(string $key)`
-- `set(string $key, mixed $value)`
-- `getFlash(string $key)`
-- `setFlash(string $key, mixed $value)`
-- `delete(string $key)`
-- `flush()`
-- `getId()`
-- `regenerateId()`
+## Quick example
 
 ```php
 session()->set('user_id', 42);
@@ -58,14 +22,25 @@ if (session()->has('user_id')) {
 session()->setFlash('status', 'Profile updated');
 ```
 
-## Important constraints
+## Adapter model
 
-A few behaviors affect real usage:
+Supported adapter names:
 
-- `SessionFactory` caches one `Session` instance per adapter name inside the factory service
-- unsupported method calls fail on the wrapper instead of silently passing through
-- `has()` uses a non-empty check, so values like `0`, `false`, `''`, and `null` behave as missing
-- `get()` depends on `has()`, so those same empty-like values come back as `null`
-- values are written through the framework crypto helpers, so read them back through the Session API rather than assuming raw storage format
+- `native`
+- `database`
 
-For backend-specific behavior, see [Adapters](adapters.md).
+When no adapter is passed, Session uses `session.default` from `config/session.php`.
+
+## Operational constraints
+
+- `has()` treats empty-like values as missing (`null`, `false`, `0`, `'0'`, `''`).
+- `get()` depends on `has()`, so those values resolve as `null`.
+- Use Session APIs for reads/writes instead of relying on backend storage format.
+- Regenerate session IDs after authentication or privilege changes.
+
+## Read next
+
+- [Usage](usage.md)
+- [Contracts](contracts.md)
+- [Helpers](helpers.md)
+- [Adapters](adapters.md)
