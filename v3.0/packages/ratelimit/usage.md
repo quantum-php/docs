@@ -80,6 +80,8 @@ The limiter uses `get_user_ip()`.
 
 If your proxy or server setup does not expose the real client IP, different users can share the same bucket.
 
+If you are behind a reverse proxy or load balancer, make sure IP forwarding is configured correctly so `get_user_ip()` resolves the real client IP.
+
 ### Know the difference between `interval` and adapter `ttl`
 
 The route `interval` controls the normal request window.
@@ -96,4 +98,6 @@ That matters when you expected an auth middleware, logging middleware, or other 
 
 The package does not silently bypass storage problems.
 
-For example, if the file adapter cannot lock its state file, the hit is treated as disallowed and the request can be rejected.
+For example, if the file adapter cannot lock/open its state file, the hit is treated as disallowed and the request can be rejected.
+
+For Redis, connection/runtime failures are not converted into a fallback allow/deny result by this package, so handle those exceptions at your app boundary if needed.

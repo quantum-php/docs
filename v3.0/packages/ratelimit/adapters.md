@@ -77,6 +77,7 @@ Use it when multiple workers or servers must share the same limits.
 
 - The adapter only configures host and port. Authentication, database selection, and other Redis options are not part of this package contract.
 - `prefix` is stored directly in Redis key names, unlike the file adapter where it only affects the hashed filename.
+- Redis client errors are not translated into a package-level fallback response; treat them as runtime failures in your app error handling.
 
 ## Shared adapter behavior
 
