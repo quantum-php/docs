@@ -129,6 +129,10 @@
   * [Adapters](v3.0/packages/renderer/adapters.md)
   * [Contracts](v3.0/packages/renderer/contracts.md)
   * [Usage](v3.0/packages/renderer/usage.md)
+* ResourceCache
+  * [Overview](v3.0/packages/resourcecache/overview.md)
+  * [Contracts](v3.0/packages/resourcecache/contracts.md)
+  * [Usage](v3.0/packages/resourcecache/usage.md)
 * Mailer
   * [Overview](v3.0/packages/mailer/overview.md)
   * [Architecture](v3.0/packages/mailer/architecture.md)
