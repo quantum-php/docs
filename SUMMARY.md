@@ -151,6 +151,11 @@
   * [Overview](v3.0/packages/loader/overview.md)
   * [Architecture](v3.0/packages/loader/architecture.md)
   * [Usage](v3.0/packages/loader/usage.md)
+* Tracer
+  * [Overview](v3.0/packages/tracer/overview.md)
+  * [Architecture](v3.0/packages/tracer/architecture.md)
+  * [Contracts](v3.0/packages/tracer/contracts.md)
+  * [Usage](v3.0/packages/tracer/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
