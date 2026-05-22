@@ -151,6 +151,10 @@
   * [Overview](v3.0/packages/loader/overview.md)
   * [Architecture](v3.0/packages/loader/architecture.md)
   * [Usage](v3.0/packages/loader/usage.md)
+* Service
+  * [Overview](v3.0/packages/service/overview.md)
+  * [Contracts](v3.0/packages/service/contracts.md)
+  * [Usage](v3.0/packages/service/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
