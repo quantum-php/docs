@@ -133,6 +133,12 @@
   * [Overview](v3.0/packages/resourcecache/overview.md)
   * [Contracts](v3.0/packages/resourcecache/contracts.md)
   * [Usage](v3.0/packages/resourcecache/usage.md)
+* Router
+  * [Overview](v3.0/packages/router/overview.md)
+  * [Architecture](v3.0/packages/router/architecture.md)
+  * [Contracts](v3.0/packages/router/contracts.md)
+  * [Helpers](v3.0/packages/router/helpers.md)
+  * [Usage](v3.0/packages/router/usage.md)
 * Mailer
   * [Overview](v3.0/packages/mailer/overview.md)
   * [Architecture](v3.0/packages/mailer/architecture.md)
@@ -158,6 +164,16 @@
   * [Contracts](v3.0/packages/storage/contracts.md)
   * [Helpers](v3.0/packages/storage/helpers.md)
   * [Usage](v3.0/packages/storage/usage.md)
+* Session
+  * [Overview](v3.0/packages/session/overview.md)
+  * [Adapters](v3.0/packages/session/adapters.md)
+  * [Contracts](v3.0/packages/session/contracts.md)
+  * [Helpers](v3.0/packages/session/helpers.md)
+  * [Usage](v3.0/packages/session/usage.md)
+* Service
+  * [Overview](v3.0/packages/service/overview.md)
+  * [Contracts](v3.0/packages/service/contracts.md)
+  * [Usage](v3.0/packages/service/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
