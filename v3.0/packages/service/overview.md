@@ -1,17 +1,17 @@
 # Service
 
-The Service package gives you a small base class and factory layer for application services.
+Service provides a simple base class and resolver pattern for application services.
 
-Use it when you want to keep business logic outside controllers and instantiate service classes through Quantum's DI container.
+Use it when you want business logic outside controllers and want predictable service resolution through Quantum.
 
-## What the package provides
+## What it gives you
 
-- `Quantum\Service\Service` as the base class for service objects
-- `ServiceFactory::create()` for a fresh service instance
-- `ServiceFactory::get()` for a shared DI-managed instance
-- the `service()` helper for quick resolution
+- `Quantum\Service\Service` base class
+- `service()` helper for quick resolution
+- `ServiceFactory::create()` for fresh instances
+- `ServiceFactory::get()` for shared instances
 
-## Typical usage
+## Quick example
 
 ```php
 use App\Modules\Blog\Services\PostService;
@@ -20,11 +20,9 @@ $postService = service(PostService::class);
 $sharedPostService = service(PostService::class, true);
 ```
 
-Use the default form when you want a new instance for the current call. Use the singleton form when you want the same DI-managed instance reused.
+Default resolution returns a fresh instance. Pass `true` to reuse the shared instance.
 
-## How it fits into an app
-
-A service class usually coordinates models, other services, or framework helpers:
+## Typical service shape
 
 ```php
 namespace App\Modules\Blog\Services;
@@ -35,21 +33,19 @@ class PostService extends Service
 {
     public function publish(int $id): void
     {
-        // domain logic here
+        // domain logic
     }
 }
 ```
 
-The package itself does not add lifecycle hooks, configuration files, or adapter selection. Its main job is validating that a class is a real Quantum service and then resolving it through the DI container.
+## Key constraints
 
-## Key caveats
-
-- Only classes that extend `Quantum\Service\Service` can be resolved through `ServiceFactory` or the `service()` helper.
-- `service($class)` creates a new instance by default; it is not shared unless you pass `true` as the second argument.
-- The base `Service` class throws if you call an undefined method, so magic fallbacks are not part of the contract.
+- Only classes extending `Quantum\Service\Service` are valid service targets.
+- `service($class)` is fresh-by-default.
+- Undefined method calls on services fail fast.
 
 ## Read next
 
-- [Contracts](contracts.md)
 - [Usage](usage.md)
+- [Contracts](contracts.md)
 - [Dependency Injection](../../advanced-features/dependency-injection.md)

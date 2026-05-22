@@ -1,8 +1,10 @@
 # Service Contracts
 
-## Service class contract
+This page describes the behaviors you can rely on when integrating with the Service package.
 
-A class must extend `Quantum\Service\Service` to be treated as a framework service.
+## Service type contract
+
+A class must extend `Quantum\Service\Service`.
 
 ```php
 use Quantum\Service\Service;
@@ -12,27 +14,25 @@ class ReportService extends Service
 }
 ```
 
-If you pass any other class to `ServiceFactory` or `service()`, the package throws a service exception before DI resolution begins.
+Non-service classes are rejected before resolution.
 
-## Resolution contract
-
-The package exposes two resolution modes:
+## Resolution modes
 
 ### `ServiceFactory::create(string $serviceClass, array $args = [])`
 
-- validates that the class exists
-- validates that the class extends `Quantum\Service\Service`
-- returns a fresh instance through `Di::create()`
+Contract:
 
-Use this when constructor arguments or mutable state should not be shared.
+- validates service class eligibility
+- returns a fresh instance
+- accepts runtime constructor arguments
 
 ### `ServiceFactory::get(string $serviceClass, array $args = [])`
 
-- runs the same class validation as `create()`
-- registers the class with the DI container if it is not already registered
-- returns the DI-managed instance through `Di::get()`
+Contract:
 
-Use this when you want one shared instance for that class in the container.
+- validates service class eligibility
+- returns the shared instance for that service class
+- accepts runtime constructor arguments
 
 ## Helper contract
 
@@ -42,26 +42,21 @@ service(string $serviceClass, bool $singleton = false): Service
 
 Behavior:
 
-- `false` uses `ServiceFactory::create()`
-- `true` uses `ServiceFactory::get()`
-- the helper does not expose the factory's `$args` parameter
+- `false` resolves a fresh instance
+- `true` resolves the shared instance
+- helper does not accept constructor args
 
-That last point matters: if your service constructor needs runtime arguments, call `ServiceFactory::create()` or `ServiceFactory::get()` directly instead of the helper.
+If you need runtime args, use `ServiceFactory::create()` or `ServiceFactory::get()`.
 
-## Undefined method behavior
+## Undefined method contract
 
-The base `Service` class implements `__call()` and always throws a service exception for unsupported methods.
+Undefined method calls throw immediately.
 
-Practical effect:
+Practical effect: service method typos fail fast instead of being silently ignored.
 
-- calling a typo such as `$service->publsih()` fails immediately
-- dynamic method forwarding is not built into the base class
+## Failure cases to handle
 
-## Failure behavior
-
-Common failures you should expect:
-
-- the service class does not exist
-- the class exists but does not extend `Quantum\Service\Service`
-- DI resolution fails because constructor dependencies cannot be resolved
-- an undefined service method is called at runtime
+- service class does not exist
+- class exists but does not extend `Quantum\Service\Service`
+- constructor dependencies cannot be resolved
+- undefined service method is called

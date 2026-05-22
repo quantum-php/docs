@@ -2,8 +2,6 @@
 
 ## Create a service class
 
-Start with a class that extends the framework base service.
-
 ```php
 namespace App\Modules\Billing\Services;
 
@@ -18,9 +16,9 @@ class InvoiceService extends Service
 }
 ```
 
-This is enough to make the class valid for `ServiceFactory` and the `service()` helper.
+Any class resolved through Service APIs must extend `Quantum\Service\Service`.
 
-## Resolve a fresh service instance
+## Resolve a fresh instance
 
 ```php
 use App\Modules\Billing\Services\InvoiceService;
@@ -29,19 +27,19 @@ $service = service(InvoiceService::class);
 $service->send(15);
 ```
 
-This path creates a new service instance each time you call the helper.
+Use this when each call should get its own instance.
 
-## Resolve a shared service instance
+## Resolve a shared instance
 
 ```php
 $service = service(InvoiceService::class, true);
 ```
 
-Use the shared form when the service should be reused through the container, for example when it holds collaborators that you want to instantiate once.
+Use shared mode when the same service instance should be reused.
 
 ## Pass runtime constructor arguments
 
-When your service constructor needs explicit runtime values, use the factory directly.
+Use the factory directly when constructor values are runtime-specific:
 
 ```php
 use Quantum\Service\Factories\ServiceFactory;
@@ -51,11 +49,9 @@ $service = ServiceFactory::create(InvoiceService::class, [
 ]);
 ```
 
-The `service()` helper cannot pass custom arguments.
+`service()` does not accept custom constructor args.
 
 ## Compose services with DI
-
-Because service resolution goes through the DI container, constructor-injected dependencies are supported.
 
 ```php
 class InvoiceService extends Service
@@ -68,22 +64,22 @@ class InvoiceService extends Service
 }
 ```
 
-Keep in mind that singleton resolution also shares that constructed dependency graph for the lifetime of the DI entry.
+Constructor dependencies are resolved through DI.
 
 ## Common pitfalls
 
-### Do not pass plain classes
+### Passing a non-service class
 
 ```php
 service(stdClass::class);
 ```
 
-This fails because `stdClass` is not a subclass of `Quantum\Service\Service`.
+This fails because the class does not extend `Quantum\Service\Service`.
 
-### Choose singleton mode intentionally
+### Forgetting shared mode
 
-The helper defaults to a fresh instance. If you expected shared state or one-time setup reuse, pass `true` explicitly.
+If you expect reuse, pass `true` explicitly.
 
-### Avoid relying on magic method forwarding
+### Relying on undefined methods
 
-If a method is not defined on the service class, the base class throws instead of silently proxying the call.
+Typos like `$service->publsih()` fail immediately.
