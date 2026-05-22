@@ -157,6 +157,12 @@
   * [Overview](v3.0/packages/loader/overview.md)
   * [Architecture](v3.0/packages/loader/architecture.md)
   * [Usage](v3.0/packages/loader/usage.md)
+* Session
+  * [Overview](v3.0/packages/session/overview.md)
+  * [Adapters](v3.0/packages/session/adapters.md)
+  * [Contracts](v3.0/packages/session/contracts.md)
+  * [Helpers](v3.0/packages/session/helpers.md)
+  * [Usage](v3.0/packages/session/usage.md)
 * Service
   * [Overview](v3.0/packages/service/overview.md)
   * [Contracts](v3.0/packages/service/contracts.md)
