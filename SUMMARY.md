@@ -118,6 +118,11 @@
   * [Adapters](v3.0/packages/paginator/adapters.md)
   * [Contracts](v3.0/packages/paginator/contracts.md)
   * [Usage](v3.0/packages/paginator/usage.md)
+* RateLimit
+  * [Overview](v3.0/packages/ratelimit/overview.md)
+  * [Adapters](v3.0/packages/ratelimit/adapters.md)
+  * [Contracts](v3.0/packages/ratelimit/contracts.md)
+  * [Usage](v3.0/packages/ratelimit/usage.md)
 * Mailer
   * [Overview](v3.0/packages/mailer/overview.md)
   * [Architecture](v3.0/packages/mailer/architecture.md)
