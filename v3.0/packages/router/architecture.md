@@ -1,53 +1,40 @@
 # Router Architecture
 
-## Build, match, dispatch
+Router runs in three stages: build, match, dispatch.
 
-The Router package separates routing into three steps.
+## 1) Build
 
-### Build
+`RouteBuilder` collects module route closures and produces a route collection.
 
-`RouteBuilder` receives one closure per module and turns those definitions into a `RouteCollection`.
+At this stage, module-level prefix configuration is applied to routes.
 
-Each module can also provide config options. The builder currently reads the module `prefix` option and prepends it to every route defined by that module.
+## 2) Match
 
-### Match
+`RouteFinder` scans routes in registration order.
 
-`RouteFinder` walks the built collection in insertion order.
+Matching rules that affect usage:
 
-For each route it checks:
+- first matching route wins
+- method and URI must both match
+- query string is ignored for route matching
 
-1. HTTP method is allowed
-2. URI pattern matches
+## 3) Dispatch
 
-The first successful match becomes a `MatchedRoute` containing:
+`RouteDispatcher` executes either:
 
-- the original `Route` object
-- extracted route parameters
+- a closure handler, or
+- a controller action
 
-There is no secondary priority system. Registration order is the precedence rule.
+If `__before()` / `__after()` hooks exist on the controller, they run around the action.
 
-### Dispatch
+## Group model
 
-`RouteDispatcher` handles two route styles:
+Groups are a route-definition convenience. They are not a separate runtime route type.
 
-- closure routes
-- controller-action routes
+Use groups to:
 
-For controller routes, the dispatcher:
-
-1. creates the controller instance directly
-2. optionally runs CSRF verification when the controller exposes `public $csrfVerification = true`
-3. calls `__before()` when present
-4. calls the action
-5. calls `__after()` when present
-
-Arguments are resolved through `Di::autowire(...)`, so named route parameters can be injected into closures, actions, and hook methods.
-
-## Group behavior
-
-Groups are a builder feature, not a separate runtime route type.
-
-A group gives related routes a shared group name and lets you apply shared configuration after the group callback finishes.
+- organize related routes
+- apply shared metadata by chaining after `group(...)`
 
 ```php
 $route->group('auth', function ($route) {
@@ -56,22 +43,9 @@ $route->group('auth', function ($route) {
 })->middlewares(['Guest']);
 ```
 
-Nested groups are rejected.
+## Route metadata
 
-## Pattern compilation
-
-`PatternCompiler` translates Quantum's route DSL into a regular expression and stores the extracted parameter map.
-
-Important effects from the compiler:
-
-- matching uses only the request path, not the query string
-- incoming paths are URL-decoded before matching
-- trailing slashes are accepted on literal and parameter routes
-- unnamed parameters are still captured under generated names such as `_segment1`
-
-## Metadata carried on routes
-
-Each `Route` can carry metadata used by other packages:
+Route objects can carry metadata consumed by other packages:
 
 - name
 - module
@@ -80,6 +54,3 @@ Each `Route` can carry metadata used by other packages:
 - middlewares
 - cache settings
 - rate-limit settings
-- compiled pattern
-
-The router itself stores this metadata; related packages such as Middleware, ResourceCache, and RateLimit consume it later.

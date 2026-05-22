@@ -1,14 +1,8 @@
 # Router Contracts
 
-## Module route file contract
+This page documents behavior you can rely on when integrating with Router.
 
-`RouteBuilder::build()` expects one closure per module.
-
-If a module route entry is not a `Closure`, the builder throws a route exception for that module.
-
-## Handler contract
-
-A route must be defined in one of these forms:
+## Route definition forms
 
 ```php
 $route->get('health', function () {
@@ -18,61 +12,47 @@ $route->get('health', function () {
 $route->get('posts', 'PostController', 'index');
 ```
 
-Rules that matter:
+Contract:
 
-- a closure route cannot also define controller or action values
-- a controller route must define both controller and non-empty action
-- controller actions and closures must return `Quantum\Http\Response`
+- Closure route: closure handler only
+- Controller route: controller + non-empty action required
+- Handler return value must be `Quantum\Http\Response`
 
-Returning a string, array, or any other value fails at dispatch time.
+## HTTP methods
 
-## HTTP methods contract
+Methods are required.
 
-Route methods are required.
+`add()` accepts a pipe-delimited list (example: `GET|POST`) and normalizes values before matching.
 
-`add()` splits a pipe-delimited string such as `GET|POST`, trims each token, uppercases the final values, and rejects an empty method list.
-
-Method matching is case-insensitive in practice because stored methods are normalized to uppercase before comparison.
-
-## Naming contract
+## Naming
 
 ```php
 $route->get('dashboard', 'DashboardController', 'index')->name('dashboard');
 ```
 
-Rules:
+Contract:
 
-- `name()` must be called after a route definition
-- route names must be unique within the current module
+- `name()` must follow a route definition
+- names are unique per module
 - the same name can exist in another module
 
-## Group and chaining contract
+## Group contracts
 
-### `group(string $name, callable $callback)`
+```php
+$route->group('account', function ($route) {
+    $route->get('profile', 'AccountController', 'profile');
+    $route->post('avatar', 'AccountController', 'avatar')
+        ->middlewares(['VerifiedUser']);
+})->middlewares(['Auth']);
+```
 
-- creates a shared group name for routes defined inside the callback
-- rejects nested groups
-- returns the builder so you can chain shared configuration after the group
+Contract:
 
-### `middlewares(array $middlewares)`
+- Nested groups are rejected
+- Shared middleware/cache/rate-limit config should be chained after `group(...)`
+- Route-level chaining applies only to that route
 
-This method has three valid contexts:
-
-- after a single route definition: applies only to that route
-- inside a group before routes are defined: queues middleware for all routes in the group
-- after `group(...)`: applies to the routes created by that last group
-
-### `cacheable(bool $enabled, ?int $ttl = null)` and `rateLimit(int $limit, int $interval)`
-
-These methods also work on a single route or a whole group, but their in-group behavior is different from `middlewares()`:
-
-- inside a group they update the routes already created in that group
-- after `group(...)` they update all routes from that last group
-- outside a route or group they throw a route exception
-
-That means calling `cacheable()` or `rateLimit()` midway through a group only affects routes defined earlier in that group, not routes declared later.
-
-## Pattern contract
+## Pattern contracts
 
 Supported segment types:
 
@@ -80,46 +60,25 @@ Supported segment types:
 - `:num`
 - `:any`
 
-Parameter-name rules:
+Rules:
 
-- explicit names may contain letters only
+- explicit parameter names are alphabetic
 - duplicate parameter names in one route are rejected
-- unnamed parameters are auto-named `_segment<index>`
+- optional segments resolve to `null` when absent
 
-Examples:
+## Dispatch contracts
 
-```php
-$route->get('posts/[id=:num]', 'PostController', 'show');
-$route->get('invite/[code=:alpha:8]', 'InviteController', 'show');
-$route->get('search/[term=:any]?', 'SearchController', 'index');
-```
+For controller routes:
 
-Matching behavior that affects usage:
+- target action method must exist
+- controller action must return `Response`
+- if `__before()` / `__after()` exist, they run around the action
 
-- the query string is ignored
-- trailing slashes are accepted
-- optional parameters resolve to `null` when the segment is absent
+## Failure modes you should handle
 
-## Controller dispatch contract
-
-For controller routes, the dispatcher creates the controller with `new $controllerClass()`.
-
-Practical effects:
-
-- the package does not resolve controllers from the DI container
-- controller constructors must work with direct instantiation
-- the target action method must exist before dispatch
-
-If the controller defines `__before()` or `__after()`, those methods run around the action and receive autowired arguments the same way the action does.
-
-## Failure behavior
-
-Common route-package failures include:
-
-- missing or invalid HTTP methods
-- incomplete controller definitions
-- route names reused inside the same module
+- invalid method declarations
+- incomplete controller/action definitions
+- duplicate route names in one module
 - nested groups
-- invalid or duplicate parameter names
-- missing controller action methods
-- handler return values that are not `Response`
+- invalid route parameter names
+- non-`Response` handler return values

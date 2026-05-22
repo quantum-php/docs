@@ -2,7 +2,7 @@
 
 ## Define routes in a module
 
-A module route file should return a closure that receives the builder.
+A module route file returns a closure that receives the route builder.
 
 ```php
 return function ($route) {
@@ -14,9 +14,7 @@ return function ($route) {
 };
 ```
 
-Short controller names work well here because the builder already knows the current module.
-
-## Use a fully qualified controller when needed
+## Use fully-qualified controllers when you want explicit classes
 
 ```php
 use App\Modules\Admin\Controllers\ReportController;
@@ -26,9 +24,9 @@ return function ($route) {
 };
 ```
 
-Use this form when you want explicit controller class names or when you are building routes outside the normal module namespace convention.
+## Apply shared config to a group
 
-## Share configuration across a group
+Apply group-wide middleware, rate limits, or caching by chaining after `group(...)`:
 
 ```php
 $route->group('auth', function ($route) {
@@ -38,25 +36,21 @@ $route->group('auth', function ($route) {
   ->rateLimit(10, 60);
 ```
 
-This is the clearest way to apply shared middleware, caching, or rate limits to every route in the group.
-
-## Mix route-specific and group-wide middleware
+## Combine group-wide and route-specific middleware
 
 ```php
 $route->group('account', function ($route) {
-    $route->middlewares(['Auth']);
-
     $route->get('profile', 'AccountController', 'profile');
 
     $route->post('avatar', 'AccountController', 'avatar')
         ->middlewares(['VerifiedUser']);
-});
+})->middlewares(['Auth']);
 ```
 
 In this pattern:
 
-- `Auth` is queued for every route in the group
-- `VerifiedUser` applies only to the `avatar` route
+- `Auth` applies to every route in the `account` group
+- `VerifiedUser` applies only to `avatar`
 
 ## Use typed and optional parameters
 
@@ -66,9 +60,9 @@ $route->get('invite/[code=:alpha:8]', 'InviteController', 'show');
 $route->get('search/[term=:any]?', 'SearchController', 'index');
 ```
 
-Parameter values are extracted from the path and can be read later through `route_params()` or injected into handlers through the dispatcher's DI autowiring.
+Read matched values through `route_params()` or `route_param('name')`.
 
-## Return a Response from every handler
+## Return `Response` from handlers
 
 ```php
 $route->get('health', function () {
@@ -76,36 +70,18 @@ $route->get('health', function () {
 });
 ```
 
-Do not return plain arrays or strings from route handlers. The dispatcher rejects anything that is not `Quantum\Http\Response`.
-
-## Read matched-route data during a request
-
-```php
-if (route_name() === 'home') {
-    // ...
-}
-
-$id = route_param('id');
-```
-
-This is useful for view logic, middleware decisions, and shared controller helpers.
+Do not return plain strings or arrays.
 
 ## Common pitfalls
 
-### Register specific routes before broad ones
+### Register specific routes before broad routes
 
-The finder returns the first match.
+Route matching is first-match-wins.
 
-If a dynamic route is registered before a more specific literal route, the literal route may never run.
+### Keep explicit parameter names alphabetic
 
-### Keep parameter names alphabetic
+`[post1=:num]` is invalid. Use `[post=:num]`.
 
-`[post1=:num]` is invalid because explicit parameter names can contain letters only.
+### Prefer group chaining for shared config
 
-Use `[post=:num]` or leave the segment unnamed if you do not care about the key name.
-
-### Prefer chaining shared group config after `group(...)`
-
-That pattern is the least surprising.
-
-Calling `cacheable()` or `rateLimit()` from inside a group only updates routes that already exist at that moment.
+Use `})->middlewares([...])` / `->rateLimit(...)` / `->cacheable(...)` for predictable group-wide behavior.

@@ -1,19 +1,14 @@
 # Router
 
-The Router package turns module route definitions into runtime route objects, matches the incoming request, and dispatches the selected handler.
+Router defines how requests map to handlers in Quantum modules.
 
-Use it when you are defining application routes, attaching route metadata such as middleware or rate limits, or reading information about the currently matched route.
+Use it when you need to:
 
-## What the package provides
+- define routes and route groups
+- attach middleware, cache, or rate-limit metadata
+- read matched-route data during request handling
 
-The package is built around four responsibilities:
-
-- `RouteBuilder` collects module route closures into a `RouteCollection`
-- `RouteFinder` matches the current request against that collection
-- `RouteDispatcher` runs the matched closure or controller action
-- helper functions expose the matched route's metadata during a request
-
-## Basic route definition
+## Quick example
 
 ```php
 return function ($route) {
@@ -25,11 +20,7 @@ return function ($route) {
 };
 ```
 
-Inside module route files, short controller names are resolved to the current module's `Controllers` namespace automatically.
-
 ## Pattern support
-
-Route patterns can include typed parameters:
 
 ```php
 $route->get('posts/[id=:num]', 'PostController', 'show');
@@ -37,39 +28,22 @@ $route->get('invite/[code=:alpha:8]', 'InviteController', 'show');
 $route->get('verify/[token=:any]?', 'AuthController', 'verify');
 ```
 
-Supported parameter types are:
+Supported parameter types:
 
 - `:alpha` letters only
 - `:num` digits only
 - `:any` any characters except `/`
 
-You can also:
+## What matters operationally
 
-- name a parameter with `[name=:type]`
-- require an exact length with `[name=:type:5]`
-- make a segment optional with `?`
-- combine both so `[name=:type:5]?` matches up to that length or no segment at all
-
-## Request lifecycle
-
-At runtime, the package follows this flow:
-
-1. `RouteBuilder` builds routes from module closures
-2. `RouteFinder` returns the first route whose method and URI both match
-3. `RouteDispatcher` runs the handler and requires a `Quantum\Http\Response`
-
-Route order matters. The finder stops at the first matching route.
-
-## Key caveats
-
-- Route names must be unique within a module, but can repeat across different modules.
-- Nested route groups are not supported.
-- Closure handlers and controller actions must return `Quantum\Http\Response`.
-- Short controller names only work when the builder has module context, which is the normal module-routes flow.
+- Route matching is first-match-wins.
+- Group-wide config is best applied by chaining after `group(...)`.
+- Route handlers must return `Quantum\Http\Response`.
+- Route names must be unique inside a module.
 
 ## Read next
 
-- [Architecture](architecture.md)
+- [Usage](usage.md)
 - [Contracts](contracts.md)
 - [Helpers](helpers.md)
-- [Usage](usage.md)
+- [Architecture](architecture.md)
