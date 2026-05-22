@@ -133,6 +133,12 @@
   * [Overview](v3.0/packages/resourcecache/overview.md)
   * [Contracts](v3.0/packages/resourcecache/contracts.md)
   * [Usage](v3.0/packages/resourcecache/usage.md)
+* Router
+  * [Overview](v3.0/packages/router/overview.md)
+  * [Architecture](v3.0/packages/router/architecture.md)
+  * [Contracts](v3.0/packages/router/contracts.md)
+  * [Helpers](v3.0/packages/router/helpers.md)
+  * [Usage](v3.0/packages/router/usage.md)
 * Mailer
   * [Overview](v3.0/packages/mailer/overview.md)
   * [Architecture](v3.0/packages/mailer/architecture.md)
