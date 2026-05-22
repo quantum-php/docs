@@ -57,11 +57,26 @@ The adapter reads one package-specific option:
 
 The database handler reads and writes these fields:
 
-- `session_id`
-- `ttl`
-- `data`
+- `session_id` (lookup key)
+- `data` (raw PHP session payload)
+- `ttl` (last-write Unix timestamp)
 
-Your chosen table must support that shape.
+A practical schema (from framework tests) is:
+
+```sql
+CREATE TABLE sessions (
+    id INTEGER PRIMARY KEY,
+    session_id VARCHAR(255) UNIQUE,
+    data TEXT,
+    ttl INTEGER
+);
+```
+
+Notes:
+
+- `session_id` should be unique.
+- `ttl` is updated on every write and used by GC cleanup (`ttl < time() - max_lifetime`).
+- You can use a different table name via `session.database.table`, but it must expose equivalent columns.
 
 ### Runtime behavior
 
