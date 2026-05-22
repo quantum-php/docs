@@ -68,6 +68,22 @@ If you have another iterable type, convert it before calling the helper.
 $payload = transform(iterator_to_array($items), new PostTransformer());
 ```
 
+### Keep or reset associative keys intentionally
+
+`transform()` preserves associative keys.
+
+```php
+$byUuid = [
+    'a1' => $postA,
+    'b2' => $postB,
+];
+
+$transformed = transform($byUuid, new PostTransformer());
+// keys remain: a1, b2
+```
+
+If you need numeric indexing, normalize with `array_values()`.
+
 ### Keep transformer output predictable
 
 The interface allows any return type, but mixed result shapes make downstream code harder to use.

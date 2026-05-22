@@ -153,9 +153,10 @@
   * [Usage](v3.0/packages/loader/usage.md)
 * Transformer
   * [Overview](v3.0/packages/transformer/overview.md)
+  * [Usage](v3.0/packages/transformer/usage.md)
   * [Contracts](v3.0/packages/transformer/contracts.md)
   * [Helpers](v3.0/packages/transformer/helpers.md)
-  * [Usage](v3.0/packages/transformer/usage.md)
+  * [Architecture](v3.0/packages/transformer/architecture.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)

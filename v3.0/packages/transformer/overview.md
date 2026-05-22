@@ -57,6 +57,7 @@ This package is a good fit when:
 
 ## Read next
 
+- [Usage](usage.md)
 - [Contracts](contracts.md)
 - [Helpers](helpers.md)
-- [Usage](usage.md)
+- [Architecture](architecture.md)
