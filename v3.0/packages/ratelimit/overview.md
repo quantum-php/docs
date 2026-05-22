@@ -67,7 +67,7 @@ Blocked responses use this payload:
 - The package does not send `X-RateLimit-Remaining` on successful requests.
 - Unsupported adapter names fail with `RateLimitException::adapterNotSupported(...)`.
 - Adapter configuration is loaded from `config/rate_limit.php` the first time the factory is used.
-- Backend failures are not normalized: file-storage lock/open failures are treated as disallowed requests, while Redis client failures can surface as runtime exceptions.
+- Storage backends report errors differently: file storage returns a blocked hit when lock/state access fails, while Redis client issues may surface as runtime exceptions.
 
 ## Read next
 

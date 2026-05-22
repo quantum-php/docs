@@ -94,10 +94,10 @@ If a route is throttled, the framework rate-limit middleware runs before your mo
 
 That matters when you expected an auth middleware, logging middleware, or other custom middleware to run first.
 
-### Handle backend failures as request failures
+### Add backend-aware error handling
 
-The package does not silently bypass storage problems.
+Storage adapters expose failures differently.
 
-For example, if the file adapter cannot lock/open its state file, the hit is treated as disallowed and the request can be rejected.
+If the file adapter cannot lock/open its state file, the hit result is blocked.
 
-For Redis, connection/runtime failures are not converted into a fallback allow/deny result by this package, so handle those exceptions at your app boundary if needed.
+For Redis, connection/runtime issues are surfaced by the client, so add exception handling at your app boundary.

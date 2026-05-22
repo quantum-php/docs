@@ -51,7 +51,7 @@ Use it when the app runs on one machine or when each node can keep its own indep
 ### Caveats
 
 - File limits are local to the filesystem backing `path`.
-- If the adapter cannot open or lock its state file, `hit()` returns `false`, which causes the middleware to reject the request.
+- If the adapter cannot open or lock its state file, `hit()` returns `false`.
 - Stored filenames are hashed, so inspecting the directory is useful for operations, not for human-readable debugging.
 
 ## Redis adapter
@@ -77,7 +77,7 @@ Use it when multiple workers or servers must share the same limits.
 
 - The adapter only configures host and port. Authentication, database selection, and other Redis options are not part of this package contract.
 - `prefix` is stored directly in Redis key names, unlike the file adapter where it only affects the hashed filename.
-- Redis client errors are not translated into a package-level fallback response; treat them as runtime failures in your app error handling.
+- Redis client errors are surfaced by the Redis client, so handle them in your app-level exception flow.
 
 ## Shared adapter behavior
 
