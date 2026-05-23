@@ -163,6 +163,11 @@
   * [Contracts](v3.0/packages/transformer/contracts.md)
   * [Helpers](v3.0/packages/transformer/helpers.md)
   * [Architecture](v3.0/packages/transformer/architecture.md)
+* Validation
+  * [Overview](v3.0/packages/validation/overview.md)
+  * [Usage](v3.0/packages/validation/usage.md)
+  * [Rules](v3.0/packages/validation/rules.md)
+  * [Contracts](v3.0/packages/validation/contracts.md)
 * Tracer
   * [Overview](v3.0/packages/tracer/overview.md)
   * [Architecture](v3.0/packages/tracer/architecture.md)
