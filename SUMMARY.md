@@ -34,6 +34,11 @@
   * [Contracts](v3.0/packages/auth/contracts.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+* Captcha
+  * [Overview](v3.0/packages/captcha/overview.md)
+  * [Adapters](v3.0/packages/captcha/adapters.md)
+  * [Contracts](v3.0/packages/captcha/contracts.md)
+  * [Usage](v3.0/packages/captcha/usage.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
 * Database
