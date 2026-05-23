@@ -36,6 +36,10 @@
   * [Overview](v3.0/packages/cache/overview.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
+  * [Architecture](v3.0/packages/archive/architecture.md)
+  * [Adapters](v3.0/packages/archive/adapters.md)
+  * [Contracts](v3.0/packages/archive/contracts.md)
+  * [Usage](v3.0/packages/archive/usage.md)
 * Database
   * [Overview](v3.0/packages/database/overview.md)
   * [Adapters](v3.0/packages/database/adapters.md)
