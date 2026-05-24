@@ -64,6 +64,7 @@ You can also inspect the concrete adapter with `getAdapter()` when debugging int
 
 - use symmetric mode for values that must survive beyond one request or process
 - ensure `app.key` is configured before using helper-driven packages such as Cookie or Session
+- keep asymmetric payloads short; the built-in RSA adapter is not designed for large bodies or file-sized content
 - use the raw `Cryptor` API only when you intentionally want string-in/string-out behavior without helper serialization
 
 ## Current limitations
@@ -71,4 +72,5 @@ You can also inspect the concrete adapter with `getAdapter()` when debugging int
 - no API for custom ciphers or custom RSA settings
 - no persisted public/private key management
 - no authenticated payload metadata beyond what OpenSSL and the current wrapper format provide
+- asymmetric encrypt/decrypt failures are not normalized into package exceptions once the adapter is constructed
 - helper decoding does not preserve boolean `false` exactly
