@@ -29,6 +29,8 @@ These are static, because adapter connections are stored at adapter-class level.
 
 All of these return the same adapter instance for fluent chaining.
 
+`offset()` is only useful when you also apply `limit()`. The interface documents it as a paged-result modifier rather than a standalone skip operation.
+
 ### Result methods
 
 - `get(): array`
@@ -39,6 +41,13 @@ All of these return the same adapter instance for fluent chaining.
 - `first()`
 
 `get()` returns a list of adapter/model objects, not plain arrays.
+
+Lookup miss behavior matters when you reuse the same model instance:
+
+- Idiorm leaves the current instance unchanged when `findOne()`, `findOneBy()`, or `first()` do not find a row.
+- SleekDB resets the instance data to an empty payload on a miss.
+
+If you are doing probe-style lookups, prefer a fresh model instance or explicitly inspect the result before reusing the object.
 
 ### Mutation methods
 
