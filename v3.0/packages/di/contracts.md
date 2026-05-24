@@ -51,6 +51,7 @@ The `$override` parameter does not change this part of the behavior.
 When `$override` is `false`, `set()` also refuses to insert an instance if the abstract already has a registry binding.
 
 When `$override` is `true`, that registry collision check is skipped.
+This does not rewrite the stored binding in `DiRegistry`; it only seeds the runtime container with the supplied object. If you later call `resetContainer()`, that seeded instance is removed and the container falls back to the original registered concrete.
 
 ## Resolution contracts
 
@@ -65,6 +66,7 @@ Unlike `create()`, it does not auto-register the class.
 `create()` calls `register($dependency)` when the dependency is not already registered.
 
 That means plain instantiable classes can be created without an explicit boot-time registration step.
+It also means the binding stays in the registry after the fresh instance is returned, so a later `get($dependency)` call can reuse that self-registration and start returning a shared instance for the same class key.
 
 ### Shared caching is keyed by abstract name
 
@@ -101,11 +103,13 @@ The package does not throw its own exception for missing required scalar values.
 
 ### Only closures and array callables are accepted
 
-These are valid:
+These are accepted for argument resolution:
 
 - `function () {}`
 - `[$service, 'handle']`
 - `[Handler::class, 'run']`
+
+Class-string array callables are only practical when the target method is static or when you use the reflected signature and then invoke the method yourself on an instance. The container does not instantiate the target object for you.
 
 These are rejected by the current implementation:
 
