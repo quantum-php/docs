@@ -34,6 +34,11 @@
   * [Contracts](v3.0/packages/auth/contracts.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+* Cookie
+  * [Overview](v3.0/packages/cookie/overview.md)
+  * [Contracts](v3.0/packages/cookie/contracts.md)
+  * [Helpers](v3.0/packages/cookie/helpers.md)
+  * [Usage](v3.0/packages/cookie/usage.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
 * Database
