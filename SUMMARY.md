@@ -34,6 +34,11 @@
   * [Contracts](v3.0/packages/auth/contracts.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+* Csrf
+  * [Overview](v3.0/packages/csrf/overview.md)
+  * [Contracts](v3.0/packages/csrf/contracts.md)
+  * [Helpers](v3.0/packages/csrf/helpers.md)
+  * [Usage](v3.0/packages/csrf/usage.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
 * Database
