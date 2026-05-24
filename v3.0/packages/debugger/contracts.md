@@ -80,3 +80,17 @@ $debugBar['messages']->warning('Disk nearly full');
 ```
 
 The level string is therefore part of the runtime contract, not just metadata.
+
+## Built-in tab contract
+
+The package only renders five store-backed tabs:
+
+- `messages`
+- `queries`
+- `routes`
+- `hooks`
+- `mails`
+
+You can write to any key in `DebuggerStore`, but `Debugger::render()` only replays those built-in names.
+
+If you need additional tabs, treat that as package customization rather than normal application usage.

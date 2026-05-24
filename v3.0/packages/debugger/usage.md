@@ -23,6 +23,8 @@ debugbar()->addToStoreCell(Debugger::MAILS, 'warning', 'SMTP handshake failed');
 
 You can also route logger output into a tab by passing a `tab` context value to the framework's message logger path.
 
+Stick to the built-in tab constants for normal usage. `render()` only replays `messages`, `queries`, `routes`, `hooks`, and `mails` from the store.
+
 ## Rendering in a layout
 
 ```php
@@ -32,6 +34,8 @@ You can also route logger output into a tab by passing a `tab` context value to 
 When debugging is disabled, this returns an empty string.
 
 When debugging is enabled, it returns both the renderer head assets and the toolbar markup, so it should only be emitted once per page.
+
+If you call `render()` more than once on the same shared debugger instance, stored messages are replayed again and can appear duplicated in the toolbar.
 
 ## Custom collectors
 

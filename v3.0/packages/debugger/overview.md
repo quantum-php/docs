@@ -59,6 +59,8 @@ Framework integrations then add package-specific messages into named tabs:
 - web bootstrap stores registered hooks in `hooks`
 - view rendering updates the `routes` tab with the final view path
 
+The built-in render flow only replays those five tab names. If you write data into some other store key, it stays in the store unless you extend the debugger package yourself.
+
 ## Rendering contract
 
 `render()` does three things when debugging is enabled:
@@ -82,5 +84,7 @@ The package does not publish those files by itself during normal request handlin
 
 - The store is static in `DebuggerStore`, so data is process-scoped, not request-object-scoped.
 - `render()` does not clear the store after output.
+- `render()` replays stored entries into the same collector objects each time, so calling it more than once in the same request can duplicate toolbar messages.
 - `addToStoreCell()` ignores empty payloads, so `''`, `[]`, `0`, and `'0'` are not recorded.
 - Message levels are invoked dynamically on `MessagesCollector`; unsupported level names would fail at call time.
+- Only `messages`, `queries`, `routes`, `hooks`, and `mails` are auto-created as store-backed tabs.
