@@ -34,6 +34,12 @@
   * [Contracts](v3.0/packages/auth/contracts.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+* Console
+  * [Overview](v3.0/packages/console/overview.md)
+  * [Architecture](v3.0/packages/console/architecture.md)
+  * [Contracts](v3.0/packages/console/contracts.md)
+  * [Usage](v3.0/packages/console/usage.md)
+  * [Built-in Commands](v3.0/packages/console/built-in-commands.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
 * Database
