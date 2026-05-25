@@ -28,6 +28,13 @@
 * [Modules Overview](v3.0/core-concepts/modules.md)
 
 ### Packages
+* App
+  * [Overview](v3.0/packages/app/overview.md)
+  * [Architecture](v3.0/packages/app/architecture.md)
+  * [Adapters](v3.0/packages/app/adapters.md)
+  * [Contracts](v3.0/packages/app/contracts.md)
+  * [Helpers](v3.0/packages/app/helpers.md)
+  * [Usage](v3.0/packages/app/usage.md)
 * Auth
   * [Overview](v3.0/packages/auth/overview.md)
   * [Adapters](v3.0/packages/auth/adapters.md)
