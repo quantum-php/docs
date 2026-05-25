@@ -45,6 +45,8 @@ Important consequences:
 
 `Debugger::render()` loops over the built-in tab names and calls `createTab($tab)` for each one.
 
+That list is fixed to `messages`, `queries`, `routes`, `hooks`, and `mails`.
+
 `createTab()`:
 
 1. creates a `MessagesCollector` for the tab if it does not already exist
@@ -52,6 +54,8 @@ Important consequences:
 3. calls the collector method named by the stored level (`info`, `warning`, and so on)
 
 Because the level name is executed as a method call, the write side and the collector API must stay in sync.
+
+It also means store-backed custom tab names are not replayed automatically. Writing to some other cell is only useful if you add your own render path around the package.
 
 ## View-path merge behavior
 
