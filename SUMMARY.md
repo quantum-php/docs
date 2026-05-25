@@ -35,6 +35,12 @@
   * [Contracts](v3.0/packages/app/contracts.md)
   * [Helpers](v3.0/packages/app/helpers.md)
   * [Usage](v3.0/packages/app/usage.md)
+* Asset
+  * [Overview](v3.0/packages/asset/overview.md)
+  * [Architecture](v3.0/packages/asset/architecture.md)
+  * [Contracts](v3.0/packages/asset/contracts.md)
+  * [Helpers](v3.0/packages/asset/helpers.md)
+  * [Usage](v3.0/packages/asset/usage.md)
 * Auth
   * [Overview](v3.0/packages/auth/overview.md)
   * [Adapters](v3.0/packages/auth/adapters.md)
