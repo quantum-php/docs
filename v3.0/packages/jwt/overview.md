@@ -45,6 +45,8 @@ If no payload was added, `compose()` throws `JwtException::payloadNotFound()`.
 
 `retrieve($jwt)` verifies the token with the current key and algorithm, stores the decoded payload on the instance, and returns the same `JwtToken` object for chaining.
 
+Verification failures are not wrapped by Quantum. Invalid signatures, expired tokens, malformed payloads, and unsupported algorithms surface from `firebase/php-jwt` directly.
+
 After that you can read values with:
 
 - `fetchPayload()` for the full decoded object
@@ -58,6 +60,7 @@ The package does not normalize or remap claim names. What you sign is what you r
 - The package only exposes one signer/verifier class; there is no factory, helper, or driver registration layer.
 - `setAlgorithm()` accepts any string and stores it as-is. Validation happens later inside `firebase/php-jwt` when encoding or decoding.
 - The same algorithm configured on the instance is used for both `compose()` and `retrieve()`. If you change it between issuing and verifying, verification will fail.
+- `compose()` optionally accepts a key ID and custom header array, then forwards both directly to `firebase/php-jwt` during encoding.
 - `setLeeway()` changes `Firebase\JWT\JWT::$leeway`, which is a static upstream setting. In practice, that means the leeway applies process-wide for later JWT verification in the same runtime.
-- `JwtToken` keeps its payload and fetched payload on the instance. Reusing one instance across multiple token-building flows can carry old claims forward unless you overwrite them deliberately.
+- `JwtToken` keeps both its compose-side claims and its fetched decoded payload on the instance. Reusing one instance across multiple flows can carry old state forward unless you overwrite it deliberately or create a fresh object.
 - The package returns a plain JWT string. If another package wraps that token in base64 for transport, unwrap it before calling `retrieve()`.

@@ -46,6 +46,8 @@ $payload = $jwt->retrieve($token)->fetchPayload();
 
 Use the same algorithm for signing and verifying on that instance.
 
+`setAlgorithm()` does not validate the string when you call it. If the algorithm is unsupported, the failure happens later when the token is encoded or decoded.
+
 ## Verifying a token and reading claims
 
 ```php
@@ -68,6 +70,18 @@ $subject = (new JwtToken())
 
 `fetchClaim()` returns the raw claim value or `null` when the claim is absent.
 
+`retrieve()` does not wrap upstream verification errors, so catch `firebase/php-jwt` exceptions where you handle untrusted tokens.
+
+## Setting a key ID or custom header
+
+```php
+$token = (new JwtToken())
+    ->setClaim('sub', 'user-15')
+    ->compose('main-signing-key', ['typ' => 'JWT']);
+```
+
+Use this when downstream services expect a `kid` header or a custom header field.
+
 ## Working with leeway
 
 ```php
@@ -89,12 +103,8 @@ $token = (new JwtToken())->compose();
 
 This fails with `JwtException::payloadNotFound()` because the package refuses to emit an empty token payload.
 
-## Relationship to the Auth package
+## Recommended usage pattern
 
-Quantum's JWT auth adapter uses this package underneath, but it adds its own transport behavior:
+Use a fresh `JwtToken` instance for each independent issue or verify flow.
 
-- it preloads claims from `config('auth.jwt.claims')`
-- it sets a small verification leeway
-- it base64-encodes the signed JWT before putting it into auth responses and bearer flows
-
-If you are verifying a token produced by that auth adapter manually, decode the base64 wrapper first and then pass the raw JWT string to `retrieve()`.
+The object keeps both pending compose claims and the last decoded payload on the same instance, so reusing one object across unrelated requests can preserve state you did not mean to carry forward.

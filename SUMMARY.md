@@ -103,6 +103,7 @@
   * [Usage](v3.0/packages/lang/usage.md)
 * Jwt
   * [Overview](v3.0/packages/jwt/overview.md)
+  * [Contracts](v3.0/packages/jwt/contracts.md)
   * [Usage](v3.0/packages/jwt/usage.md)
 * Environment
   * [Overview](v3.0/packages/environment/overview.md)
