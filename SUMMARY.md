@@ -75,6 +75,12 @@
   * [Contracts](v3.0/packages/console/contracts.md)
   * [Usage](v3.0/packages/console/usage.md)
   * [Built-in Commands](v3.0/packages/console/built-in-commands.md)
+* Config
+  * [Overview](v3.0/packages/config/overview.md)
+  * [Architecture](v3.0/packages/config/architecture.md)
+  * [Contracts](v3.0/packages/config/contracts.md)
+  * [Helpers](v3.0/packages/config/helpers.md)
+  * [Usage](v3.0/packages/config/usage.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
   * [Architecture](v3.0/packages/archive/architecture.md)
