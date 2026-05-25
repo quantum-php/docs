@@ -28,10 +28,18 @@
 * [Modules Overview](v3.0/core-concepts/modules.md)
 
 ### Packages
+* App
+  * [Overview](v3.0/packages/app/overview.md)
+  * [Architecture](v3.0/packages/app/architecture.md)
+  * [Adapters](v3.0/packages/app/adapters.md)
+  * [Contracts](v3.0/packages/app/contracts.md)
+  * [Helpers](v3.0/packages/app/helpers.md)
+  * [Usage](v3.0/packages/app/usage.md)
 * Auth
   * [Overview](v3.0/packages/auth/overview.md)
   * [Adapters](v3.0/packages/auth/adapters.md)
   * [Contracts](v3.0/packages/auth/contracts.md)
+  * [Usage](v3.0/packages/auth/usage.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
 * Csrf
@@ -39,8 +47,29 @@
   * [Contracts](v3.0/packages/csrf/contracts.md)
   * [Helpers](v3.0/packages/csrf/helpers.md)
   * [Usage](v3.0/packages/csrf/usage.md)
+* Cron
+  * [Overview](v3.0/packages/cron/overview.md)
+  * [Architecture](v3.0/packages/cron/architecture.md)
+  * [Contracts](v3.0/packages/cron/contracts.md)
+  * [Helpers](v3.0/packages/cron/helpers.md)
+  * [Usage](v3.0/packages/cron/usage.md)
+* Cookie
+  * [Overview](v3.0/packages/cookie/overview.md)
+  * [Contracts](v3.0/packages/cookie/contracts.md)
+  * [Helpers](v3.0/packages/cookie/helpers.md)
+  * [Usage](v3.0/packages/cookie/usage.md)
+* Console
+  * [Overview](v3.0/packages/console/overview.md)
+  * [Architecture](v3.0/packages/console/architecture.md)
+  * [Contracts](v3.0/packages/console/contracts.md)
+  * [Usage](v3.0/packages/console/usage.md)
+  * [Built-in Commands](v3.0/packages/console/built-in-commands.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
+  * [Architecture](v3.0/packages/archive/architecture.md)
+  * [Adapters](v3.0/packages/archive/adapters.md)
+  * [Contracts](v3.0/packages/archive/contracts.md)
+  * [Usage](v3.0/packages/archive/usage.md)
 * Database
   * [Overview](v3.0/packages/database/overview.md)
   * [Adapters](v3.0/packages/database/adapters.md)
@@ -168,6 +197,11 @@
   * [Contracts](v3.0/packages/transformer/contracts.md)
   * [Helpers](v3.0/packages/transformer/helpers.md)
   * [Architecture](v3.0/packages/transformer/architecture.md)
+* Validation
+  * [Overview](v3.0/packages/validation/overview.md)
+  * [Usage](v3.0/packages/validation/usage.md)
+  * [Rules](v3.0/packages/validation/rules.md)
+  * [Contracts](v3.0/packages/validation/contracts.md)
 * Tracer
   * [Overview](v3.0/packages/tracer/overview.md)
   * [Architecture](v3.0/packages/tracer/architecture.md)
@@ -190,6 +224,12 @@
   * [Overview](v3.0/packages/service/overview.md)
   * [Contracts](v3.0/packages/service/contracts.md)
   * [Usage](v3.0/packages/service/usage.md)
+* View
+  * [Overview](v3.0/packages/view/overview.md)
+  * [Architecture](v3.0/packages/view/architecture.md)
+  * [Contracts](v3.0/packages/view/contracts.md)
+  * [Helpers](v3.0/packages/view/helpers.md)
+  * [Usage](v3.0/packages/view/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
