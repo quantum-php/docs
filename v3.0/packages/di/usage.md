@@ -36,6 +36,7 @@ $builderB = Di::create(ReportBuilder::class);
 `$builderA` and `$builderB` are different objects.
 
 Because `create()` auto-registers missing classes against themselves, this works even when `ReportBuilder` was not registered earlier.
+That self-registration persists in the container registry, so a later `Di::get(ReportBuilder::class)` call will succeed and start returning a shared instance for that class key.
 
 ## Seed a prebuilt instance
 
@@ -55,6 +56,8 @@ The current implementation has two gotchas:
 
 - you cannot call `set()` twice for the same abstract once an instance already exists
 - the abstract key must be a real class or interface name
+
+Also, `set()` seeds only the runtime container entry. If you clear the container with `Di::resetContainer()`, the seeded object is removed and future `get()` calls fall back to the registered concrete binding.
 
 ## Autowire a callable
 
@@ -81,6 +84,8 @@ $result = (function (MailerInterface $mailer, string $subject = 'Hello') {
     return [$mailer, $subject];
 })(...$args);
 ```
+
+If you pass a class-string array callable such as `[Handler::class, 'run']`, `autowire()` only reflects the method signature. It does not create a `Handler` instance or perform the method call for you.
 
 ## Understand argument precedence
 
