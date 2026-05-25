@@ -73,6 +73,8 @@ Example:
 logger()->info('Mailer connected', ['tab' => 'mails']);
 ```
 
+The debugger store receives the level and raw message as separate values. File-style formatting and `trace` appends are specific to the file adapters.
+
 ### Contract
 
 - available only in debug mode

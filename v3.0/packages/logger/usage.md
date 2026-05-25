@@ -33,13 +33,27 @@ File adapters treat `trace` as a special context value:
 try {
     // ...
 } catch (Throwable $exception) {
-    logger()->error('Import failed', [
+    logger()->error('Import job ended early', [
         'trace' => $exception->getTraceAsString(),
     ]);
 }
 ```
 
 That writes the formatted message first and then appends the trace block.
+
+## Log a structured payload
+
+When you want file logs to capture structured data, call the logger instance directly:
+
+```php
+logger()->info([
+    'job' => 'catalog-sync',
+    'status' => 'queued',
+    'items' => 48,
+]);
+```
+
+File adapters JSON-format array messages before writing them. The global level helpers accept string messages, so `logger()` is the better fit for this style.
 
 ## Route debug messages into a custom debugger tab
 
