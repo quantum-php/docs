@@ -42,6 +42,12 @@
   * [Usage](v3.0/packages/auth/usage.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+* Cron
+  * [Overview](v3.0/packages/cron/overview.md)
+  * [Architecture](v3.0/packages/cron/architecture.md)
+  * [Contracts](v3.0/packages/cron/contracts.md)
+  * [Helpers](v3.0/packages/cron/helpers.md)
+  * [Usage](v3.0/packages/cron/usage.md)
 * Cookie
   * [Overview](v3.0/packages/cookie/overview.md)
   * [Contracts](v3.0/packages/cookie/contracts.md)
