@@ -26,7 +26,7 @@ A new `Hasher` starts with these defaults:
 - algorithm: `PASSWORD_BCRYPT`
 - cost: `12`
 
-Those defaults stay on the instance until you change them with `setAlgorithm()` or `setCost()`.
+Those defaults stay on the instance until you change them with `setAlgorithm()` or `setCost()`. You can inspect the current values with `getAlgorithm()` and `getCost()`.
 
 ## Where the framework uses it
 
@@ -55,3 +55,9 @@ It does not:
 `Hasher::check()` ignores those properties and simply calls `password_verify()` against the stored hash.
 
 `Hasher::info()` returns the raw structure from `password_get_info()`, so the metadata comes from the hash itself, not from the current `Hasher` configuration.
+
+## Practical setup rule
+
+When you customize hashing settings, set the algorithm before the cost.
+
+That keeps bcrypt cost validation aligned with the active algorithm and avoids carrying a cost value that was accepted under one algorithm choice but used later under another.

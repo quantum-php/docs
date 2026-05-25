@@ -51,14 +51,35 @@ This is the normal upgrade path:
 ## Switching algorithms
 
 ```php
-$hasher = (new Hasher())->setAlgorithm(PASSWORD_DEFAULT);
+$hasher = (new Hasher())
+    ->setAlgorithm(PASSWORD_DEFAULT);
+
 $hash = $hasher->hash('secret');
+```
+
+If you need to change both the algorithm and the cost, set the algorithm first:
+
+```php
+$hasher = (new Hasher())
+    ->setAlgorithm(PASSWORD_BCRYPT)
+    ->setCost(12);
 ```
 
 Keep two caveats in mind:
 
 - `setAlgorithm()` does not validate the algorithm name itself
 - `setCost()` only enforces range checks when the current algorithm is `PASSWORD_BCRYPT`
+
+## Inspecting current settings
+
+```php
+$hasher = (new Hasher())->setCost(4);
+
+$currentAlgorithm = $hasher->getAlgorithm();
+$currentCost = $hasher->getCost();
+```
+
+These getters show the object's active settings. They do not read anything from a stored password hash.
 
 ## Inspecting stored hash metadata
 

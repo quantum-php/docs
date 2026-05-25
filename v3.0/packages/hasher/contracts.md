@@ -15,6 +15,8 @@ Outside that range, the method throws `HasherException::invalidBcryptCost()`.
 
 This validation is stateful. It depends on the algorithm that is currently set on the instance when `setCost()` runs.
 
+Practical rule: if you plan to change both values, call `setAlgorithm()` first and `setCost()` second.
+
 ## Algorithm changes are not validated by the package
 
 `setAlgorithm()` assigns the provided string directly and returns the same instance.
@@ -49,6 +51,12 @@ So this is valid:
 - verify it later with another `Hasher` object configured differently
 
 Use `needsRehash()` separately when you want to enforce current hashing settings after a successful login.
+
+## Getters expose the current instance state
+
+`getAlgorithm()` and `getCost()` return the values currently stored on that `Hasher` instance.
+
+They do not inspect an existing hash. Use them to confirm how the object is configured before calling `hash()` or `needsRehash()`, not to infer how an already-stored password was created.
 
 ## Metadata comes from the hash
 
