@@ -48,6 +48,9 @@
   * [Usage](v3.0/packages/auth/usage.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+  * [Adapters](v3.0/packages/cache/adapters.md)
+  * [Contracts](v3.0/packages/cache/contracts.md)
+  * [Usage](v3.0/packages/cache/usage.md)
 * Captcha
   * [Overview](v3.0/packages/captcha/overview.md)
   * [Adapters](v3.0/packages/captcha/adapters.md)

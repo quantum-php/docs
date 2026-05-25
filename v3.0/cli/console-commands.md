@@ -296,4 +296,4 @@ This page fits well with:
 - [CLI Overview](overview.md)
 - [Development Server](development-server.md)
 - [Code Generation](code-generation.md)
-- [Modules Overview](../modules/overview.md)
+- [Modules Overview](../core-concepts/modules.md)

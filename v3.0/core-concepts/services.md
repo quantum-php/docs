@@ -108,7 +108,7 @@ class YourService extends Service
 Explore:
 
 - [Models](../core-concepts/models.md)
-- [Transformers](../core-concepts/transformers.md)
+- [Transformers](../packages/transformer/overview.md)
 - [Dependency Injection](../advanced-features/dependency-injection.md)
 
 ## Related Topics
