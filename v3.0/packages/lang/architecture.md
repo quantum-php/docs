@@ -27,6 +27,8 @@ It expects these settings:
 
 If no usable language can be detected and `default` is empty, the factory throws `LangException::misconfiguredDefaultConfig()`.
 
+The `default` value is used as-is. It does not need to appear in `supported`, because the supported list is only applied to request-derived values.
+
 ## Detection details
 
 ### Query parameter
@@ -48,6 +50,8 @@ Example: `es-ES, en;q=0.8` resolves to `es`.
 ## Translation loading model
 
 Translation files are loaded once per language instance and reused until you explicitly call `flush()`.
+
+The `enabled` flag stored on `Lang` is informational at this layer. The factory still creates the service either way; the web bootstrap decides whether `load()` is called automatically.
 
 Loading order is:
 
@@ -88,3 +92,5 @@ $lang->setLang('es');
 ```
 
 After that, `current_lang()` reports `es`, but already-wired translation loading still points at the translator's original language unless you rebuild the Lang instance.
+
+The same caveat applies to `flush()` followed by `load()`: that reload cycle clears cached translations, but it still reloads the translator's original language.

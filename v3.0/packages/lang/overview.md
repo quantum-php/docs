@@ -30,7 +30,9 @@ It also ships `LangException` for package-specific runtime failures.
 3. `Accept-Language` request header
 4. `lang.default`
 
-Only values present in `lang.supported` are accepted from the request. Unsupported values are ignored and the factory falls back to the default language.
+Only values present in `lang.supported` are accepted from the request. Unsupported request values are ignored and the factory falls back to `lang.default`.
+
+The fallback itself is not checked against `lang.supported`. If `lang.default` is set, Quantum will use it even when it is not listed in the supported-language array.
 
 ## Where translations are loaded from
 
@@ -59,6 +61,8 @@ $value = t('custom.test');
 ## What happens at runtime
 
 In a normal web request, Quantum loads the package during app bootstrap through `WebAppTrait::loadLanguage()`. If `lang.enabled` is true, the shared `Lang` instance calls `load()` once and keeps translations in memory for the rest of the container lifetime.
+
+`lang.enabled` controls that bootstrap load step. The package service can still be resolved manually when the flag is false.
 
 If a key is missing, `t()` returns the key string unchanged instead of throwing an exception.
 
