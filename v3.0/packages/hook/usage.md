@@ -1,5 +1,18 @@
 # Hook Usage
 
+## Register hook names first
+
+Hook names come from `config/hooks`, so define them before application code starts attaching listeners.
+
+```php
+return [
+    'user.registered',
+    'mail.sent',
+];
+```
+
+The package expects a flat list of names. Duplicate entries stop `HookManager` during construction.
+
 ## Queue a listener and fire it once
 
 ```php

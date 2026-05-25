@@ -31,11 +31,25 @@ The constructor ensures a `hooks` config entry exists:
 
 `CORE_HOOKS` is currently an empty array, so out of the box the package depends on the configured hook list.
 
+Use a flat list of hook names in `config/hooks`, for example:
+
+```php
+return [
+    'user.registered',
+    'mail.sent',
+    'report.generated',
+];
+```
+
+If the list contains duplicate names, manager construction fails before you can attach or fire listeners.
+
 ## Important constraints
 
 - hook names must be registered before `on()` or `fire()` can use them
-- duplicate hook names fail during registration
+- `config/hooks` should return a plain list of hook names, not a nested structure
+- duplicate hook names fail during registration, including duplicates loaded from configuration
 - unregistered hook names fail both when attaching listeners and when firing
+- firing a registered hook with no queued listeners is a no-op
 - listeners are consumed on first `fire()` call
 - `fire()` always passes exactly one argument to each listener: the `?array $args` value
 - a newly registered hook starts with an empty listener queue
