@@ -14,6 +14,8 @@ You begin in one of three ways:
 
 Each method replaces the current internal client instance.
 
+It does **not** reset the wrapper's other state. The current HTTP method, pending data payload, tracked request headers, collected responses, and collected errors all stay on the same `HttpClient` object until you overwrite them or create a fresh wrapper instance.
+
 ## 2. Configure the underlying curl client
 
 `HttpClient` exposes a small native API (`setMethod()`, `setData()`, `start()`) and forwards unknown method calls to the underlying curl-class object through `__call()`.

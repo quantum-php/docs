@@ -82,4 +82,5 @@ For multi requests, `getResponse()` returns a map keyed by curl request ID.
 - `setData()` only affects the single-request `start()` path.
 - `createAsyncMultiRequest()` does not populate Quantum's internal response and error stores for you.
 - Request headers are only mirrored into `getRequestHeaders()` when you set them through proxied `setHeader()` or `setHeaders()` calls.
+- Reusing one `HttpClient` instance across multiple requests keeps prior wrapper state unless you overwrite it. That includes the current method, pending data, tracked request headers, and collected response/error arrays.
 - The package only validates methods set through `setMethod()`. If you call underlying curl-class helpers directly, their behavior comes from that library.

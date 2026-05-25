@@ -94,10 +94,13 @@ In this mode, handle the result inside your callbacks. Do not rely on `getRespon
 - use normal multi-request mode when you want Quantum to collect finished responses for later inspection
 - use async multi-request mode only when callback handling is the real output path
 - set headers through `setHeader()` or `setHeaders()` if you want `getRequestHeaders()` to reflect them later
+- prefer a fresh `HttpClient` instance for each independent request or batch
 
 ## Caveats
 
 - call `createRequest()` or one of the multi-request builders before any proxied curl-class method
 - `setMethod()` only affects the single-request execution path
 - `setData()` is skipped when the value is empty or otherwise falsey
+- recreating the underlying request does not clear earlier wrapper state; if you reuse one instance, reset or overwrite method, data, and headers deliberately
+- multi-request response and error collections stay on the wrapper object until you discard that instance
 - single-request getters throw for multi clients instead of choosing one request implicitly
