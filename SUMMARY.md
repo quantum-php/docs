@@ -42,6 +42,11 @@
   * [Usage](v3.0/packages/auth/usage.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+* Csrf
+  * [Overview](v3.0/packages/csrf/overview.md)
+  * [Contracts](v3.0/packages/csrf/contracts.md)
+  * [Helpers](v3.0/packages/csrf/helpers.md)
+  * [Usage](v3.0/packages/csrf/usage.md)
 * Cron
   * [Overview](v3.0/packages/cron/overview.md)
   * [Architecture](v3.0/packages/cron/architecture.md)
