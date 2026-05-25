@@ -1,10 +1,10 @@
 # Mailer Contracts
 
-The Mailer package keeps a small shared contract and several adapter-specific runtime rules.
+The Mailer package keeps a small shared contract and a few adapter-specific runtime rules.
 
 ## The common adapter surface
 
-Every adapter resolved by the factory must implement `Quantum\Mailer\Contracts\MailerInterface`.
+Every adapter resolved by the factory implements `Quantum\Mailer\Contracts\MailerInterface`.
 
 That gives you this common API:
 
@@ -22,31 +22,31 @@ That gives you this common API:
 
 If you want code that works across all mailer adapters, stay within that surface.
 
-## Adapter-specific methods are not portable
+## Adapter-specific methods
 
 `Quantum\Mailer\Mailer` forwards unknown methods directly to the adapter instance.
 
-That means methods such as `setCC()` or `setAttachment()` are not part of the package-wide contract. They work only when the current adapter implements them.
+That means methods such as `setCC()` or `setAttachment()` are adapter features rather than package-wide features. Use them when you know which transport is active.
 
-If the method does not exist on the active adapter, the wrapper throws a mailer exception.
+If the active adapter does not provide the method, the wrapper throws a mailer exception.
 
-## `send()` is a one-shot operation
+## `send()` is a per-message workflow
 
-The shared trait resets the composed message fields immediately after each send attempt.
+The shared trait resets the composed fluent fields after each send attempt.
 
-So this contract matters:
+In practice, the reliable workflow is:
 
-- compose
-- send once
-- rebuild the message if you need to send again
+- compose the sender, recipients, subject, and body or template
+- call `send()` once
+- compose the next message again
 
-Do not expect the adapter to keep your previous sender, recipients, subject, or body after `send()` returns.
+`MailerFactory` also reuses one wrapper per adapter name, so a fully composed message on every send keeps shared adapter instances consistent across loops, jobs, and long-running workers.
 
 ## Template contract
 
 `setTemplate()` stores a base path, not a full filename.
 
-At send time the package always requires:
+At send time the package requires:
 
 ```text
 <templatePath>.php
@@ -54,20 +54,20 @@ At send time the package always requires:
 
 If the body is an array, the package extracts it into local variables before requiring the template.
 
-## Failure contract
+## Delivery result contract
 
-`send()` reports failure as `false`.
+`send()` reports delivery state as `true` or `false`.
 
-It does not return a response object or provider payload. Built-in failure details come from the adapter's transport error list, which the package logs through `warning(...)`.
+It does not return a provider response object. Built-in transport details are mirrored into the debugger mails tab from the adapter error list.
 
 ## Mail trap contract
 
 When `mailer.mail_trap` is enabled, `send()` means "save locally" rather than "deliver remotely".
 
-Success then depends on whether the package can write a `.eml` file to `shared/emails`.
+That flow writes a `.eml` file into `shared/emails`, and `MailTrap` can parse that file later for subject, addresses, body, and attachments.
 
 ## Message ID contract
 
 In long-running processes, the package can reuse the same generated message ID across multiple sends from the same adapter class.
 
-If your workflow depends on a new ID per message, do not rely on the package to provide that automatically.
+If your workflow depends on a fresh ID per message, provide your own naming or tracking value alongside the mailer flow.
