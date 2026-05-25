@@ -190,6 +190,12 @@
   * [Overview](v3.0/packages/service/overview.md)
   * [Contracts](v3.0/packages/service/contracts.md)
   * [Usage](v3.0/packages/service/usage.md)
+* View
+  * [Overview](v3.0/packages/view/overview.md)
+  * [Architecture](v3.0/packages/view/architecture.md)
+  * [Contracts](v3.0/packages/view/contracts.md)
+  * [Helpers](v3.0/packages/view/helpers.md)
+  * [Usage](v3.0/packages/view/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
