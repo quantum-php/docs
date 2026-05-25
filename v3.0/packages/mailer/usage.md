@@ -49,11 +49,11 @@ mailer(MailerType::RESEND)
     ->send();
 ```
 
-This still returns the same `Mailer` wrapper shape. Only the underlying adapter changes.
+This still returns the same `Mailer` wrapper shape. The adapter name selects the transport behind it.
 
 ## Use SMTP-only features
 
-Reply-to, CC, BCC, and attachments exist only on the SMTP adapter:
+Reply-to, CC, BCC, and attachments exist on the SMTP adapter:
 
 ```php
 use Quantum\Mailer\Enums\MailerType;
@@ -77,7 +77,7 @@ If you need reply-to, the method name is `setReplay()` in this package.
 
 When `mailer.mail_trap` is truthy, `send()` saves a `.eml` file to `shared/emails` instead of contacting the transport.
 
-That is useful for local development and tests where you want to inspect the generated message.
+That is useful for local development and tests where you want to inspect the generated message. Create the `shared/emails` directory as part of project setup so each saved message has a destination.
 
 You can then parse a saved message with `MailTrap`:
 
@@ -94,10 +94,31 @@ $subject = $mail->getParsedSubject();
 $body = $mail->getParsedBody();
 ```
 
+## Reuse a cached adapter safely
+
+`mailer()` reuses one wrapper per adapter name, so treat each send as a full composition step:
+
+```php
+use Quantum\Mailer\Enums\MailerType;
+
+$mailer = mailer(MailerType::RESEND);
+
+foreach ($recipients as $recipient) {
+    $mailer
+        ->setFrom('noreply@example.com', 'Example App')
+        ->setAddress($recipient['email'], $recipient['name'])
+        ->setSubject('Weekly digest')
+        ->setBody('<p>Your digest is ready.</p>')
+        ->send();
+}
+```
+
+This keeps the current subject and body explicit on every message, which matches the package's shared-instance lifecycle.
+
 ## Practical caveats
 
-- Build the full message before calling `send()`. The adapter state is cleared immediately after the send attempt.
-- `shared/emails` must already exist when mail trap is enabled, or saving fails.
-- In mail-trap mode, a non-template array body is not rendered into the saved `.eml` body unless the adapter provides its own rendered MIME message.
-- The package logs transport errors through `warning(..., ['tab' => Debugger::MAILS])`, so debugger output is the main built-in failure detail channel.
-- Because message IDs are cached in static state, long-running workers should not rely on this package to generate a fresh local mail-trap filename for every send.
+- Build the full message before calling `send()`. The shared fluent fields reset after each attempt, and composing every field on every message keeps reused adapters predictable.
+- Create `shared/emails` before enabling mail trap so saved `.eml` files have a local destination.
+- In mail-trap mode, a non-template array body produces an empty generated body unless the adapter supplies its own rendered MIME message.
+- Transport errors are mirrored into the debugger mails tab, so debugger output is the built-in place to inspect delivery details.
+- Because message IDs are cached in static state, long-running workers should treat the generated local mail-trap filename as reusable state and provide their own unique naming strategy when needed.
