@@ -15,9 +15,10 @@ return [
 
 Practical notes:
 
-- `enabled` controls whether web bootstrap loads translations
+- `enabled` controls whether web bootstrap loads translations automatically
 - `supported` is the allowlist for query, URL, and header detection
 - `default` is the required fallback when request detection yields no supported language
+- `default` does not have to be present in `supported`; Quantum still uses it as the final fallback
 - `url_segment` is the URL segment index used for language detection (for example, `1` for `/es/articles`)
 
 ## Add translation files
@@ -101,11 +102,11 @@ $lang->flush();
 $lang->load();
 ```
 
-Use this only when you intentionally need to clear the in-memory translation store. It is not a language-switching API.
+Use this only when you intentionally need to clear the in-memory translation store. It is not a language-switching API, and it reloads the translator's original language selection.
 
 ## Caveats to keep in mind
 
 - `setLang()` updates the visible language code, not the translator source language.
 - Missing translation files fail loudly during `load()`, but missing keys do not.
 - Only the active module is scanned for module translations during a request.
-- Header detection uses only the primary two-letter language code from the first `Accept-Language` entry.
+- Query and URL detection require an exact supported-language match; only the header fallback is normalized to a primary two-letter code.
