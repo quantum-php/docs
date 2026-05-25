@@ -42,6 +42,9 @@
   * [Usage](v3.0/packages/auth/usage.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
+  * [Adapters](v3.0/packages/cache/adapters.md)
+  * [Contracts](v3.0/packages/cache/contracts.md)
+  * [Usage](v3.0/packages/cache/usage.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
   * [Architecture](v3.0/packages/archive/architecture.md)
