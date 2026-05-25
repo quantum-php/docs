@@ -42,9 +42,12 @@
   * [Usage](v3.0/packages/auth/usage.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
-  * [Adapters](v3.0/packages/cache/adapters.md)
-  * [Contracts](v3.0/packages/cache/contracts.md)
-  * [Usage](v3.0/packages/cache/usage.md)
+* Console
+  * [Overview](v3.0/packages/console/overview.md)
+  * [Architecture](v3.0/packages/console/architecture.md)
+  * [Contracts](v3.0/packages/console/contracts.md)
+  * [Usage](v3.0/packages/console/usage.md)
+  * [Built-in Commands](v3.0/packages/console/built-in-commands.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
   * [Architecture](v3.0/packages/archive/architecture.md)
