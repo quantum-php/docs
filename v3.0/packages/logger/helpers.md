@@ -48,7 +48,8 @@ A few limits are easy to miss:
 
 - the convenience helpers do not let you choose an adapter
 - there are no global helpers for `critical`, `alert`, or `emergency`
+- the convenience helpers accept string messages, while `logger()` also lets you send array payloads through the PSR-3 methods
 - every helper call goes back through the shared factory
 - in debug mode, helper output goes to the debugger message store instead of files
 
-Use `logger()` when you need the full PSR-3 surface or adapter selection.
+Use `logger()` when you need the full PSR-3 surface, adapter selection, or structured array messages.
