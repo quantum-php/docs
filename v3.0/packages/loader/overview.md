@@ -52,6 +52,7 @@ So without a module, Loader first checks the primary path (`config/database.php`
 
 - `Setup` defaults `hierarchical` to `true`, so shared fallback is on unless you disable it.
 - `Setup` defaults the module to `request()->getCurrentModule()`, so request context changes where Loader looks unless you set the module explicitly.
+- A `Setup` object cannot be reset back to `null` module state through `setModule()`. If you want to drop a module override and go back to non-module resolution, create a fresh `Setup`.
 - `loadDir()` only includes `*.php` files from the exact directory pattern you pass in. It does not recurse into subdirectories.
 - `loadDir()` uses `require_once`, while `load()` uses `require`. Repeated `load()` calls can re-run a file.
 - Missing files raise `LoaderException` only when you call `load()` or `getFilePath()`. Use `fileExists()` when absence is expected.

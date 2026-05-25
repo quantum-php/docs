@@ -73,6 +73,22 @@ if (!$loader->fileExists()) {
 
 With `hierarchical` set to `false`, the loader does not look under `shared/`.
 
+If you later want to load the shared version again, create a new `Setup`. `setModule()` only accepts a string, so reusing the same `Setup` instance does not give you a built-in way to clear the module override.
+
+## Load a root-level PHP file
+
+`pathPrefix` is optional. When you omit it, Loader resolves a file from the project root instead of a subdirectory:
+
+```php
+$setup = new Setup(null, 'routes', false, null, 'routes.php is missing.');
+
+$routes = (new Loader())
+    ->setup($setup)
+    ->load();
+```
+
+That resolves `routes.php` from the base path returned by `App::getBaseDir()`.
+
 ## Customize the error message
 
 `getFilePath()` and `load()` use the exception message stored in `Setup`:
@@ -114,5 +130,6 @@ A few caveats matter here:
 
 - Shared fallback lowercases `pathPrefix`; module/primary paths use the value as provided. Use consistent lowercase directory names to avoid case-related surprises across environments.
 - `load()` returns whatever the target PHP file returns. If the file returns nothing, you get PHP's normal `require` return value.
+- `setup()` copies values from `Setup` into `Loader`. If you mutate the `Setup` object afterward, call `setup()` again before loading.
 - Reuse a `Setup` object only when you want the same resolution rules. It is mutable and can be changed after construction.
 - Reuse a DI-managed `Loader` carefully. Always call `setup()` again before each new load.

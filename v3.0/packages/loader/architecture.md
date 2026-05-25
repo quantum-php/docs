@@ -26,6 +26,8 @@ Constructor defaults matter:
 
 Because the module default comes from the current request, the same `new Setup('config', 'app')` call can resolve differently inside and outside a module request.
 
+`Loader::setup()` copies those values into the loader instance. Changing the `Setup` object later does not affect an already configured loader until you call `setup()` again.
+
 ## File path resolution flow
 
 Loader resolves one primary path first, then optional shared fallback.
@@ -85,5 +87,7 @@ Quantum uses this during bootstrap to load package, app, and module helper files
 Several core packages resolve `Loader` through `Di::get(Loader::class)`, which returns a shared instance for the current container.
 
 `Loader::setup()` mutates that instance in place. In practice, every caller is expected to call `setup()` immediately before `fileExists()`, `getFilePath()`, or `load()`.
+
+The class also exposes `set($property, $value)`, which writes directly to internal loader state without validation. That is best treated as an escape hatch for framework internals. For package and app code, prefer `Setup` so your intent stays explicit.
 
 Do not assume the DI-managed loader keeps a safe permanent configuration between calls.
