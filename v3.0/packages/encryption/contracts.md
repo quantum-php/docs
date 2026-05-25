@@ -47,6 +47,8 @@ Common cases:
 - missing asymmetric key properties -> `CryptorException::publicKeyNotProvided()` or `privateKeyNotProvided()`
 - OpenSSL key generation/config failure -> `CryptorException::missingConfig('openssl.cnf')`
 
+Asymmetric encrypt/decrypt calls have a looser failure contract after construction. The adapter does not wrap failed `openssl_public_encrypt(...)` or `openssl_private_decrypt(...)` calls, so oversized plaintext or invalid ciphertext can escape as native PHP/OpenSSL errors instead of `CryptorException`.
+
 ## Serialization contract in helpers
 
 The package helpers add another contract above the raw adapters:

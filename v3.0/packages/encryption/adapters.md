@@ -72,6 +72,8 @@ If `openssl_pkey_new(...)` fails, or if `openssl_pkey_get_details(...)` returns 
 - `encrypt()` requires the generated public key and returns `base64_encode($encrypted)`
 - `decrypt()` requires the generated private key and runs `openssl_private_decrypt(...)` on the base64-decoded input
 
+Because the adapter uses `openssl_public_encrypt(...)` with the default RSA padding and a 1024-bit key, it is only practical for small plaintext values. Large payloads are not chunked or streamed by the package.
+
 If either key property is missing, the adapter throws:
 
 - `CryptorException::publicKeyNotProvided()`
@@ -87,4 +89,11 @@ That means:
 - ciphertext is only useful while the same adapter instance stays alive
 - this adapter is not suitable for durable encrypted storage with the current package API
 
-The methods also do not check the boolean return value of `openssl_public_encrypt(...)` or `openssl_private_decrypt(...)`. The current implementation assumes those calls succeed once keys exist.
+The methods also do not check the boolean return value of `openssl_public_encrypt(...)` or `openssl_private_decrypt(...)`.
+
+Practical effect:
+
+- oversized plaintext for `encrypt()` can surface as a native PHP/OpenSSL failure instead of a package exception
+- invalid, foreign, or mismatched ciphertext for `decrypt()` can do the same
+
+So asymmetric mode is best treated as a narrow same-runtime helper for short secrets, not as a general-purpose encrypted transport layer.
