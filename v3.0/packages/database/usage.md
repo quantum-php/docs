@@ -55,6 +55,8 @@ $events = $eventModel
 
 For Idiorm, a criteria value shaped like `['fn' => 'date("now")']` is inserted as a raw SQL expression.
 
+If you need paging, pair `offset()` with `limit()`. Quantum treats offset as part of a bounded result window rather than a standalone skip.
+
 ## Joining related models
 
 `joinTo()` uses relation metadata defined on Quantum `DbModel` classes.
@@ -86,8 +88,11 @@ $data = $user->asArray();
 Behavior differences to keep in mind:
 
 - `findOne()`, `findOneBy()`, and `first()` mutate the current instance with the resolved row
+- on Idiorm, a lookup miss leaves the instance unchanged; on SleekDB, a lookup miss clears the instance data
 - `get()` returns cloned items for each result row
 - hidden fields are removed only when you call `asArray()`
+
+For predictable lookup code, avoid reusing an already-hydrated model instance for a second `findOne()` or `findOneBy()` call unless you handle the adapter-specific miss behavior.
 
 ## Building tables in migrations
 
