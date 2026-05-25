@@ -1,40 +1,48 @@
-# Caching in Quantum Framework
+# Cache
 
-Quantum PHP provides a flexible caching layer to optimize application performance. The caching system is implemented using `CacheFactory`, which handles adapter selection and caching logic.
+Cache gives you a PSR-16 style API for short-lived application data without tying your code to one backend.
 
-## Cache Helper Flow
+Use it for things like computed fragments, lookup results, throttling support data, or other values you can safely rebuild.
 
-The `cache()` function is the primary entry point for interacting with the cache system. It resolves to a `Cache` instance managed by the `CacheFactory`. The flow is as follows:
+## Entry point
 
-1. **Adapter Resolution Order**:
-   - Takes an optional `$adapter` argument; if none is provided, uses `cache.default` from configuration.
-   - Resolves an adapter class using `CacheFactory::ADAPTERS` lookup.
-   - Instantiates the adapter if not already cached locally.
-
-## Adapter Instances
-
-The cache factory supports multiple adapters:
-- **FileAdapter**: Local filesystem-based caching.
-- **DatabaseAdapter**: Uses database tables for caching.
-- **MemcachedAdapter**: Connects to Memcached servers.
-- **RedisAdapter**: Interfaces with Redis instances.
-
-For efficiency, `CacheFactory` maintains an internal instance cache for each adapter, ensuring the same adapter isn't repeatedly instantiated within the request lifecycle.
-
-## Quantum\Cache\Cache Behavior
-
-The `Cache` facade provides methods that map to `PSR CacheInterface` methods:
-- **get**
-- **set**
-- **delete**, etc.
-
-If a method is invoked that the adapter does not support, `Cache::methodNotSupported` exception is thrown, promoting error transparency.
+Use the `cache()` helper.
 
 ```php
-// Example usage:
-$cache = cache('redis');  // Resolves redis adapter
-$cache->set('key', 'value', 3600); // Set cache with a TTL
-$value = $cache->get('key');  // Retrieve cached value
+cache()->set('settings.homepage', $payload, 300);
+
+$payload = cache()->get('settings.homepage');
 ```
 
-The caching layer design offers flexibility to switch between built-in storage solutions, with minimal configuration changes.
+`cache()` returns a `Quantum\Cache\Cache` wrapper. When you do not pass an adapter name, the factory uses `cache.default` from `config/cache.php`.
+
+## Supported adapters
+
+Quantum ships four built-in adapters:
+
+- `file`
+- `database`
+- `memcached`
+- `redis`
+
+The factory keeps one resolved `Cache` instance per adapter name for the life of the current DI-managed factory instance. Repeated calls like `cache('redis')` reuse the same wrapper and underlying adapter.
+
+## What the package guarantees
+
+- cache config is loaded lazily on first use
+- all built-in adapters serialize values before storage
+- `null` TTL uses the adapter's configured default TTL
+- unsupported adapter names fail during resolution
+- unsupported forwarded method calls fail on the wrapper
+
+## Important caveats
+
+- `clear()` is backend-wide for the configured store. It is not limited to the current prefix or to keys created by one caller.
+- batch methods accept arrays only, even though the PSR signatures say `iterable`
+- expiry cleanup is lazy for file and database storage: expired entries are removed when they are checked
+
+## Read next
+
+- [Adapters](adapters.md)
+- [Contracts](contracts.md)
+- [Usage](usage.md)

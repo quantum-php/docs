@@ -28,19 +28,29 @@
 * [Modules Overview](v3.0/core-concepts/modules.md)
 
 ### Packages
+* App
+  * [Overview](v3.0/packages/app/overview.md)
+  * [Architecture](v3.0/packages/app/architecture.md)
+  * [Adapters](v3.0/packages/app/adapters.md)
+  * [Contracts](v3.0/packages/app/contracts.md)
+  * [Helpers](v3.0/packages/app/helpers.md)
+  * [Usage](v3.0/packages/app/usage.md)
 * Auth
   * [Overview](v3.0/packages/auth/overview.md)
   * [Adapters](v3.0/packages/auth/adapters.md)
   * [Contracts](v3.0/packages/auth/contracts.md)
+  * [Usage](v3.0/packages/auth/usage.md)
 * Cache
   * [Overview](v3.0/packages/cache/overview.md)
-* Captcha
-  * [Overview](v3.0/packages/captcha/overview.md)
-  * [Adapters](v3.0/packages/captcha/adapters.md)
-  * [Contracts](v3.0/packages/captcha/contracts.md)
-  * [Usage](v3.0/packages/captcha/usage.md)
+  * [Adapters](v3.0/packages/cache/adapters.md)
+  * [Contracts](v3.0/packages/cache/contracts.md)
+  * [Usage](v3.0/packages/cache/usage.md)
 * Archive
   * [Overview](v3.0/packages/archive/overview.md)
+  * [Architecture](v3.0/packages/archive/architecture.md)
+  * [Adapters](v3.0/packages/archive/adapters.md)
+  * [Contracts](v3.0/packages/archive/contracts.md)
+  * [Usage](v3.0/packages/archive/usage.md)
 * Database
   * [Overview](v3.0/packages/database/overview.md)
   * [Adapters](v3.0/packages/database/adapters.md)
@@ -168,6 +178,11 @@
   * [Contracts](v3.0/packages/transformer/contracts.md)
   * [Helpers](v3.0/packages/transformer/helpers.md)
   * [Architecture](v3.0/packages/transformer/architecture.md)
+* Validation
+  * [Overview](v3.0/packages/validation/overview.md)
+  * [Usage](v3.0/packages/validation/usage.md)
+  * [Rules](v3.0/packages/validation/rules.md)
+  * [Contracts](v3.0/packages/validation/contracts.md)
 * Tracer
   * [Overview](v3.0/packages/tracer/overview.md)
   * [Architecture](v3.0/packages/tracer/architecture.md)
@@ -190,6 +205,12 @@
   * [Overview](v3.0/packages/service/overview.md)
   * [Contracts](v3.0/packages/service/contracts.md)
   * [Usage](v3.0/packages/service/usage.md)
+* View
+  * [Overview](v3.0/packages/view/overview.md)
+  * [Architecture](v3.0/packages/view/architecture.md)
+  * [Contracts](v3.0/packages/view/contracts.md)
+  * [Helpers](v3.0/packages/view/helpers.md)
+  * [Usage](v3.0/packages/view/usage.md)
 
 ### Advanced Features
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)

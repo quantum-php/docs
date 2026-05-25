@@ -1,38 +1,110 @@
-# Authentication
+# Auth
 
-The Quantum PHP Framework provides a robust authentication system that is fundamental to the framework's security contract. Rather than treating authentication as an optional add-on, Quantum integrates it deeply into the request lifecycle. 
+Auth provides Quantum's application-level authentication flow.
 
-The system is managed through the `AuthFactory`, which acts as the central orchestrator for all authentication needs.
+Use it when you need to sign users in, restore the current user, issue password-reset or activation tokens, or switch between session-based web auth and JWT-based API auth behind one entry point.
 
-## The `AuthFactory` Contract
+## Quick start
 
-The `auth()` helper is the primary entry point, resolving to a singleton-managed `AuthFactory` instance. This factory handles the complexity of:
-1. **Adapter Resolution**: It dynamically selects the authentication strategy (e.g., `Session` or `JWT`) based on the application's configuration.
-2. **Deterministic Lifecycle Caching**: Once an adapter is resolved for a given request, the `AuthFactory` caches the instance. This ensures that every call to `auth()->user()` or `auth()->check()` within the same request lifecycle points to the exact same authenticated state.
-3. **Guard Configuration**: It allows for specific auth-guard configuration, enabling you to switch auth strategies per route or module (e.g., sessions for web, JWT for API).
+```php
+if (auth()->signin($email, $password)) {
+    return redirect('/dashboard');
+}
 
-## Authentication Strategy Comparison
+$user = auth()->user();
+```
 
-Choosing the correct strategy is vital for the systemic security of a Quantum module. The following table differentiates the supported adapters:
+If you do not pass an adapter name, `auth()` resolves `auth.default` from the auth config.
 
-| Attribute | SessionAuthAdapter | JwtAuthAdapter |
-| :--- | :--- | :--- |
-| **Typical Use** | Browser-based Web Apps | API and Microservices |
-| **Signin Flow** | Persists user in native PHP session | Generates signed client-side token |
-| **`user()` Source** | Retrieved from session storage | Extracted from verified JWT payload |
-| **Termination** | `session_destroy()` side-effect | Token expiration / Blacklisting |
-| **State Carrier** | Secure Cookie / Session ID | `Authorization: Bearer <token>` |
+## What the package gives you
 
-## Integration with Core Lifecycle
+- `auth()` helper as the standard entry point
+- adapter resolution for `session` and `jwt`
+- one shared `Auth` wrapper per adapter name through `AuthFactory`
+- common account flows implemented by both adapters:
+  - `signin()`
+  - `signout()`
+  - `check()`
+  - `user()`
+  - `signup()`
+  - `activate()`
+  - `forget()`
+  - `reset()`
+  - `resendOtp()`
+- adapter-specific follow-up methods:
+  - `refreshUser()`
+  - `verifyOtp()`
 
-Authentication is not bolted-on; it is an intrinsic part of the request flow:
+## Resolution model
 
-- **Middleware Enforcement**: Authentication checks should be applied via middleware using the `auth` guard. This aligns with standard Quantum patterns where middleware protects sensitive controllers. See [Middleware](../core-concepts/middleware.md) for enforcement patterns.
-- **Request Lifecycle**: For high-level details on when authentication state is initialized vs. when middlewares trigger, see [Advanced Request Lifecycle](../advanced-features/request-lifecycle.md).
+`auth()` returns `Quantum\Auth\Auth`, a thin wrapper around the active adapter.
 
-## Best Practices
+On first use, the factory:
 
-- **Avoid Manual Instance Handling**: Always use the `auth()` helper instead of manually instantiating `AuthFactory`.
-- **Consistency**: Stick to one auth adapter per request. Mixing `SessionAuthAdapter` and `JwtAuthAdapter` in a single request flow can lead to ambiguous state ownership.
-- **Security Defaults**: Ensure your `JwtAuthAdapter` configuration uses strong signing algorithms (verify via `shared/config/auth.php`).
+- loads auth config if it is not already loaded
+- resolves the configured service class for the selected adapter
+- creates either `SessionAuthAdapter` or `JwtAuthAdapter`
+- caches the resulting `Auth` instance by adapter name
 
+Practical effect: repeated `auth()` calls for the same adapter reuse the same auth wrapper during the current runtime.
+
+## Supported adapters
+
+- `session` for browser-oriented, server-side login state
+- `jwt` for token-based API authentication
+
+See [Adapters](adapters.md) for the differences that affect integration.
+
+## Shared account flows
+
+### Sign in
+
+`signin()` verifies the configured username field and password hash through your auth service.
+
+If two-factor auth is disabled, sign-in completes immediately.
+
+If two-factor auth is enabled, sign-in does not finish immediately. The package creates an OTP, stores OTP metadata through the auth service, sends the code by email, and returns an OTP token that must be passed to `verifyOtp()`.
+
+### Sign up and activation
+
+`signup()` hashes the submitted password, generates an activation token, persists the user through your auth service, and sends the activation email.
+
+`activate($token)` marks the account as active by clearing the activation token field.
+
+### Password reset
+
+`forget($username)` generates a reset token, stores it through the auth service, sends the reset email, and returns the token.
+
+`reset($token, $password)` replaces the stored password hash and clears the reset token when the token matches a user.
+
+## Schema contract at package level
+
+Auth depends on `AuthServiceInterface::userSchema()` to map logical auth keys to your real storage fields.
+
+The schema must define every key used by `Quantum\Auth\Enums\AuthKeys`, including names for:
+
+- username
+- password
+- activation token
+- reset token
+- remember token
+- OTP, OTP expiry, OTP token
+- access token
+- refresh token
+
+If any required key mapping is missing, adapter construction fails with an auth exception.
+
+Fields marked as `visible` in the schema are the only fields that Auth exposes in session state and JWT access-token payloads.
+
+## Important constraints
+
+- Unsupported adapter names fail during resolution.
+- Unsupported method calls on `Auth` fail at runtime because the wrapper only forwards methods that exist on the active adapter.
+- Inactive accounts cannot sign in.
+- Email-based flows depend on the Mailer package and the shared email templates used by the package.
+
+## Read next
+
+- [Usage](usage.md)
+- [Adapters](adapters.md)
+- [Contracts](contracts.md)
