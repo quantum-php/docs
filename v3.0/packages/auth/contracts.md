@@ -1,27 +1,106 @@
-# AuthService Contract
+# Auth Contracts
 
-The `AuthServiceInterface` defines the main operations for handling user data in Quantum's authentication system. This interface outlines how user entities are created, updated, retrieved, and defined across the framework.
+This page defines the behaviors you can rely on when integrating with Auth.
 
-## Method Details
+## Entry-point contract
 
-### `get(string $field, ?string $value): ?User`
-- **Purpose**: Retrieve a user entity by a specified field and value.
-- **Functionality**: Utilizes the `User` model to find a match. Returns `null` if no match is found.
-- **Example Usage**: Used to locate a user by email during login authentication.
+```php
+$auth = auth();
+$jwtAuth = auth('jwt');
+```
 
-### `add(array $data): User`
-- **Purpose**: Creates a new user within the system.
-- **Functionality**: Initializes a new `User` entity, populates with provided data, and persists it. Automatically handles unique identifier generation.
-- **Example Usage**: Engaged during user registration workflows.
+- `auth(?string $adapter = null): Quantum\Auth\Auth`
+- no adapter argument means `auth.default` is used
+- supported adapter names are `session` and `jwt`
+- unknown adapter names fail during resolution
 
-### `update(string $field, ?string $value, array $data): ?User`
-- **Purpose**: Updates existing user details based on a field match.
-- **Functionality**: Finds the user, updates relevant fields, and re-saves the entry. Avoids altering primary identifiers.
-- **Example Usage**: Allows updates to user profiles, such as changing contact information.
+`Quantum\Auth\Auth` is a forwarding wrapper. It only supports methods implemented by the active adapter.
 
-### `userSchema(): array`
-- **Purpose**: Defines the structure and visibility of user-related data fields.
-- **Functionality**: Provides a schema that specifies field names and their visibility, helping to structure user data consistently.
-- **Example Usage**: Employed in form generation and validation scenarios, ensuring data integrity and security adherence.
+## Auth service contract
 
-This interface ensures that the authentication system can consistently interact with the `User` object and schema across different storage or service implementations.
+Each adapter resolves a service class from `auth.<adapter>.service` and requires that service to implement `Quantum\Auth\Contracts\AuthServiceInterface`.
+
+Required methods:
+
+- `get(string $field, ?string $value): ?User`
+- `add(array $data): User`
+- `update(string $field, ?string $value, array $data): ?User`
+- `userSchema(): array`
+
+### Practical expectations for the service
+
+Your service must be able to:
+
+- find a user by the mapped username field
+- persist hashed passwords, activation tokens, reset tokens, remember tokens, OTP fields, and refresh tokens
+- return a schema that maps every logical auth key to a real storage field name
+
+If the resolved service does not implement `AuthServiceInterface`, factory resolution fails.
+
+## User schema contract
+
+`userSchema()` must return an array that includes a `name` entry for every logical key in `AuthKeys`.
+
+A field may also include `visible => true`.
+
+Visible fields are the only fields that Auth:
+
+- stores in session auth state
+- embeds in JWT access-token `data`
+- uses when rebuilding `Quantum\Auth\User` from session or token payloads
+
+Practical consequence: if a field is not marked visible, `auth()->user()` will not expose it when the current user comes from session or access-token data.
+
+## Return-value contract
+
+Common methods behave like this:
+
+- `signin(...)`
+  - session adapter: `true` on immediate success, or OTP token string when two-factor auth is enabled
+  - JWT adapter: token array on immediate success, or OTP token string when two-factor auth is enabled
+- `signout(): bool`
+- `check(): bool`
+- `user(): ?Quantum\Auth\User`
+- `signup(array $userData, ?array $customData = null): Quantum\Auth\User`
+- `activate(string $token): void`
+- `forget(string $username): ?string`
+- `reset(string $token, string $password): void`
+- `resendOtp(string $otpToken): string`
+- `refreshUser(string $uuid): bool`
+- `verifyOtp(int $otp, string $otpToken)`
+  - session adapter: `bool`
+  - JWT adapter: `array<string,string>` with fresh tokens
+
+Because `signin()` and `verifyOtp()` are adapter-dependent, treat them as flow-specific methods rather than assuming a single return type across all adapters.
+
+## Failure contract
+
+Auth throws package exceptions for the user-facing failures that matter most:
+
+- incorrect credentials
+- inactive account
+- incorrect verification code
+- expired verification code
+- invalid user schema
+
+Other failures can also bubble up from dependent packages such as Config, DI, Mailer, Session, JWT, or your auth service implementation.
+
+## Token and state contracts
+
+- Passwords are hashed before user creation and password reset.
+- Activation, reset, remember, refresh, and OTP tokens are generated by Auth and stored through your auth service.
+- JWT access tokens contain only visible user fields.
+- JWT access tokens are returned in base64-wrapped form by the JWT auth adapter.
+- The JWT adapter sets JWT leeway to `1`, which affects token verification through the wrapped `JwtToken` instance.
+
+## User object contract
+
+`auth()->user()` returns `Quantum\Auth\User` or `null`.
+
+The returned user object is a lightweight data container:
+
+- `getData()` returns the stored field array
+- `getFieldValue($field)` reads one field
+- property access such as `$user->email` proxies to `getFieldValue()` when that field exists
+
+Do not assume it is a full ORM model unless your own auth service wraps and rehydrates it that way elsewhere.
