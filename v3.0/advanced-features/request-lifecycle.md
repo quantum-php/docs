@@ -172,7 +172,7 @@ To understand the lifecycle better, read these together:
 - [Controllers](../core-concepts/controllers.md)
 - [Views](../core-concepts/views.md)
 - [Middleware](../core-concepts/middleware.md)
-- [Modules Overview](../modules/overview.md)
-- [Request Parsing Contract](../core-concepts/request.md#input-merge">)
+- [Modules Overview](../core-concepts/modules.md)
+- [Request Parsing Contract](../core-concepts/request.md#input-merge-precedence)
 
 Once these pages connect in your head as one flow, the framework stops feeling abstract.

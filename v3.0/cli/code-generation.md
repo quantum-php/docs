@@ -207,5 +207,5 @@ These pages fit well with code generation:
 
 - [The `qt` Command-Line Tool](qt-command-line-tool.md)
 - [Console Commands](console-commands.md)
-- [Modules Overview](../modules/overview.md)
+- [Modules Overview](../core-concepts/modules.md)
 - [Project Structure](../getting-started/project-structure.md)
