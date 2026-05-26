@@ -28,7 +28,7 @@ return response()->html($html);
 
 Use a key that matches the page variant you want to cache.
 
-Because the package already scopes files by session ID, a route path is often enough for user-specific pages.
+Because the package already scopes files by session ID, a route path is often enough for user-specific pages. Add query parameters, locale, or other response-shaping inputs when those change the rendered HTML.
 
 ## Change TTL for one cache instance
 
@@ -45,12 +45,14 @@ The new TTL only affects this `ViewCache` instance.
 ## Toggle caching dynamically
 
 ```php
+$cache = new ViewCache();
+$cache->setup();
 $cache->enableCaching(app()->isProduction());
 ```
 
-This only changes whether `getCachedResponse()` serves cached output.
+This changes whether `getCachedResponse()` serves cached output for that instance.
 
-It does not prevent direct writes through `set()`.
+Direct writes through `set()` remain available, so you can prebuild cache entries before turning reads on.
 
 ## Enable HTML minification
 
@@ -72,13 +74,13 @@ $cache->delete('/posts');
 
 Use this after content updates when you know the old rendered page is stale.
 
-Remember that deletion targets the current session's cache file for that key.
+Deletion targets the current session's cache file for that key, so the same logical page may still have separate entries for other visitor sessions.
 
 ## Common pitfalls
 
 ### Include all meaningful page variants in your key
 
-The package does not inspect query strings, locale, or custom request state for you.
+The package uses the key string you provide.
 
 If `/posts?page=2` should be cached separately from `/posts?page=1`, build that into the key yourself.
 
@@ -88,8 +90,8 @@ If the current request has a module, files are stored under that module's cache 
 
 That means the same key can resolve to different cache files depending on the active module.
 
-### Expect lazy cleanup, not scheduled cleanup
+### Expect lazy cleanup during cache access
 
 Expired files are removed when the package checks them.
 
-The package does not include a background sweeper for old cache files.
+That keeps the package simple in normal request flow. If you want scheduled cleanup for old cache directories, add it at the application or infrastructure layer.

@@ -2,7 +2,7 @@
 
 The ResourceCache package stores rendered HTML responses on disk so repeated requests can skip view rendering work.
 
-Use it when you want simple full-page view caching for HTML endpoints, especially pages that are expensive to render but safe to serve from a short-lived cache.
+Use it when you want simple full-page caching for HTML endpoints, especially pages that are expensive to render and benefit from a short-lived per-visitor cache.
 
 ## What the package provides
 
@@ -47,6 +47,8 @@ The package reads two config areas:
 
 On `setup()`, the package lazily imports `config/view_cache.php` if it has not been loaded yet.
 
+The global `resource_cache` switch is read when you create the `ViewCache` instance. In most applications that config is already available during normal bootstrap. If you construct the cache earlier, create it after config bootstrap or call `enableCaching(true)` for that instance.
+
 Supported `view_cache` options used by this package:
 
 - `cache_dir` - base cache directory relative to `base_dir()`; defaults to `cache`
@@ -67,10 +69,10 @@ This means identical cache keys are separated by current module automatically.
 ## Important contracts
 
 - Cache file names are derived from the cache key plus the current session ID.
-- Cached HTML is therefore session-scoped, not shared across all visitors.
-- Expired files are deleted the first time they are checked after expiry.
-- `getCachedResponse()` only returns a cached response when caching is currently enabled.
-- Direct methods such as `set()`, `get()`, and `delete()` still work even if global caching is disabled.
+- Cached HTML is therefore visitor-scoped by default.
+- Expired files are removed the first time the package checks them after their TTL passes.
+- `getCachedResponse()` serves cached output when caching is enabled for the current `ViewCache` instance.
+- Direct methods such as `set()`, `get()`, and `delete()` keep working regardless of that read toggle.
 
 ## Common pitfalls
 
@@ -80,15 +82,15 @@ This means identical cache keys are separated by current module automatically.
 
 If you skip it, cache file paths are not initialized correctly.
 
-### Do not expect cross-session page sharing
+### Plan keys around visitor-scoped cache files
 
 The package includes `session()->getId()` in the cache file name.
 
-If you want one shared page cache for all users, this package does not provide that behavior.
+That makes the built-in cache a good fit for per-visitor HTML. For shared page caching across all users, use a different cache layer.
 
-### Only enable minification when the HTML minifier package is available
+### Enable minification when the HTML minifier package is available
 
-If minification is enabled but `voku\helper\HtmlMin` is not installed, saving content fails with a resource-cache exception.
+When minification is enabled, `set()` expects the `voku\helper\HtmlMin` package to be installed. If it is missing, the write raises a resource-cache exception.
 
 ## Read next
 
