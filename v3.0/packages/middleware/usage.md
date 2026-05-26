@@ -57,7 +57,20 @@ public function apply(Request $request, Closure $next): Response
 
 Middleware runs in route order.
 
-If a route lists multiple middleware names, the first one gets the first chance to stop or modify the request. Later middleware only run when earlier middleware call `$next(...)`.
+If a route lists multiple middleware names, the first one gets the first chance to stop or modify the request. Later middleware run when earlier middleware call `$next(...)`.
+
+Group middleware wraps route-specific middleware. This is the usual shape for shared access checks plus route-level refinements.
+
+```php
+$route->group('account', function ($route) {
+    $route->get('profile', 'AccountController', 'profile');
+
+    $route->post('avatar', 'AccountController', 'avatar')
+        ->middlewares(['VerifiedUser']);
+})->middlewares(['Auth']);
+```
+
+With this setup, `Auth` runs before `VerifiedUser`.
 
 ## Know what the package resolves
 
@@ -68,6 +81,7 @@ Make sure:
 - the class exists under the current module's `Middlewares` namespace
 - the route middleware name matches the class suffix exactly
 - the class extends `Quantum\Middleware\Middleware`
+- any constructor you define accepts the current `Request`
 
 ## Keep rate limiting in mind
 
