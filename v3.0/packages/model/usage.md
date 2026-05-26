@@ -23,7 +23,7 @@ What happens here:
 2. `fill()` applies only allowed fields.
 3. `save()` copies attributes into the ORM.
 4. If the adapter generated a primary key, the model receives it back after save.
-5. If `HasTimestamps` is used, timestamp fields are updated before persistence.
+5. If `HasTimestamps` is used, `updated_at` is refreshed on every save, while `created_at` is filled on the first save unless you already set it.
 
 ## Query records with a builder
 
@@ -94,7 +94,7 @@ $posts = model(Post::class)
     ->get();
 ```
 
-Keep relation definitions explicit. Missing `type`, `foreign_key`, or `local_key` fails fast.
+Keep relation definitions explicit. Include `type`, `foreign_key`, and `local_key` for each joined model.
 
 ## Paginate model queries
 
@@ -126,6 +126,7 @@ Behavior to remember:
 - `forceDelete()` performs the real delete
 - `restore()` clears the deleted-at value
 - `withTrashed()` changes later reads on that same model instance
+- Reusing one soft-delete builder across several reads keeps the accumulated scope on that builder, so a fresh model instance is the cleanest start for each query
 
 ## Use plain models for non-database payloads
 
@@ -155,3 +156,4 @@ Here `asArray()` returns only visible fields, while `slug` is still stored on th
 - Direct assignment bypasses `fillable` rules.
 - `create()` clears existing attributes.
 - Soft-delete inclusion flags stay on the current model instance until you discard it.
+- A fresh builder is the simplest way to avoid carrying earlier soft-delete scope into later reads.
