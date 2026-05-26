@@ -60,9 +60,9 @@ The package:
 - removes existing `page` and `per_page` query parameters
 - keeps the rest of the current URI intact
 - appends fresh `per_page=<value>&page=<value>` parameters
-- optionally prefixes the application base URL when `$withBaseUrl` is `true`
+- prefixes the application base URL when `$withBaseUrl` is `true`
 
-This means pagination links are request-aware. They are most useful during an active HTTP request.
+This makes pagination links request-aware. They are most useful during an active HTTP request.
 
 ## HTML output contract
 
@@ -79,3 +79,5 @@ The generated HTML uses translation keys for the previous and next labels:
 If you rely on the built-in HTML output, make sure those translations exist in your loaded language files.
 
 `$pageItemsCount` is normalized to a minimum of `3`, so smaller values do not reduce the visible page window below that threshold.
+
+When you pass `true` to `getPagination()`, the numbered page links use absolute URLs. The previous, next, and jump-to-first links continue to use request-relative URLs, so use the direct link helpers when you need a fully absolute pagination bar.
