@@ -9,6 +9,7 @@ $current = current_route();
 $params = route_params();
 $name = route_name();
 $prefix = route_prefix();
+$cache = route_cache_settings();
 ```
 
 Common helpers:
@@ -21,6 +22,7 @@ Common helpers:
 - `route_prefix()`
 - `route_uri()`
 - `route_method()`
+- `route_cache_settings()`
 - `current_middlewares()`
 - `current_controller()`
 - `current_action()`
@@ -45,4 +47,5 @@ $baseNamespace = module_base_namespace();
 These helpers are request-scoped.
 
 Call them from controllers, middleware, or request-time view logic.
-Avoid using them during boot before a request is available.
+`current_module()` returns `null` until the request object is registered, which makes it a safe presence check during bootstrap-adjacent code.
+The rest are best used once routing has already matched the request.

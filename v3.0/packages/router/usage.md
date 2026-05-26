@@ -24,6 +24,9 @@ return function ($route) {
 };
 ```
 
+Short controller names are resolved inside the current module's `Controllers` namespace.
+Use a fully-qualified class when you want a route file to point at a controller outside that default module path.
+
 ## Apply shared config to a group
 
 Apply group-wide middleware, rate limits, or caching by chaining after `group(...)`:
@@ -70,7 +73,30 @@ $route->get('health', function () {
 });
 ```
 
-Do not return plain strings or arrays.
+Return a `Response` instance from closure handlers and controller actions.
+
+## Use action parameters for request-time dependencies
+
+Router creates controller instances directly for each dispatch, then resolves action arguments through the DI container.
+That keeps controllers lightweight and lets you receive matched params or services in the action itself.
+
+```php
+use Quantum\Http\Request;
+use Quantum\Http\Response;
+
+class ProfileController
+{
+    protected bool $csrfVerification = true;
+
+    public function update(Request $request, string $id): Response
+    {
+        return response()->json([
+            'updated' => true,
+            'id' => $id,
+        ]);
+    }
+}
+```
 
 ## Common pitfalls
 

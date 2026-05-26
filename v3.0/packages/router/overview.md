@@ -38,8 +38,10 @@ Supported parameter types:
 
 - Route matching is first-match-wins.
 - Group-wide config is best applied by chaining after `group(...)`.
-- Route handlers must return `Quantum\Http\Response`.
-- Route names must be unique inside a module.
+- Route handlers return `Quantum\Http\Response`.
+- Short controller names resolve inside the current module; fully-qualified class names opt into an explicit target.
+- Controllers are instantiated directly, so action parameters are the right place for DI-backed request values.
+- Route names stay unique inside a module.
 
 ## Read next
 
