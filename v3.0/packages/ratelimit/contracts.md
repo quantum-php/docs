@@ -2,10 +2,13 @@
 
 ## Route contract
 
-Rate limiting starts at the route definition.
+Rate limiting starts at the route definition or route group definition.
 
 ```php
-$route->rateLimit(100, 60);
+Router::group('/api', function () {
+    Router::get('/posts', 'PostController', 'index');
+    Router::get('/comments', 'CommentController', 'index');
+})->rateLimit(100, 60);
 ```
 
 ### Parameters
@@ -13,7 +16,17 @@ $route->rateLimit(100, 60);
 - `$limit` - maximum allowed hits in the current window
 - `$interval` - window length in seconds
 
-Both values must be greater than `0`. Invalid values fail immediately when the route is configured.
+Both values need to be greater than `0`. The route API validates them as soon as you call `rateLimit(...)`.
+
+### Where `rateLimit(...)` applies
+
+`RouteBuilder::rateLimit(...)` supports three usage patterns:
+
+- directly on a route definition
+- on the current group while the group is being built
+- immediately after a group definition, which applies the settings to the routes that group just created
+
+Calling `rateLimit(...)` without an active route or group raises `RouteException::rateLimitOutsideRoute()`.
 
 ## Runtime key contract
 
@@ -49,12 +62,12 @@ $limiter->reset('GET', '/api/posts', '127.0.0.1');
 
 - increments the current counter
 - returns `true` while the counter is within the limit
-- returns `false` after the limit is exceeded
+- returns `false` once the bucket moves past the limit
 
 #### `retryAfter(...)`
 
 - returns remaining seconds in the current window when the adapter can determine it
-- returns `0` when no state exists or expiry cannot be determined
+- returns `0` when no state exists or expiry is not available
 
 #### `reset(...)`
 
@@ -67,13 +80,13 @@ $limiter->reset('GET', '/api/posts', '127.0.0.1');
 
 That means repeated calls for the same adapter share the same underlying adapter object for the life of the current DI-managed factory instance.
 
-If `config('rate_limit')` has not been imported yet, the factory imports `config/rate_limit.php` lazily on first use.
+If `config('rate_limit')` is not loaded yet, the factory imports `config/rate_limit.php` on first use.
 
 ## Middleware contract
 
-`RateLimitMiddleware` reads the matched route's rate-limit settings and either:
+`RateLimitMiddleware` reads the matched route's rate-limit settings and then:
 
 - passes the request through with `X-RateLimit-Limit`, or
 - returns a `429` JSON response immediately
 
-If the adapter reports `retryAfter()` as `0`, the middleware falls back to the route interval for the `Retry-After` header.
+When the adapter returns `0` from `retryAfter()`, the middleware uses the route interval for the `Retry-After` header.
