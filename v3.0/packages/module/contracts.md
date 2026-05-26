@@ -16,9 +16,10 @@ Returns route-definition closures keyed by module name.
 Contract rules:
 
 - reads module config lazily if it is not cached yet
-- includes only modules whose `enabled` option is truthy
-- throws when an enabled module has no `routes/routes.php`
-- throws when a route file does not return a `Closure`
+- includes modules whose `enabled` option is truthy
+- raises an exception when an enabled module has no `routes/routes.php`
+- raises an exception when a route file returns something other than a `Closure`
+- reuses cached route closures on later calls from the same loader instance
 
 ### `loadModulesDependencies(): array<string, string>`
 
@@ -30,10 +31,13 @@ Contract rules:
 - missing dependency files are treated as empty
 - non-array dependency files are treated as empty
 - later modules override earlier dependency keys
+- the loader instance reuses cached dependency data for each module
 
 ### `getModuleConfigs(): array`
 
 Returns the raw `shared/config/modules.php` payload after loading it.
+
+The returned array is cached on the loader instance, so a fresh loader is the cleanest way to pick up config edits made later in the same process.
 
 ## `ModuleManager`
 
@@ -58,12 +62,14 @@ Failure cases:
 
 - template directory is missing
 - assets were requested but the template has no assets directory
-- template directory listing fails
+- template directory listing does not complete successfully
 - any copied file is still missing after the copy step
 
 ### `addModuleConfig(): void`
 
 Loads the current shared module config, checks for duplicate module names or prefixes, then rewrites `shared/config/modules.php` with the new entry added.
+
+When `ModuleLoader` is not registered in the DI container yet, this method registers it before reading the current config.
 
 The new module options are:
 
@@ -77,7 +83,7 @@ The new module options are:
 That means:
 
 - existing formatting is not preserved
-- the config file must remain valid PHP that returns an array after each write
+- the config file should keep returning a valid PHP array after each write
 
 ## Exceptions exposed by the package
 
@@ -91,4 +97,4 @@ That means:
 - directory listing failure
 - incomplete file creation
 
-Handle these exceptions at the point where you bootstrap or scaffold modules so startup and code generation failures surface clearly.
+Handle these exceptions at the point where you bootstrap or scaffold modules so startup and code generation issues surface clearly.
