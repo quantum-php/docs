@@ -2,7 +2,7 @@
 
 ## Base middleware contract
 
-Every middleware class must extend `Quantum\Middleware\Middleware` and implement:
+Every middleware class extends `Quantum\Middleware\Middleware` and implements:
 
 ```php
 public function apply(Request $request, Closure $next): Response;
@@ -39,7 +39,7 @@ Although the abstract base class does not define a constructor, `MiddlewareManag
 new $middlewareClass($request)
 ```
 
-In practice, if your middleware defines a constructor, it must accept the current request object as passed by the manager.
+In practice, if your middleware defines a constructor, it accepts the current request object as passed by the manager.
 
 ## Naming and placement contract
 
@@ -51,10 +51,16 @@ For a route middleware name like `Auth`, the package looks for a class shaped li
 <module base namespace>\<module>\Middlewares\Auth
 ```
 
+## Order contract
+
+Middleware runs in the order stored on the matched route.
+
+For routes built through Router groups, shared group middleware runs before route-specific middleware. Within each list, declaration order is preserved.
+
 ## Error contract
 
 The package guarantees one dedicated middleware-specific exception path:
 
 - missing middleware class -> `MiddlewareException::middlewareNotFound(...)`
 
-The package also enforces the base-class requirement after instantiation, so a class that does not extend `Quantum\Middleware\Middleware` fails before it can run.
+The package also enforces the base-class requirement after instantiation, so a class that does not extend `Quantum\Middleware\Middleware` is rejected before `apply()` runs.

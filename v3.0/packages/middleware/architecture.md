@@ -14,7 +14,7 @@ On construction it captures three route inputs:
 - the route middleware list
 - whether the route has a rate-limit definition
 
-Middleware execution order follows the route's declared middleware order.
+Middleware execution follows the final route middleware list produced by the Router package. For grouped routes, that means group middleware runs before route-specific middleware while keeping the declaration order inside each list.
 
 ### `Middleware`
 
@@ -38,6 +38,8 @@ The manager then executes route middleware in order:
 2. instantiate it with the current request
 3. call `apply()` and pass a closure that continues the remaining middleware
 
+The manager resolves and creates each middleware right before it runs. Middleware later in the queue are created only when earlier middleware call `$next(...)`.
+
 When no middleware remains, the terminal handler runs.
 
 ## Class resolution model
@@ -52,12 +54,12 @@ The module base namespace comes from `request()->getModuleBaseNamespace()`, and 
 
 That has two practical consequences:
 
-- middleware resolution is tied to the active request namespace configuration
+- middleware resolution follows the active request namespace configuration
 - route middleware names are simple class-name suffixes, not service ids
 
 ## Failure behavior
 
-Resolution fails in two distinct ways:
+Resolution has two distinct outcomes when the class contract is not met:
 
 - if the class does not exist, `MiddlewareException::middlewareNotFound(...)` is thrown
 - if the class exists but does not extend `Quantum\Middleware\Middleware`, the shared base exception path throws a type error-style framework exception
