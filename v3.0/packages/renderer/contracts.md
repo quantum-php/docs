@@ -22,7 +22,7 @@ Contract rules that affect usage:
 
 - if the view config has not been loaded yet, the package imports it lazily
 - when `$adapter` is `null`, the factory uses `view.default`
-- only `html` and `twig` are valid adapter names
+- `html` and `twig` are the built-in adapter names
 - one renderer instance is cached per adapter name inside the factory service
 
 ## View lookup contract
@@ -35,6 +35,8 @@ Both built-in adapters resolve the view in this order:
 If neither file exists, rendering throws a renderer exception.
 
 Because module lookup happens first, a module can override a shared view with the same logical name.
+
+For Twig usage, top-level logical names such as `dashboard` map most directly to the built-in adapter. The adapter sets the matched file's directory as Twig's loader root before rendering `dashboard.php`.
 
 ## Wrapper forwarding contract
 
@@ -56,7 +58,7 @@ Other method calls are forwarded through `__call(...)`.
 
 If the adapter does not implement the requested method, the package throws a renderer exception.
 
-So adapter-specific calls are opt-in and not portable across adapters.
+That makes adapter-specific calls opt-in and adapter-dependent.
 
 ## Adapter-specific data contract
 

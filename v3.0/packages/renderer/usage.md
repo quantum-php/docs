@@ -55,17 +55,17 @@ The Twig adapter still loads a `.php` file name, but the file contents should be
 ```php
 $renderer = RendererFactory::get('twig');
 
-echo $renderer->render('posts/show', [
+echo $renderer->render('post-show', [
     'post' => $post,
 ]);
 ```
 
 ```twig
-{# modules/Blog/Views/posts/show.php #}
+{# modules/Blog/Views/post-show.php #}
 <h1>{{ post.title }}</h1>
 ```
 
-If the Twig environment is configured correctly, the adapter renders that file through Twig.
+Top-level logical names are the clearest fit for the built-in Twig adapter because it renders the matched file from that file's directory.
 
 ## Use PHP functions in Twig templates
 
@@ -105,8 +105,10 @@ Lookup is module-first.
 
 If a module file exists, the shared file with the same logical name is ignored.
 
-### Know that HTML and Twig read the same file path convention
+### Know that HTML and Twig keep the same filename convention
 
 Switching from `html` to `twig` changes the rendering engine, not the filename convention.
 
 The built-in Twig adapter still looks for `<view>.php`.
+
+For Twig, favor top-level logical names such as `post-show` or `dashboard`. If you prefer nested template paths, the HTML adapter fits that layout directly and a custom Twig adapter can mirror it.

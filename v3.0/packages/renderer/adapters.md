@@ -59,9 +59,9 @@ makes `$post` and `$title` available inside `posts/show.php`.
 
 ## Twig adapter
 
-`TwigAdapter` renders the same `.php` view filenames through Twig.
+`TwigAdapter` renders `.php` view files through Twig.
 
-Use it when you want Twig syntax and Twig environment options, but still want Quantum's module/shared view lookup.
+Use it when you want Twig syntax and Twig environment options while keeping Quantum's module/shared view lookup.
 
 ### How it renders
 
@@ -70,6 +70,8 @@ Use it when you want Twig syntax and Twig environment options, but still want Qu
 - creates a new Twig `Environment` for the render call
 - passes the provided config array into Twig as environment options
 - renders `<view>.php` with the given params
+
+For the built-in adapter, top-level logical names such as `home` or `invoice` are the clearest fit. Those map directly to files such as `Views/home.php` and `Views/invoice.php`.
 
 ### Function exposure
 
@@ -82,10 +84,11 @@ That means Twig templates can call framework helpers and other defined PHP funct
 - Twig templates still use `.php` filenames in this package.
 - Missing files throw a renderer exception before Twig rendering starts.
 - Twig loader, runtime, or syntax errors are surfaced by Twig.
-- Because a new Twig environment is created on each `render(...)` call, runtime-added Twig state is not preserved across renders.
+- Each render call creates a fresh Twig environment, so register Twig options through config and treat per-render mutations as request-local.
+- Nested logical names such as `posts/show` are a better fit for the HTML adapter. The built-in Twig adapter resolves the matched file's directory as the Twig loader root, so top-level Twig view names give the most predictable path resolution.
 
 ## Unsupported adapters
 
-The factory only supports `html` and `twig`.
+The factory supports `html` and `twig`.
 
-Passing any other adapter name to `RendererFactory::get(...)` throws an adapter-not-supported exception.
+Passing a different adapter name to `RendererFactory::get(...)` throws an adapter-not-supported exception.
