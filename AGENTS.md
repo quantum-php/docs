@@ -47,9 +47,8 @@ For pull requests:
 - If navigation changed, mention the `SUMMARY.md` update explicitly.
 
 ## Git Workflow
-No formal GitFlow policy is documented, but recent history shows a consistent PR flow:
 
-1. Create a feature branch from `master` using `docs/<topic>` naming (examples in history: `docs/v3-package-loader`, `docs/summary-add-config-links-20260525-1749`).
+1. Create a feature branch from `master` using `docs/<topic>` naming (examples in history: `docs/v3-package-loader`, `docs/summary-add-config-links`).
 2. Use focused commits with `docs: ...` messages.
 3. Keep the branch current with `master` before merge (history includes both rebases and `Merge branch 'master' into docs/...`).
 4. Open a PR targeting `master` with:
