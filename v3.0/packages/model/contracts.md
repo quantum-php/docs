@@ -36,13 +36,13 @@ A model with only hidden attributes can therefore look empty from this API.
 
 ## Database model contracts
 
-### ORM must be attached before DB-backed operations
+### ORM-backed operations expect a factory-created model instance
 
-Any DB-backed method that needs the ORM instance fails with `ModelException::ormIsNotSet()` when the model was not created through the package factory path.
+DB-backed methods expect an attached ORM instance. When a model is created outside the package factory path, those methods raise `ModelException::ormIsNotSet()`.
 
 In normal application code, use `model(Post::class)` instead of `new Post()`.
 
-### Primary key cannot be filled through `fill()`
+### Primary key stays outside `fill()` input
 
 `DbModel::shouldFill()` always rejects the key that matches `$idColumn`, even if you put that key in `$fillable`.
 
@@ -85,6 +85,14 @@ If the model has a `touchTimestamps()` method, `save()` calls it before syncing 
 
 This is how `HasTimestamps` plugs in.
 
+### `HasTimestamps` preserves `created_at` on first save and refreshes `updated_at` on every save
+
+On a new record, `HasTimestamps` writes the created-at column only when that attribute is not already present.
+
+That lets you seed a custom creation timestamp before the first `save()`.
+
+The updated-at column is refreshed on every `save()`, including the first insert.
+
 ### `save()` never writes the current primary key value back into the ORM payload
 
 During sync, the field matching `$idColumn` is skipped.
@@ -109,13 +117,13 @@ Missing definitions raise dedicated `ModelException` variants.
 
 ### Supported join relation types are narrower than the enum
 
-`Relation::BELONGS_TO_MANY` exists as a constant, but current join handling supports only:
+`Relation::BELONGS_TO_MANY` exists as a constant, but current join handling supports these relation types:
 
 - `Relation::HAS_ONE`
 - `Relation::HAS_MANY`
 - `Relation::BELONGS_TO`
 
-Using another type fails at runtime.
+For join queries, keep relation definitions within that set.
 
 ## Collection contracts
 
@@ -149,6 +157,12 @@ Any other value falls back to the datetime branch.
 Without `withTrashed()`, soft-delete reads automatically add a `deleted_at IS NULL` style filter.
 
 `onlyTrashed()` switches the model into trashed mode and also adds a `deleted_at IS NOT NULL` filter.
+
+### Reused soft-delete builders keep accumulating scope filters
+
+Each read method applies the soft-delete scope to the current ORM query before running.
+
+A fresh model instance gives each query a clean scope. Reusing one long-lived builder can stack multiple soft-delete predicates onto the same query state.
 
 ### `withTrashed()` and `onlyTrashed()` mutate the current model instance
 
