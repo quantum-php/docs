@@ -43,7 +43,7 @@ $name = $manager->generateMigration('users', 'create');
 
 This writes a file into `base_dir()/migrations` and returns the generated migration name.
 
-Review the generated file before running it. Some templates intentionally leave work unfinished.
+Review the generated file before running it. The scaffold is a starting point: update the method signatures to match `Migration`, then complete the table operations for your schema change.
 
 ## Applying pending migrations
 
@@ -55,6 +55,8 @@ $applied = $manager->applyMigrations(MigrationManager::UPGRADE);
 ```
 
 Upgrade mode applies every pending migration file that is not already recorded in the `migrations` table.
+
+Create a fresh `MigrationManager` for each apply cycle. The manager keeps its discovered migration list on the instance, so a new instance gives each run a clean view of the current migration state.
 
 ## Rolling migrations back
 

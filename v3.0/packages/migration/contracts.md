@@ -19,9 +19,9 @@ The manager rejects classes that do not extend `Migration`.
 
 The runner discovers `*.php` files from `base_dir()/migrations` and derives the class name from the file basename.
 
-In practice, each file must define a class that can be instantiated by that basename and that class must extend `Migration`.
+In practice, each file should define a class that can be instantiated by that basename and that class should inherit from `Migration`.
 
-If the file loads but the class is not a valid migration, the package throws `MigrationException::invalidMigrationClass(...)`.
+If the file loads but the class is not a valid migration, the package raises `MigrationException::invalidMigrationClass(...)`.
 
 ## Manager API
 
@@ -59,12 +59,13 @@ Any other configured driver is rejected before migration work begins.
 
 ## Template caveats
 
-The built-in templates are scaffolds, not guarantees.
+The built-in templates are scaffolds for starting a migration file.
 
-Notable package-driven caveats:
+Before you run a generated file, complete these package-driven details:
 
-- `rename` scaffolds reference `$newName`, which you still need to define
-- `drop` scaffolds leave `down()` empty
-- `create` and `alter` scaffolds only give you the starting table call; you still need to add the actual schema operations
+- align the generated method signatures with the base contract: `up(TableFactory $tableFactory): void` and `down(TableFactory $tableFactory): void`
+- define `$newName` in `rename` scaffolds before using the rename calls
+- add the schema operations that belong in `create` and `alter` scaffolds after the initial table lookup
+- fill in `down()` for `drop` scaffolds when you want a reversible rollback path
 
-Treat generated files as a starting point, then finish them manually.
+Treat generated files as a starting point, then finish them for the schema change you want to ship.
