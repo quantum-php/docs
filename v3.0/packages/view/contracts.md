@@ -83,10 +83,11 @@ If your code only used `renderPartial()`, `getContent()` is still considered una
 
 ## Cache contract
 
-When view cache is enabled, the package caches the fully rendered layout output using the current request URI as the cache key.
+When view cache is enabled, `render()` still renders body and layout first, then writes the final HTML using the current request URI as the cache key.
 
 Important boundary:
 
 - caching happens after both the body and layout are rendered
+- this path does not short-circuit rendering before layout generation
 - only full `render()` participates
 - no request URI means no cache write/read path
