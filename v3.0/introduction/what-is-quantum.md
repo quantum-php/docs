@@ -2,7 +2,7 @@
 
 Quantum PHP Framework is a modular PHP framework for building web applications with a clean and organized structure.
 
-It is designed to help developers build everything from simple websites to larger applications and APIs without getting lost in unnecessary complexity. The framework gives you the core building blocks you expect from modern PHP development, while encouraging a structure that stays understandable as a project grows.
+It helps you build everything from simple websites to larger applications and APIs without unnecessary complexity. It provides familiar modern PHP building blocks while encouraging a structure that remains understandable as a project grows.
 
 At a high level, Quantum PHP Framework provides support for common application concerns such as:
 
@@ -26,13 +26,13 @@ Quantum PHP Framework is especially suitable for developers who want:
 - the flexibility to build websites, dashboards, APIs, and custom applications
 - a modular architecture that can scale with the project
 
-It is a strong fit for developers who want to learn a full framework in a more approachable way, while still giving experienced developers enough room to build serious applications.
+It is a good fit for teams that want a framework that is approachable early and still practical for production work.
 
 ## What kind of framework is it?
 
 Quantum PHP Framework follows an MVC-oriented approach and also supports modular application design. In practice, that means you can separate responsibilities clearly and keep related functionality grouped together in a predictable way.
 
-Rather than forcing everything into one large monolithic structure, the framework encourages clean boundaries between features and application layers.
+Rather than forcing everything into one monolithic structure, it encourages clean boundaries between features and application layers.
 
 ## What can you build with it?
 
