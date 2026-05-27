@@ -57,9 +57,9 @@ Continue with [Project Structure](project-structure.md) to get a clear overview 
 A good next path after this page is:
 
 1. [Project Structure](project-structure.md)
-2. Routing
-3. Controllers
-4. Views
-5. Modules
+2. [Routing](../core-concepts/routing.md)
+3. [Controllers](../core-concepts/controllers.md)
+4. [Views](../core-concepts/views.md)
+5. [Modules](../core-concepts/modules.md)
 
 This order helps you move from "the app runs" to "I understand how the framework is put together."
