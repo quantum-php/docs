@@ -49,7 +49,7 @@ Dropbox operations use path-like names such as `exports/report.csv`. The adapter
 - `put()` always uploads with overwrite mode
 - `append()` is implemented as read-then-write, so it is not an atomic append operation
 - `exists()` delegates to `isFile()`, so directory checks still require `isDirectory()`
-- most adapter failures are converted to `false` instead of being rethrown directly
+- most adapter-level request errors come back as `false` instead of being rethrown directly
 
 ## Google Drive adapter
 
@@ -66,6 +66,7 @@ Google Drive is less path-oriented than Dropbox.
 
 - `makeDirectory('Invoices')` creates a folder by name under `root` unless you pass a parent ID
 - `put('invoice.pdf', $content, $parentId)` creates a new file by name under a parent folder ID
+- if the first `put()` argument already matches an existing file ID, the adapter writes into that Drive file instead of creating a new one
 - once a file exists, most later operations (`get()`, `rename()`, `remove()`, `copy()`, `isFile()`, `isDirectory()`) expect a Google Drive file or folder ID rather than a path
 
 Treat that adapter as ID-based after creation.
@@ -75,7 +76,8 @@ Treat that adapter as ID-based after creation.
 - `copy($source, $dest)` copies a file ID into a destination folder ID, defaulting to `root`
 - `append()` is also read-then-write rather than atomic
 - `listDirectory($dirname)` expects a folder ID and returns the Drive API `files` list for that parent
-- adapter failures are returned as `false`
+- `UploadedFile::save()` is best reserved for path-style remote adapters; direct `fs('gdrive')->put(..., $parentId)` calls give you explicit Drive folder placement
+- adapter-level request errors are returned as `false`
 
 ## Cloud auth requirements
 
@@ -87,4 +89,4 @@ That service must implement `Quantum\Storage\Contracts\TokenServiceInterface` so
 - get the refresh token
 - save new tokens after the first OAuth exchange or an automatic refresh
 
-If the service does not implement that contract, adapter resolution fails before any file operation runs.
+When the configured service implements another interface, adapter resolution raises a storage exception before file operations begin.

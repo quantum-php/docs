@@ -23,11 +23,13 @@ Unsupported adapter methods are rejected with exceptions instead of being ignore
 `UploadedFile` runs this sequence:
 
 1. parse upload metadata
-2. detect extension + MIME from local temp file
+2. detect extension + MIME from the local temp file
 3. load MIME policy (defaults + optional config)
-4. validate upload and destination
-5. write locally or through remote adapter
-6. optionally run post-save image modification
+4. validate the temp file and destination strategy
+5. write locally or forward the temp file content to a remote adapter
+6. optionally run post-save image modification against the saved path
+
+Practical effect: upload inspection and staging still depend on the local adapter, even when the final destination is remote.
 
 ## Cloud composition
 
