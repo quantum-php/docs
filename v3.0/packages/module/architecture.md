@@ -17,7 +17,7 @@ On construction it immediately loads module dependency definitions and passes th
 That has two practical consequences:
 
 1. module dependency registration happens before route loading
-2. disabled modules can still contribute DI bindings
+2. only enabled modules contribute DI bindings
 
 ## Configuration source
 
@@ -29,11 +29,11 @@ shared/config/modules.php
 
 If that file is absent, package operations that need module config raise `ModuleException::moduleConfigNotFound()`.
 
-The config array drives both dependency discovery and enabled-route filtering.
+The config array drives both enabled-dependency discovery and enabled-route filtering.
 
 ## Dependency loading flow
 
-For each module in config, `ModuleLoader` looks for:
+For each enabled module in config, `ModuleLoader` looks for:
 
 ```text
 modules/<ModuleName>/config/dependencies.php

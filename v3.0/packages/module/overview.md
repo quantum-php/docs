@@ -45,12 +45,12 @@ return [
 ];
 ```
 
-`enabled` controls route loading, while dependency loading still covers every configured module.
+`enabled` controls both route loading and dependency loading.
 
 ## Important behavior to rely on
 
-- Module dependencies are registered for every configured module, even when `enabled` is `false`.
-- Module routes are loaded for modules whose config has a truthy `enabled` value.
+- Module dependencies are registered only for modules whose config has a truthy `enabled` value.
+- Module routes are loaded only for modules whose config has a truthy `enabled` value.
 - Each route file returns a `Closure`.
 - Enabled modules without a route file raise a `ModuleException` during route loading.
 
