@@ -8,7 +8,7 @@ This page summarizes the built-in rules shipped by the package.
 
 Passes only when the value is neither an empty string nor `0`.
 
-That means both `''` and `'0'` fail. Integer `0` also fails because the rule casts to string first.
+That means both `''` and `'0'` return an error. Integer `0` does the same because the rule casts to string first.
 
 ### `email`
 
@@ -67,6 +67,8 @@ This is stricter than "valid JSON" in general. JSON arrays, numbers, booleans, a
 Checks loose equality against another field in the same input payload.
 
 Use it for password confirmation or duplicate-entry checks.
+
+Include the referenced field in the submitted payload. The comparison reads the original input array directly, so sending both keys keeps the result predictable.
 
 ### `captcha`
 
@@ -210,6 +212,8 @@ Requires a full valid URL.
 First validates the URL, then checks whether the hostname resolves.
 
 This is a DNS-level existence check, not an HTTP status check.
+
+On installations with `checkdnsrr()` and `idn_to_ascii()`, the lookup checks for an `A` record. If you need different DNS behavior, add a custom rule for your project.
 
 ### `ip`
 
