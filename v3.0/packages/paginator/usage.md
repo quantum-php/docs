@@ -43,6 +43,8 @@ $posts = $paginator->data();
 
 The key rule is order of operations: prepare filters and sorting first, then create the paginator.
 
+The paginator captures `total()` when you create it and reuses the same model instance for page data. If you add more criteria after construction, create a fresh paginator so the row count and page slice stay aligned.
+
 ## Read navigation metadata
 
 The same calls work for both adapters.
@@ -70,6 +72,8 @@ Pass `true` when you need links prefixed with the application base URL.
 ```php
 $absoluteLinks = $paginator->links(true);
 ```
+
+For a full set of absolute navigation links, prefer the direct link helpers or `links(true)`. The built-in HTML renderer keeps its previous and next controls request-relative.
 
 ## Use the built-in HTML renderer
 
