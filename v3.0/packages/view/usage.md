@@ -65,9 +65,16 @@ $body = view()->getContent();
 
 ## Reset shared state when needed
 
-Because `view()` returns a shared instance, params can carry over between calls.
+Because `view()` returns a shared instance, params and layout asset definitions can carry over between calls.
 
-Use `flushParams()` when you intentionally want to clear previously assigned values before another render path.
+Use `flushParams()` when you intentionally want to clear previously assigned values before another render path. When you are switching from a full page flow to a different layout flow, pair that with a fresh `setLayout()` call.
+
+```php
+view()->flushParams();
+view()->setLayout('layouts/account', [
+    'css' => ['/css/account.css'],
+]);
+```
 
 ## Common pitfalls
 
