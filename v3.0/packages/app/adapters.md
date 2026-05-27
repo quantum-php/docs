@@ -64,9 +64,9 @@ The console adapter:
 
 ### `core:env` bootstrap path
 
-`core:env` uses the shortest startup path in this package.
+For `core:env`, the adapter runs only the helper-loading stage before creating the Symfony application.
 
-For that command, Quantum loads helpers and then builds the Symfony application immediately. The application name and version therefore use the adapter defaults of `UNKNOWN` for that run, which keeps the command available before app config is loaded.
+Because app config is skipped in this path, `app.name` and `app.version` resolve through the adapter fallback values when those config values are not available yet.
 
 ### Command registration contract
 
