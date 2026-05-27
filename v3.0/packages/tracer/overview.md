@@ -2,14 +2,14 @@
 
 Tracer is Quantum’s global error-handling layer.
 
-Use it to convert PHP errors into exceptions and render consistent failure output for CLI and web requests.
+Use it during bootstrap to convert PHP runtime errors into exceptions and send uncaught throwables through a consistent CLI or web response path.
 
 ## What it provides
 
-- `ErrorHandler` for registration and exception routing
-- `ExceptionSeverityResolver` for log-level mapping
-- `WebExceptionRenderer` for debug/prod web error pages
-- `StackTraceFormatter` for debug trace snippets
+- `ErrorHandler` for registration and runtime routing
+- `ExceptionSeverityResolver` for logger severity selection
+- `WebExceptionRenderer` for debug and production error views
+- `StackTraceFormatter` for source snippets in debug trace pages
 
 ## Quick setup
 
@@ -24,23 +24,23 @@ $handler->setup($logger);
 
 After setup:
 
-- enabled PHP errors are converted to `ErrorException`
-- uncaught throwables are routed by runtime (`cli` vs web)
-- web failures return HTTP 500
-- production web failures are logged before rendering
+- enabled PHP errors become `ErrorException` instances
+- uncaught throwables are routed by runtime (`cli` or web)
+- web requests return HTTP 500 for uncaught exceptions
+- production web requests log the exception before rendering the response
 
-## Debug vs production output
+## Debug and production output
 
-- CLI debug: class, message, file/line, full trace
-- CLI production: message only
-- Web debug: trace page (`errors/trace`)
-- Web production: error page (`errors/500`)
+- CLI debug: class, message, file/line, and full trace
+- CLI production: exception message in the terminal output
+- Web debug: `errors/trace` partial with formatted stack trace data
+- Web production: `errors/500` partial
 
 ## Practical constraints
 
-- Logging is done in web production flow.
-- Web status code for uncaught exceptions is always 500.
-- Trace code snippets require local filesystem access.
+- Production logging happens in the web exception path.
+- Uncaught web exceptions use a 500 response.
+- Source snippets appear when the filesystem adapter can read local source files.
 
 ## Read next
 

@@ -11,13 +11,15 @@ $handler = new ErrorHandler();
 $handler->setup($logger);
 ```
 
+This wires PHP error handling and uncaught exception handling through the same Tracer instance.
+
 ## Attach CLI output when needed
 
 ```php
 $handler->setCliOutput($output);
 ```
 
-Use this in console commands to keep Tracer output on your existing Symfony output stream.
+Use this in console commands when you want Tracer to write to the same Symfony output stream as the rest of the command. Without an injected output, Tracer writes to Symfony `ConsoleOutput`.
 
 ## Customize collaborators
 
@@ -29,29 +31,30 @@ $handler = new ErrorHandler(
 );
 ```
 
+Use custom collaborators when you want to adjust severity mapping, debug trace formatting, or web error-page rendering while keeping the same top-level handler API.
+
 ## Production behavior
 
 ### CLI
 
-Prints message only.
+Tracer prints the exception message for terminal-friendly output.
 
 ### Web
 
-Returns HTTP 500 and renders `errors/500`.
-If view rendering fails, falls back to plain `Internal Server Error`.
+Tracer returns HTTP 500 and renders `errors/500`. When the error partial is unavailable, Tracer sends a plain `Internal Server Error` response.
 
 ## Debug behavior
 
 ### CLI
 
-Prints class, message, file/line, and trace.
+Tracer prints the exception class, message, file/line, and trace.
 
 ### Web
 
-Renders `errors/trace` with message, severity, and formatted stack trace.
+Tracer renders `errors/trace` with the exception message, severity label, and formatted stack trace.
 
 ## Common pitfalls
 
-- Missing `errors/trace` or `errors/500` partials causes fallback output.
-- Trace snippets depend on local adapter access to source files.
-- Tracer does not map exception types to custom HTTP status codes.
+- Keep `errors/trace` and `errors/500` partials available in the active view layer when you want framework-styled error pages.
+- Trace snippets appear when the storage filesystem adapter can read local source files.
+- Treat Tracer as a 500-level exception handler and keep custom HTTP status responses in your application flow.
