@@ -25,7 +25,7 @@ $archive->setName(storage_dir() . '/builds/app.phar');
 ### PHAR-specific notes
 
 - `extractTo($path, $files)` forwards the optional `$files` argument, so partial extraction is supported
-- `removeArchive()` exists only on the PHAR adapter; call it through `$archive->getAdapter()` when you need it
+- `removeArchive()` is available on the PHAR adapter; call it through `$archive->getAdapter()` when you need it
 - add and delete operations usually return `false` on adapter-level failures instead of throwing
 
 ## ZIP adapter
@@ -50,7 +50,7 @@ $archive->setName(storage_dir() . '/exports/reports.zip');
 
 - `extractTo($path, $files)` ignores the second argument and always asks `ZipArchive` to extract the full archive
 - after add or delete operations, the adapter reopens the archive handle before later reads so `count()` and `offsetExists()` see fresh state
-- directory existence checks treat names without a dot as directory entries and normalize them with a trailing slash
+- `offsetExists()` treats names without a dot as directory entries and normalizes them with a trailing slash, so extensionless files are best added and checked with an explicit entry name such as `bin/run.sh` or `LICENSE.txt`
 
 ## Choosing between them
 

@@ -72,11 +72,12 @@ if ($adapter instanceof PharAdapter) {
 }
 ```
 
-That pattern is safe only when you know which adapter the factory resolved.
+That pattern fits cases where you already know which adapter the factory resolved.
 
 ## Common pitfalls
 
-- Forgetting `setName()` makes the first real operation fail.
+- Forgetting `setName()` means the first real operation stops with an archive exception.
 - Reusing `ArchiveFactory::get()` later in the same process gives you the same archive instance for that adapter type.
-- `addMultipleFiles()` is all-or-nothing only at the return-value level; if one later add fails, earlier files may already be in the archive.
+- `addMultipleFiles()` reports one final result, while entries added before the first returned `false` remain in the archive.
+- ZIP `offsetExists()` is tuned for directory names without dots, so extensionless file entries are easiest to work with when you choose a clear archive entry name up front.
 - ZIP extractions always extract the full archive, even if you pass a file list.

@@ -46,6 +46,10 @@ Missing source files raise an archive exception instead of returning `false`.
 
 `addMultipleFiles()` expects an associative array of archive entry name => source file path.
 
+Batch adds keep entries that were written before the first `false` result or exception path, so the method is best used when partial progress is acceptable or when you are writing into a fresh archive.
+
+On the ZIP adapter, `addMultipleFiles()` converts missing-source and adapter exceptions into a final `false` result.
+
 ## Return-value contract
 
 The package mixes exceptions and boolean failures.
@@ -67,3 +71,4 @@ These differences matter in real integrations:
 - PHAR honors the optional `$files` argument in `extractTo()`
 - ZIP ignores the optional `$files` argument in `extractTo()`
 - PHAR exposes `removeArchive()` but ZIP does not
+- ZIP treats dotless names passed to `offsetExists()` as directory lookups
