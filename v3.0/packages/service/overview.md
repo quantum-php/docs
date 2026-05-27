@@ -10,6 +10,7 @@ Use it when you want business logic outside controllers and want predictable ser
 - `service()` helper for quick resolution
 - `ServiceFactory::create()` for fresh instances
 - `ServiceFactory::get()` for shared instances
+- direct resolution of concrete service classes without a separate DI registration step
 
 ## Quick example
 
@@ -20,7 +21,7 @@ $postService = service(PostService::class);
 $sharedPostService = service(PostService::class, true);
 ```
 
-Default resolution returns a fresh instance. Pass `true` to reuse the shared instance.
+Default resolution returns a fresh instance. Pass `true` to reuse the shared instance for that service class.
 
 ## Typical service shape
 
@@ -42,7 +43,7 @@ class PostService extends Service
 
 - Only classes extending `Quantum\Service\Service` are valid service targets.
 - `service($class)` is fresh-by-default.
-- Undefined method calls on services fail fast.
+- Undefined method calls on services throw immediately.
 
 ## Read next
 
