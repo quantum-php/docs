@@ -16,7 +16,7 @@ class InvoiceService extends Service
 }
 ```
 
-Any class resolved through Service APIs must extend `Quantum\Service\Service`.
+Resolve service classes from subclasses of `Quantum\Service\Service`.
 
 ## Resolve a fresh instance
 
@@ -36,6 +36,7 @@ $service = service(InvoiceService::class, true);
 ```
 
 Use shared mode when the same service instance should be reused.
+The shared cache key is the service class name.
 
 ## Pass runtime constructor arguments
 
@@ -50,6 +51,7 @@ $service = ServiceFactory::create(InvoiceService::class, [
 ```
 
 `service()` does not accept custom constructor args.
+For shared services, provide runtime args on the first `ServiceFactory::get()` call that creates the instance.
 
 ## Compose services with DI
 
@@ -74,7 +76,8 @@ Constructor dependencies are resolved through DI.
 service(stdClass::class);
 ```
 
-This fails because the class does not extend `Quantum\Service\Service`.
+This call is accepted for subclasses of `Quantum\Service\Service`.
+Use a concrete service class here.
 
 ### Forgetting shared mode
 
@@ -82,4 +85,4 @@ If you expect reuse, pass `true` explicitly.
 
 ### Relying on undefined methods
 
-Typos like `$service->publsih()` fail immediately.
+Typos like `$service->publsih()` raise an exception immediately.

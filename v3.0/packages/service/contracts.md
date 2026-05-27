@@ -4,7 +4,7 @@ This page describes the behaviors you can rely on when integrating with the Serv
 
 ## Service type contract
 
-A class must extend `Quantum\Service\Service`.
+Use subclasses of `Quantum\Service\Service` as service targets.
 
 ```php
 use Quantum\Service\Service;
@@ -31,8 +31,10 @@ Contract:
 Contract:
 
 - validates service class eligibility
+- registers the service class with DI when needed
 - returns the shared instance for that service class
-- accepts runtime constructor arguments
+- applies runtime constructor arguments when the shared instance is created
+- reuses the same shared instance on later calls for the same service class
 
 ## Helper contract
 
@@ -47,16 +49,17 @@ Behavior:
 - helper does not accept constructor args
 
 If you need runtime args, use `ServiceFactory::create()` or `ServiceFactory::get()`.
+For shared services, pass those args on the first `get()` call that creates the instance.
 
 ## Undefined method contract
 
 Undefined method calls throw immediately.
 
-Practical effect: service method typos fail fast instead of being silently ignored.
+Practical effect: service method typos surface immediately instead of being silently ignored.
 
-## Failure cases to handle
+## Exception cases to handle
 
 - service class does not exist
 - class exists but does not extend `Quantum\Service\Service`
-- constructor dependencies cannot be resolved
+- constructor dependencies do not resolve through DI or provided args
 - undefined service method is called
