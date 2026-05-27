@@ -10,8 +10,8 @@ The View package sits on top of Renderer and coordinates the rest of the page-re
 
 - the current layout file
 - accumulated view params
-- optional assets registered for the layout
-- the last rendered page body
+- layout asset definitions collected through `setLayout()`
+- the last rendered page body from a full page render
 
 It does not resolve template files itself. It always delegates the final template render to `Renderer`.
 
@@ -21,7 +21,7 @@ It does not resolve template files itself. It always delegates the final templat
 
 It resolves the view service through DI and memoizes one `View` instance inside the factory. In practice, repeated `view()` calls during the same container lifecycle return the same object.
 
-That shared-instance behavior matters because layout and params are mutable state, not one-shot method arguments.
+That shared-instance behavior matters because layout, params, and layout asset definitions are mutable state, not one-shot method arguments.
 
 ### `RawParam`
 
@@ -43,11 +43,13 @@ If a param is wrapped in `RawParam`, the View package skips HTML escaping for th
 
 The body view renders before the layout. Layout templates can then read the rendered body through `getContent()`.
 
+When view cache is enabled, the package still renders the page and layout first. It then stores the final HTML under the current request URI and returns the cached copy for that URI.
+
 ## Partial render flow
 
 `renderPartial()` is deliberately smaller.
 
-It only merges params and renders the requested file. It does not require a layout and does not trigger asset registration, debugger updates, or view-cache writes.
+It merges params into the shared param bag and renders the requested file. It does not require a layout and does not trigger asset registration, debugger updates, or view-cache writes.
 
 ## Escaping boundary
 

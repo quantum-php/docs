@@ -45,8 +45,8 @@ If you need trusted HTML to pass through unchanged, wrap that value in `RawParam
 ## Important constraints
 
 - Full `render()` requires a layout. If no layout is set, it throws a `ViewException`.
-- The factory returns a shared `View` instance, so params and layout state persist until you replace or clear them.
-- `getContent()` only works after a successful full `render()`. Partial renders do not populate it.
+- The factory returns a shared `View` instance, so params, layout state, and layout asset definitions continue across helper calls in the same container lifecycle.
+- `getContent()` returns the body from the most recent full `render()`. Partial renders keep that previous full-render content in place.
 - The package delegates template lookup and adapter selection to the Renderer package.
 
 ## Read next
