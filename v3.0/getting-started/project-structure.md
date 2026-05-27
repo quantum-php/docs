@@ -155,7 +155,7 @@ Those topics should be covered in their own dedicated pages.
 
 After this page, the best next topics are:
 
-- Routing
-- Controllers
-- Views
-- Modules
+- [Routing](../core-concepts/routing.md)
+- [Controllers](../core-concepts/controllers.md)
+- [Views](../core-concepts/views.md)
+- [Modules](../core-concepts/modules.md)

@@ -1,12 +1,12 @@
 # First App
 
-This guide walks through the first real mental shift after installation.
+This guide covers the first practical step after installation.
 
 You already know how to install the Quantum PHP Framework and start the local server.
 Now the goal is to understand how a basic request becomes a response.
 
-For a first app, you do not need to learn every internal detail.
-You only need to understand a simple flow:
+For a first app, you do not need every internal detail.
+Start with this simple flow:
 
 - a route matches the URL
 - a controller action handles the request
@@ -22,7 +22,7 @@ After this page, you should be able to explain:
 - how a route points to a controller
 - how Quantum returns HTML or JSON
 
-That gives you the minimum working model for building real features.
+That gives you a working model for building real features.
 
 ## The basic request flow
 
@@ -35,7 +35,7 @@ A simple way to think about the framework is:
 5. the action returns a response
 6. the browser receives HTML or JSON
 
-That is the core loop you will keep using.
+This is the core loop you will use repeatedly.
 
 ## Step 1: define a route
 
@@ -78,7 +78,7 @@ This is enough for a first example because it shows the connection between route
 
 ## Step 3: return a view
 
-In a normal web page flow, the controller often prepares HTML through the response and view layer instead of returning plain text.
+In a normal web page flow, the controller usually prepares HTML through the response and view layer instead of returning plain text.
 
 A Quantum-style controller can look like this:
 
@@ -89,7 +89,7 @@ public function hello(Response $response, ViewFactory $view)
 }
 ```
 
-That means the controller delegates HTML rendering to the view layer and sends it through the response object.
+The controller delegates HTML rendering to the view layer and sends it through the response object.
 
 This is a cleaner pattern than building HTML directly inside the controller.
 
@@ -109,14 +109,14 @@ public function profile()
 }
 ```
 
-The exact response style depends on the app structure and response helpers you use, but the core idea stays the same:
+The exact response style depends on your app structure and helpers, but the core idea stays the same:
 
 - web routes often return views
 - API-style routes often return JSON
 
 ## A practical way to think about it
 
-If you forget the details, remember this:
+If you need a quick mental model, remember this:
 
 - routing decides where the request goes
 - middleware decides whether it can continue
@@ -124,7 +124,7 @@ If you forget the details, remember this:
 - views render HTML
 - JSON responses power APIs and dynamic frontend calls
 
-That is enough to start reading the rest of the docs without feeling lost.
+That is enough to continue through the docs without losing context.
 
 ## What people usually misunderstand
 
@@ -136,7 +136,7 @@ Routes should describe request mapping, not become the entire app.
 ### 2. Controllers are not views
 Controllers prepare and coordinate. Views handle presentation.
 
-### 3. HTML and JSON are both valid first responses
+### 3. HTML and JSON are both valid first outputs
 Your first app does not have to be page-only. Quantum supports both traditional web flows and API-style responses.
 
 ### 4. Middleware is part of the request path
@@ -152,4 +152,4 @@ To deepen this basic flow, read these next:
 4. [Views](../core-concepts/views.md)
 5. [Middleware](../core-concepts/middleware.md)
 
-Once those make sense together, you are no longer just running Quantum. You are actually reading and building with it.
+Once these topics make sense together, you are ready to read and build confidently with Quantum.
