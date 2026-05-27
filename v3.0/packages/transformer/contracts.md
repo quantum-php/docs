@@ -2,7 +2,7 @@
 
 ## Transformer interface
 
-Every transformer must implement `Quantum\Transformer\Contracts\TransformerInterface`.
+Every transformer implements `Quantum\Transformer\Contracts\TransformerInterface`.
 
 ```php
 interface TransformerInterface
@@ -11,12 +11,12 @@ interface TransformerInterface
 }
 ```
 
-The contract is deliberately loose:
+The contract stays deliberately open:
 
-- `$item` can be any value
-- the return value can be any value
+- `$item` may be any value
+- the return value may be any value
 
-In practice, most application transformers return arrays that are ready for JSON or templating.
+In most applications, transformers return arrays that are ready for JSON responses or view data.
 
 ## Collection transform contract
 
@@ -34,33 +34,38 @@ $result = Transformer::transform($data, $transformer);
 Behavior that matters in real usage:
 
 - the transformer runs once for each input item
-- the returned array contains the per-item return values
-- item order follows the input array order
-- when you pass one array, PHP preserves associative keys during the mapping
+- the same transformer instance handles the full collection
+- the returned array keeps input order
+- associative keys stay attached to their transformed values
+- the callback receives each item value, without array keys
 
 ## Type boundaries
 
-Because the package declares `strict_types=1` and concrete parameter types:
+With `strict_types=1` and concrete parameter types, PHP enforces the package boundary at the method signature.
 
-- passing a non-array first argument fails with `TypeError`
-- passing an object that does not implement `TransformerInterface` fails with `TypeError`
+That means:
 
-The package does not add its own exception layer around those cases.
+- pass an array as the first argument
+- pass an object that implements `TransformerInterface` as the second argument
 
-## Failure behavior inside your transformer
+PHP raises `TypeError` when either argument falls outside that contract.
 
-The package does not catch exceptions or rewrite return values.
+## Exception and return-value flow
+
+The package forwards the result of each `transform()` call directly into the returned array.
 
 Practical effect:
 
-- if your `transform()` method throws, that exception bubbles up unchanged
-- if your `transform()` method returns mixed value types, the result array will contain those mixed values as-is
+- exceptions from your transformer move upward unchanged
+- mixed return types remain mixed in the final array
+
+This keeps the package predictable and leaves output policy inside your transformer class.
 
 ## Stateless package contract
 
-`Transformer::transform()` is static and has no internal cache or shared state.
+`Transformer::transform()` is static and carries no package-level cache or shared state.
 
-Each call depends only on:
+Each call depends on:
 
 - the array you pass in
 - the transformer object you pass in

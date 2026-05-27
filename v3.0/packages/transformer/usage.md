@@ -2,7 +2,7 @@
 
 ## Transform a result list
 
-The most common pattern is to fetch records in a service and map them through a transformer.
+The common flow is to fetch records in a service and map them through a transformer.
 
 ```php
 use Quantum\Transformer\Contracts\TransformerInterface;
@@ -24,7 +24,7 @@ $payload = transform($posts, new PostTransformer());
 
 This keeps response shaping separate from query or domain logic.
 
-## Reuse one transformer instance
+## Reuse one transformer instance across a collection
 
 ```php
 $transformer = new PostTransformer();
@@ -33,44 +33,26 @@ $list = transform($posts, $transformer);
 $featured = transform($featuredPosts, $transformer);
 ```
 
-This works well when the transformer itself is stateless.
+The package passes the same transformer object through the full collection mapping. That fits stateless transformers well and also works for transformers that carry shared formatting context.
 
-If your transformer stores mutable state, remember that the package will reuse the same object for every item in that call.
+## Choose the right path for one record
 
-## Transform a single item
-
-The package does not expose a dedicated single-record method.
-
-Use one of these approaches:
+The package focuses on collection mapping. For one record, call the transformer directly when that reads better in your code.
 
 ```php
 $item = $posts[0];
 $payload = (new PostTransformer())->transform($item);
 ```
 
-or:
+If you want to keep the same collection-shaped flow, wrap the item and read the first transformed value.
 
 ```php
 $payload = transform([$item], new PostTransformer())[0];
 ```
 
-Calling the transformer directly is usually clearer for one record.
+## Preserve or reindex keys intentionally
 
-## Common pitfalls
-
-### Pass a real array
-
-The package signature only accepts arrays.
-
-If you have another iterable type, convert it before calling the helper.
-
-```php
-$payload = transform(iterator_to_array($items), new PostTransformer());
-```
-
-### Keep or reset associative keys intentionally
-
-`transform()` preserves associative keys.
+`transform()` uses PHP array mapping semantics, so associative keys stay attached to their transformed values.
 
 ```php
 $byUuid = [
@@ -82,16 +64,24 @@ $transformed = transform($byUuid, new PostTransformer());
 // keys remain: a1, b2
 ```
 
-If you need numeric indexing, normalize with `array_values()`.
+If you want sequential numeric keys, normalize the input first.
 
-### Keep transformer output predictable
+```php
+$transformed = transform(array_values($byUuid), new PostTransformer());
+```
 
-The interface allows any return type, but mixed result shapes make downstream code harder to use.
+## Convert iterables before mapping
 
-Prefer returning one consistent structure for every item in the same collection.
+The package works with arrays. When your data source returns another iterable type, convert it before calling the helper.
 
-### Handle failures in your own transformer
+```php
+$payload = transform(iterator_to_array($items), new PostTransformer());
+```
 
-If a transform step can fail, catch or normalize that case inside your transformer.
+## Keep output shape predictable
 
-The package itself does not provide fallback behavior per item.
+The interface accepts any return value, so the clearest application code comes from returning one consistent structure for each item in the same collection.
+
+## Empty collections flow through cleanly
+
+An empty input array returns an empty array, which makes the helper a good fit for response pipelines that already expect a collection result.
