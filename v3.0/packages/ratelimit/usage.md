@@ -9,7 +9,20 @@ Router::get('/api/posts', 'PostController', 'index')
     ->rateLimit(60, 60);
 ```
 
-This is the normal entry point. You do not add `RateLimitMiddleware` manually.
+This is the standard entry point. The framework wires `RateLimitMiddleware` for matched routes, so there is no extra middleware registration step here.
+
+## Apply one throttle to a route group
+
+When several routes should share the same rate-limit settings, attach `rateLimit(...)` to the group.
+
+```php
+Router::group('/api', function () {
+    Router::get('/posts', 'PostController', 'index');
+    Router::post('/posts', 'PostController', 'store');
+})->rateLimit(120, 60);
+```
+
+This copies the same `limit` and `interval` settings to each route created by that group.
 
 ## Choose a backend
 
@@ -24,11 +37,11 @@ return [
 
 Use `file` for a simple local setup.
 
-Use `redis` when requests from different workers or servers must share the same counter.
+Use `redis` when requests from different workers or servers should share the same counter.
 
 ## Resolve the limiter manually
 
-Most applications let the middleware call the limiter for them, but you can use the same package directly.
+Most applications let the middleware call the limiter for them, and you can use the same package directly when you want a custom throttle outside the route flow.
 
 ```php
 use Quantum\RateLimit\Factories\RateLimiterFactory;
@@ -39,8 +52,6 @@ if (!$limiter->hit('POST', '/api/uploads', get_user_ip(), 10, 60)) {
     return response()->json(['message' => 'Too Many Requests'], 429);
 }
 ```
-
-This is useful when you need a custom throttle outside the normal route middleware flow.
 
 ## Reset a bucket
 
@@ -57,7 +68,7 @@ Use the second form when you want the client to start with an existing count.
 
 ## Understand the middleware response
 
-When a request is blocked, the built-in middleware returns:
+When a request is throttled, the built-in middleware returns:
 
 ```http
 HTTP/1.1 429 Too Many Requests
@@ -70,34 +81,32 @@ Retry-After: 17
 {"message":"Too Many Requests"}
 ```
 
-When a request is allowed, only `X-RateLimit-Limit` is added by this package.
+When a request is allowed, this package adds `X-RateLimit-Limit` to the response.
 
-## Common pitfalls
+## Common integration notes
 
-### Do not rely on client-specific limits if IP detection is unreliable
+### Keep client IP resolution accurate
 
 The limiter uses `get_user_ip()`.
 
-If your proxy or server setup does not expose the real client IP, different users can share the same bucket.
-
-If you are behind a reverse proxy or load balancer, make sure IP forwarding is configured correctly so `get_user_ip()` resolves the real client IP.
+With reverse proxies or load balancers, configure IP forwarding so `get_user_ip()` resolves the real client IP. That keeps each bucket aligned with the right client.
 
 ### Know the difference between `interval` and adapter `ttl`
 
 The route `interval` controls the normal request window.
 
-The adapter config `ttl` only matters when you call `reset(..., $count)` with a positive count.
+The adapter config `ttl` matters when you call `reset(..., $count)` with a positive count.
 
-### Expect rate limiting before module middleware
+### Plan middleware order around throttling
 
-If a route is throttled, the framework rate-limit middleware runs before your module middleware list.
+For throttled routes, the framework rate-limit middleware runs before your module middleware list.
 
-That matters when you expected an auth middleware, logging middleware, or other custom middleware to run first.
+That matters when you expect auth, logging, or other custom middleware to run first.
 
-### Add backend-aware error handling
+### Handle backend-specific storage outcomes
 
-Storage adapters expose failures differently.
+Storage adapters expose runtime issues differently.
 
-If the file adapter cannot lock/open its state file, the hit result is blocked.
+For the file adapter, an unavailable lock or state handle produces a blocked hit result.
 
-For Redis, connection/runtime issues are surfaced by the client, so add exception handling at your app boundary.
+For Redis, connection and runtime issues surface through the Redis client, so app-level exception handling is the right place to capture them.
