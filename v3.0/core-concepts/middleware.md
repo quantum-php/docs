@@ -240,4 +240,8 @@ A useful way to think about middleware in Quantum is:
 
 ## What to read next
 
-After middleware, the next good step would be deeper docs on request and response flow, or a practical guide for building a first module with routes, controllers, views, and middleware together.
+After middleware, good next steps are:
+
+- [Request Handling](request.md)
+- [Modules](modules.md)
+- [First App](../getting-started/first-app.md)

@@ -255,6 +255,7 @@ $route->get('posts/latest', 'PostController', 'latest');
 $route->get('posts/[id=:num]', 'PostController', 'show');
 ```
 
+## Practical summary
 
 - each module defines its own routes
 - each route maps a method and URL pattern to a handler
@@ -295,4 +296,12 @@ $route->group('api', function ($route) {
 ```
 
 > **Note:** `rateLimit` values must be greater than 0; providing an invalid value will result in an exception.
+
+## What to read next
+
+After routing, the next best topics are:
+
+- [Controllers](controllers.md)
+- [Middleware](middleware.md)
+- [Request Handling](request.md)
 

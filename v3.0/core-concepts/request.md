@@ -74,3 +74,11 @@ $request->setQueryParam('id', '1');
 $request->setQueryParam('id', '2');
 // Raw query string: "user=arman&message=hello world&id=1&id=2"
 ```
+
+## What to read next
+
+After request handling, continue with:
+
+- [Routing](routing.md)
+- [Middleware](middleware.md)
+- [Request Lifecycle](../advanced-features/request-lifecycle.md)

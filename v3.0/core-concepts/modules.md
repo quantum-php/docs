@@ -173,8 +173,8 @@ A good short way to think about Quantum modules is:
 
 After this overview, the next good documentation step would be deeper pages on:
 
-- middleware
-- request and response flow
-- services
-- configuration
-- building a first real module
+- [Middleware](middleware.md)
+- [Request Handling](request.md)
+- [Services](services.md)
+- [Configuration](../advanced-features/configuration.md)
+- [First App](../getting-started/first-app.md)
