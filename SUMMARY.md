@@ -23,9 +23,7 @@
 * [Views](v3.0/core-concepts/views.md)
 * [Middleware](v3.0/core-concepts/middleware.md)
 * [Services](v3.0/core-concepts/services.md)
-
-### Modules
-* [Overview](v3.0/core-concepts/modules.md)
+* [Modules](v3.0/core-concepts/modules.md)
 
 ### Packages
 * App
