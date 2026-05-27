@@ -32,7 +32,7 @@ $loader = new ModuleLoader();
 $dependencies = $loader->loadModulesDependencies();
 ```
 
-This returns one merged dependency map across all configured modules.
+This returns one merged dependency map across enabled modules.
 
 Use `getModuleDependencies('Blog')` when you need the bindings declared by one module.
 
@@ -93,6 +93,6 @@ This prevents two modules from registering the same config key or default prefix
 ## Common reminders
 
 - `ModuleLoader` registers dependencies in its constructor, so instantiating it also updates the DI container.
-- Disabled modules still contribute dependency bindings.
+- Disabled modules are skipped for dependency registration.
 - `writeContents()` covers filesystem scaffolding, while `addModuleConfig()` updates `shared/config/modules.php`.
 - Generated files in a template's `src/` tree receive placeholder replacement, and generated PHP files use the current module base namespace from `request()`.

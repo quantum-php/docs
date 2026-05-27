@@ -23,11 +23,11 @@ Contract rules:
 
 ### `loadModulesDependencies(): array<string, string>`
 
-Returns a merged dependency map for every configured module.
+Returns a merged dependency map for enabled modules.
 
 Contract rules:
 
-- ignores the `enabled` flag
+- includes modules whose `enabled` option is truthy
 - missing dependency files are treated as empty
 - non-array dependency files are treated as empty
 - later modules override earlier dependency keys
