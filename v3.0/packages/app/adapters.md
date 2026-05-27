@@ -56,25 +56,31 @@ The console adapter:
 
 - creates Symfony `ArgvInput` and `ConsoleOutput`
 - loads helpers for every command
-- loads environment, app config, and error handling for all commands except `core:env`
-- marks the shared `Environment` instance mutable for non-`core:env` commands
+- loads environment, app config, and error handling for commands other than `core:env`
+- marks the shared `Environment` instance mutable for commands other than `core:env`
 - creates the Symfony application using `app.name` and `app.version`
 - registers framework and app command classes
 - validates that the requested command exists before running
 
+### `core:env` bootstrap path
+
+`core:env` uses the shortest startup path in this package.
+
+For that command, Quantum loads helpers and then builds the Symfony application immediately. The application name and version therefore use the adapter defaults of `UNKNOWN` for that run, which keeps the command available before app config is loaded.
+
 ### Command registration contract
 
-App commands are discovered only from `shared/Commands`.
+App commands are discovered from `shared/Commands`.
 
 Framework commands are discovered from the framework's own `Console/Commands` directory.
 
 Discovered classes are instantiated directly, so constructor-injected command dependencies are not part of this adapter's command-loading model.
 
-## Unsupported adapter types
+## Supported adapter types
 
-`AppFactory::create()` accepts only:
+`AppFactory::create()` accepts these adapter types:
 
 - `AppType::WEB` (`web`)
 - `AppType::CONSOLE` (`console`)
 
-Any other type fails fast with an app exception.
+Passing another type raises an app exception during creation.

@@ -14,10 +14,10 @@ Creates or returns the shared `App` instance for the requested type.
 ### Guarantees
 
 - the returned object wraps the selected adapter
-- a new DI container is created only for the first instance of each type
+- the first instance of each type creates the DI container that later calls for that type reuse
 - the created `AppContext` is stored globally on `App`
 
-### Caveat: cache key is only the app type
+### Caveat: cache key is the app type
 
 If you call:
 
@@ -33,6 +33,10 @@ both calls reuse the same cached `web` app instance until you destroy it.
 Removes the cached instance for one app type.
 
 Use it when a long-running process or test suite needs a fresh boot cycle for the same adapter type.
+
+On the next `create()` call for that type, Quantum builds a new container, a new `AppContext`, and a new adapter-backed `App` instance.
+
+The shared static context switches when the next app instance is created, so a destroy-and-create pair is the clean way to refresh helper paths and container-backed services.
 
 ## `App::__call()` proxy behavior
 
@@ -86,4 +90,4 @@ The package exposes three constants:
 - `ExitCode::FAILURE` = `1`
 - `ExitCode::INVALID` = `2`
 
-The built-in adapters mainly return `SUCCESS` for handled execution paths. Console command exit codes from Symfony are passed through, with falsy values normalized to `0`.
+The built-in adapters return `SUCCESS` for the handled web paths in this package. The console adapter forwards the Symfony command exit code and normalizes empty-style results to `0`.
