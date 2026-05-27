@@ -4,7 +4,7 @@ Use the App package in entry points, not inside normal feature code.
 
 ## Web entry point
 
-A typical front controller creates the app and starts it:
+A typical front controller only needs to create the app and start it:
 
 ```php
 use Quantum\App\Enums\AppType;
@@ -55,8 +55,6 @@ $moduleRoot = modules_dir();
 
 Because the factory caches one app per type, tests that need a new base directory or a fresh boot state should destroy the cached app first.
 
-That same refresh pattern is useful in long-running tooling that switches between fixture projects or between repeated bootstrap cycles.
-
 ```php
 use Quantum\App\Enums\AppType;
 use Quantum\App\Factories\AppFactory;
@@ -73,7 +71,7 @@ If the same PHP process boots two different projects with the same adapter type,
 
 ### Calling path helpers too early
 
-Helpers like `base_dir()` and `public_dir()` are available after `AppFactory::create()` has initialized `AppContext`.
+Helpers like `base_dir()` and `public_dir()` require `AppContext` to be set. Calling them before `AppFactory::create()` finishes will fail.
 
 ### Constructor-heavy console commands
 
