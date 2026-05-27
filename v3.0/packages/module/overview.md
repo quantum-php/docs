@@ -21,7 +21,7 @@ modules/<ModuleName>/routes/routes.php
 modules/<ModuleName>/config/dependencies.php
 ```
 
-Only `routes/routes.php` is required for enabled modules. `config/dependencies.php` is optional.
+Enabled modules need `routes/routes.php`. `config/dependencies.php` is optional.
 
 ## How module enabling works
 
@@ -45,14 +45,14 @@ return [
 ];
 ```
 
-Enabled controls route loading only.
+`enabled` controls route loading, while dependency loading still covers every configured module.
 
 ## Important behavior to rely on
 
 - Module dependencies are registered for every configured module, even when `enabled` is `false`.
-- Module routes are loaded only for modules whose config has a truthy `enabled` value.
-- Each route file must return a `Closure`.
-- Missing route files for enabled modules fail fast with a `ModuleException`.
+- Module routes are loaded for modules whose config has a truthy `enabled` value.
+- Each route file returns a `Closure`.
+- Enabled modules without a route file raise a `ModuleException` during route loading.
 
 ## Built-in templates
 
@@ -66,11 +66,11 @@ Templates shipped in the package include:
 - `DemoWeb`
 - `Toolkit`
 
-These templates vary in size. Some only create controllers, config, and routes. Others also include models, services, views, translations, or static assets.
+These templates vary in size. Some create controllers, config, and routes. Others also include models, services, views, translations, or static assets.
 
 ## When to use this package directly
 
-Most applications will interact with modules through Quantum bootstrapping or CLI commands. You would use the package classes directly when you are:
+Most applications will interact with modules through Quantum bootstrapping or CLI commands. Use the package classes directly when you are:
 
 - building custom project scaffolding
 - writing installation flows

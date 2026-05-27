@@ -2,6 +2,8 @@
 
 The Module package is split between runtime loading and filesystem scaffolding.
 
+Use `ModuleLoader` during boot or route registration, and use `ModuleManager` when you want to generate a new module from one of the built-in templates.
+
 ## Runtime loader
 
 `ModuleLoader` keeps three in-memory caches:
@@ -25,7 +27,7 @@ The loader reads one shared file:
 shared/config/modules.php
 ```
 
-If that file does not exist, package operations that need module config fail with `ModuleException::moduleConfigNotFound()`.
+If that file is absent, package operations that need module config raise `ModuleException::moduleConfigNotFound()`.
 
 The config array drives both dependency discovery and enabled-route filtering.
 
@@ -49,7 +51,9 @@ When multiple modules declare the same dependency key, modules listed later in `
 modules/<ModuleName>/routes/routes.php
 ```
 
-The file must exist and must return a `Closure`. The closure is cached per module after the first read.
+The file must exist and return a `Closure`. The closure is cached per module after the first read.
+
+A loader instance also keeps its module config and dependency maps in memory. After you edit `shared/config/modules.php`, `config/dependencies.php`, or `routes/routes.php` in the same process, create a fresh `ModuleLoader` so the next read uses the updated files.
 
 ## Scaffolding flow
 
@@ -62,13 +66,14 @@ The package does not combine those steps automatically. If you use `ModuleManage
 
 ## Template processing
 
-Template PHP files are materialized into runnable module files:
+Files under a template's `src/` tree are copied into the new module with placeholder replacement applied during the write step:
 
 - `*.php.tpl` becomes `*.php`
+- other filenames keep their original name
 - `{{MODULE_NAMESPACE}}` resolves to `<module base namespace>\\<ModuleName>`
 - `{{MODULE_NAME}}` resolves to the requested module name
 
-Asset files are copied as-is (no placeholder replacement).
+Files under a template's `assets/` tree are copied as-is.
 
 ## Prefix defaults
 
