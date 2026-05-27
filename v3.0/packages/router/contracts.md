@@ -70,11 +70,33 @@ Rules:
 
 For controller routes:
 
+- the controller is instantiated directly for each dispatch, so constructor-free controllers fit best here
 - target action method must exist
-- controller action must return `Response`
+- controller action returns `Response`
+- action parameters and `__before()` / `__after()` hook parameters are resolved through the DI container
 - if `__before()` / `__after()` exist, they run around the action
 
-## Failure modes you should handle
+## Controller request contracts
+
+Use the controller property below when a route should participate in CSRF checks for state-changing request methods:
+
+```php
+class AccountController
+{
+    protected bool $csrfVerification = true;
+
+    public function update(Request $request): Response
+    {
+        // ...
+    }
+}
+```
+
+When that property is enabled, Router asks the CSRF package to validate the request before the action runs.
+
+## Integration checks
+
+Keep these contracts in mind when wiring routes:
 
 - invalid method declarations
 - incomplete controller/action definitions
