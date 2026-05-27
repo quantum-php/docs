@@ -83,7 +83,7 @@ If your code only used `renderPartial()`, `getContent()` is still considered una
 
 ## Cache contract
 
-When view cache is enabled, `render()` still renders body and layout first, then writes the final HTML using the current request URI as the cache key.
+`render()` renders body and layout, then writes the final HTML using the current request URI as the cache key when view cache is enabled.
 
 Important boundary:
 
