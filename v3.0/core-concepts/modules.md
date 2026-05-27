@@ -32,12 +32,11 @@ Modules are part of the application startup flow, not just a project-organizatio
 
 ## Module loading process
 
-The framework's module loader manages application startup in two distinct phases:
+The framework's module loader manages application startup in two phases:
 
-1.  **Dependency Registration**: During initialization, the loader scans all modules listed in `shared/config/modules.php`. It automatically loads all module dependencies defined in `modules/<ModuleName>/config/dependencies.php`, **regardless of whether the module is enabled**.
-    *   *Caution*: Because dependencies are loaded before the enabled check, if a disabled module contains service definitions in its `dependencies.php`, these services will still be registered in the DI container and may impact application behavior.
+1.  **Dependency Registration**: During initialization, the loader scans modules listed in `shared/config/modules.php` and loads dependencies from `modules/<ModuleName>/config/dependencies.php` **only for modules marked as enabled**.
 
-2.  **Route Loading**: After dependencies are registered, the loader selectively loads route definitions from `modules/<ModuleName>/routes/routes.php`, but **only for modules explicitly marked as enabled** in the module configuration.
+2.  **Route Loading**: After dependencies are registered, the loader loads route definitions from `modules/<ModuleName>/routes/routes.php` **only for modules marked as enabled**.
 
 Modules directly affect both bootstrap behavior and route availability.
 
