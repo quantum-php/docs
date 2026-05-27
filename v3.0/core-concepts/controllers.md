@@ -215,4 +215,8 @@ The simplest useful way to think about it is:
 
 ## What to read next
 
-After controllers, the next best topic is views, because many web controllers hand their work off to the view layer.
+After controllers, continue with:
+
+- [Views](views.md)
+- [Middleware](middleware.md)
+- [Services](services.md)

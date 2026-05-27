@@ -103,14 +103,10 @@ class YourService extends Service
 
 ---
 
-## Next Steps
+## What to read next
 
-Explore:
+After services, continue with:
 
-- [Models](../core-concepts/models.md)
-- [Transformers](../packages/transformer/overview.md)
+- [Models](models.md)
 - [Dependency Injection](../advanced-features/dependency-injection.md)
-
-## Related Topics
-
-- See the [Service Lifecycle Management](../core-concepts/services.md) section for additional context.
+- [Transformer Package](../packages/transformer/overview.md)

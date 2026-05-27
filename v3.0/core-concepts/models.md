@@ -130,15 +130,10 @@ This definition allows the framework to understand and resolve model association
 
 ---
 
-## Next Steps
+## What to read next
 
-Explore:
+After models, continue with:
 
-- [Services](../core-concepts/services.md)
-- [Dependency Injection](../advanced-features/dependency-injection.md)
+- [Services](services.md)
 - [Database](../advanced-features/database.md)
-
-## Related Topics
-
-- For more on database queries, visit the [Database documentation](../advanced-features/database.md).
-- See also the [Migration system](../advanced-features/migration.md) to manage schema changes.
+- [Migration](../advanced-features/migration.md)

@@ -184,4 +184,8 @@ A useful way to think about views in Quantum is:
 
 ## What to read next
 
-After views, the next best topic is modules, because Quantum uses modules as a major organizing unit for routes, controllers, views, and related code.
+After views, continue with:
+
+- [Modules](modules.md)
+- [Routing](routing.md)
+- [Controllers](controllers.md)
