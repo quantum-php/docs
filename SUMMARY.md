@@ -25,7 +25,7 @@
 * [Services](v3.0/core-concepts/services.md)
 
 ### Modules
-* [Modules Overview](v3.0/core-concepts/modules.md)
+* [Overview](v3.0/core-concepts/modules.md)
 
 ### Packages
 * App
