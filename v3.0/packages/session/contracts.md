@@ -6,6 +6,8 @@ This page defines behavior you can rely on when integrating with Session.
 
 `session()` returns `Quantum\Session\Session`, which forwards supported calls to the active adapter.
 
+The factory keeps one shared wrapper per adapter name for the current process, so repeated `session()` or `session('native')` calls reuse the same wrapper.
+
 Unsupported method calls throw a session exception.
 
 ## Read/write contract
@@ -14,6 +16,8 @@ Unsupported method calls throw a session exception.
 - `get(string $key): mixed|null`
 - `delete(string $key): void`
 - `all(): array`
+
+Session serializes and encrypts values on write, then decrypts and unserializes them on read. Scalars and arrays round-trip through the API, while backend storage keeps the encoded payload.
 
 Use Session APIs as the source of truth for values.
 
@@ -44,7 +48,7 @@ Because `get()` depends on `has()`, these values read back as `null`.
 
 - `flush(): void` clears storage and destroys session state
 - `getId(): ?string` returns current session ID when available
-- `regenerateId(): bool` regenerates ID only when a session is active
+- `regenerateId(): bool` regenerates the ID for the active session, reopens the adapter, and keeps the same adapter config
 
 Use `regenerateId()` after authentication or privilege changes.
 
@@ -55,6 +59,6 @@ Supported adapter names:
 - `native`
 - `database`
 
-Unknown adapter names fail during resolution.
+Unknown adapter names raise a session exception during resolution.
 
 When no adapter is passed, resolution uses `session.default` config.

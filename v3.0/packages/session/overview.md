@@ -2,7 +2,7 @@
 
 Session provides a consistent API for request-scoped state, flash messages, and session ID management.
 
-Use it when you need to persist small values between requests without coupling your code to raw `$_SESSION` access.
+Use it when you need to persist small values between requests without coupling your code to raw `$_SESSION` access. Stored values are serialized and encrypted through the Encryption package, so session data round-trips as PHP values while backend storage stays opaque.
 
 ## What it provides
 
@@ -33,9 +33,10 @@ When no adapter is passed, Session uses `session.default` from `config/session.p
 
 ## Operational constraints
 
+- `session()` reuses one `Session` wrapper per adapter inside the current process.
 - `has()` treats empty-like values as missing (`null`, `false`, `0`, `'0'`, `''`).
 - `get()` depends on `has()`, so those values resolve as `null`.
-- Use Session APIs for reads/writes instead of relying on backend storage format.
+- Use Session APIs for reads and writes instead of relying on backend storage format.
 - Regenerate session IDs after authentication or privilege changes.
 
 ## Read next
