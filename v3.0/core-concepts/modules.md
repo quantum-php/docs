@@ -28,9 +28,9 @@ So instead of thinking only in terms of one global controller folder and one glo
 
 ## Why modules matter in Quantum
 
-From the upstream source, modules are not just a convenience pattern. They are built into the application startup flow.
+Modules are part of the application startup flow, not just a project-organization preference.
 
-## The Module Loading Process
+## Module loading process
 
 The framework's module loader manages application startup in two distinct phases:
 
@@ -39,7 +39,7 @@ The framework's module loader manages application startup in two distinct phases
 
 2.  **Route Loading**: After dependencies are registered, the loader selectively loads route definitions from `modules/<ModuleName>/routes/routes.php`, but **only for modules explicitly marked as enabled** in the module configuration.
 
-That means modules participate directly in how the application boots and how routes become available.
+Modules directly affect both bootstrap behavior and route availability.
 
 ## Where module configuration lives
 
@@ -51,8 +51,6 @@ shared/config/modules.php
 
 This file controls module-level options such as whether a module is enabled.
 
-So a project may support modules structurally even if only some of them are active at a given time.
-
 ## Where module routes live
 
 For each module, route definitions are expected at:
@@ -61,9 +59,7 @@ For each module, route definitions are expected at:
 modules/<ModuleName>/routes/routes.php
 ```
 
-This is important because it shows how modules connect to routing.
-
-Each module contributes its own routing rules instead of relying on one central route file for the whole application.
+Each module contributes its own routes instead of relying on one global route file.
 
 ## Where module dependencies can live
 
@@ -73,11 +69,11 @@ A module can also provide its own dependency definitions through:
 modules/<ModuleName>/config/dependencies.php
 ```
 
-That helps modules declare the services or bindings they need.
+This is where module-specific service bindings are declared.
 
 ## What a module can contain
 
-The upstream templates make the module shape much clearer.
+The templates make the module shape clear.
 
 ### Default API module template
 Includes areas such as:
@@ -95,7 +91,7 @@ Includes areas such as:
 - `assets/`
 
 ### Demo module templates
-The richer demo templates show that modules can also contain:
+Demo templates also include:
 
 - `DTOs/`
 - `Enums/`
@@ -105,13 +101,11 @@ The richer demo templates show that modules can also contain:
 - `Transformers/`
 - `resources/`
 
-So modules in Quantum can scale from simple to fairly complete feature packages.
+Modules can scale from small routing units to full feature packages.
 
 ## Fresh skeleton vs active modules
 
-A fresh project skeleton may not always show populated module directories immediately. But that does **not** mean modules are theoretical or undocumented features.
-
-The upstream project and framework clearly support module generation and module-driven routing.
+A fresh project skeleton may not show populated module directories immediately, but module generation and module-driven routing are built in.
 
 In fact, Quantum includes a CLI command for generating modules:
 
@@ -123,12 +117,10 @@ This command uses built-in templates such as:
 
 - `DefaultWeb`
 - `DefaultApi`
-- other richer templates depending on use case
-
-So it helps to understand the difference between:
+- other templates available in the framework
 
 - an empty or lightly populated fresh project
-- a real modular application after modules are generated and enabled
+- a modular application after modules are generated and enabled
 
 ## Modules and route prefixes
 
@@ -140,7 +132,7 @@ This helps the framework organize routes in a module-aware way rather than as un
 
 ## Modules and testing
 
-The upstream project tests also reinforce the module model.
+Project tests also reinforce the module model.
 
 There are feature tests under paths like:
 
@@ -148,7 +140,7 @@ There are feature tests under paths like:
 tests/Feature/modules/Api/
 ```
 
-That is a practical signal that modules are a real application boundary in Quantum, not just a documentation concept.
+This confirms modules are treated as an application boundary in practice.
 
 ## When to use modules
 
@@ -171,7 +163,7 @@ A good short way to think about Quantum modules is:
 
 ## What to read next
 
-After this overview, the next good documentation step would be deeper pages on:
+After this overview, continue with:
 
 - middleware
 - request and response flow
