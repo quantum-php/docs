@@ -36,11 +36,13 @@ Before validation runs, the package inserts `''` for any field that has rules bu
 This has two important effects:
 
 - optional rules like `maxLen(50)` can still pass on omitted fields
-- omitted fields with stricter rules like `email()` still fail
+- omitted fields with stricter rules like `email()` still return an error
 
 ### Validation runs only for configured fields
 
 Extra keys in the input array are ignored unless you registered rules for them.
+
+When you use `same('other_field')`, include that referenced key in the submitted payload too. The validator fills missing validated fields in its working copy, while `same()` reads from the original input array.
 
 ## Execution contract
 
@@ -50,7 +52,7 @@ When one field has multiple failing rules, the validator keeps evaluating the re
 
 Expect `getErrors()` to contain all failed rule messages for that field, not just the first one.
 
-### Built-in rules run before custom-rule lookup fails
+### Built-in rules run before custom-rule lookup exceptions
 
 For each configured rule name, resolution order is:
 

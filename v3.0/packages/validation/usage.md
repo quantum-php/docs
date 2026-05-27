@@ -135,11 +135,11 @@ $validator->setRule('display_name', [
 
 This passes when `display_name` is missing because the package substitutes `''` and `maxLen(50)` still succeeds.
 
-By contrast, an omitted optional field with `Rule::email()` still fails because `email('')` is invalid.
+By contrast, an omitted optional field with `Rule::email()` returns an error because `email('')` is invalid.
 
 ### Password confirmation
 
-Use `same()` on the field you want to validate against another field name.
+Use `same()` on the field you want to compare against another field name.
 
 ```php
 $validator->setRule('confirm_password', [
@@ -147,6 +147,8 @@ $validator->setRule('confirm_password', [
     Rule::same('password'),
 ]);
 ```
+
+Keep the referenced field in the submitted payload as well. `same()` reads the original input array directly, so the smooth path is to send both keys and pair them with `required()` when the match is mandatory.
 
 ### Database-backed checks
 
