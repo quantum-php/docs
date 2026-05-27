@@ -25,16 +25,17 @@ The native adapter:
 
 - starts a PHP session if one is not already active
 - keeps an internal `LAST_ACTIVITY` timestamp in the session
-- destroys the session when the idle time exceeds `timeout`
+- refreshes the session when the idle time is within `timeout`
+- resets the active session when the idle time exceeds `timeout`
 - updates `LAST_ACTIVITY` on every initialization
 
 Practical effect: the timeout is checked when the adapter is initialized, not by a background cleanup process.
 
 ### Caveats
 
-- `all()` includes the adapter's internal `LAST_ACTIVITY` key because it reads the full session storage
-- if `session_start()` fails, resolution throws a session exception
-- if the adapter tries to destroy an expired session and `session_destroy()` fails, resolution throws a session exception
+- `all()` includes the adapter's internal `LAST_ACTIVITY` key because it reads the full session storage.
+- Session values are stored as encrypted payloads, so direct inspection of the backing storage is best treated as transport data rather than app-level values.
+- When PHP session startup or teardown raises an error, Session surfaces it as a session exception.
 
 ## Database adapter
 
@@ -84,15 +85,17 @@ The database adapter:
 
 - creates a dynamic model for the configured table through the Model package
 - registers a custom PHP session save handler before starting the session
-- stores the raw PHP session payload in `data`
+- stores the PHP session payload in `data`
 - updates `ttl` to the current Unix timestamp on every write
 - deletes expired rows during garbage collection when `ttl < time() - max_lifetime`
 
+Because Session encrypts and serializes values before they reach `$_SESSION`, the `data` column contains PHP's session payload format around encrypted value strings.
+
 ### Caveats
 
-- this adapter depends on the Database and Model packages being configured correctly
-- expiry cleanup depends on PHP session garbage collection calling the handler's `gc()` method
-- the package does not create the session table for you
+- This adapter depends on the Database and Model packages being ready before the first `session('database')` call.
+- Expiry cleanup runs when PHP session garbage collection calls the handler's `gc()` method.
+- Create the session table as part of your database setup before you switch the default adapter.
 
 ## Choosing an adapter
 

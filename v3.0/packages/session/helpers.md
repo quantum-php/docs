@@ -24,5 +24,6 @@ session('database')->set('cart_id', 'abc123');
 - no adapter passed → uses `session.default`
 - adapter passed → resolves that backend (`native` or `database`)
 - returns a Session wrapper, not a raw adapter
+- reuses the same wrapper for repeated calls to the same adapter in the current process
 
-Prefer backend setup through configuration, not direct adapter construction.
+Prefer backend setup through configuration, then call `session()` from application code.

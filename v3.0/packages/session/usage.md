@@ -52,4 +52,5 @@ Most apps should set `session.default` and call `session()` without args.
 
 - `has()` returns `false` for empty-like values (`0`, `false`, `''`, `null`).
 - Native adapter includes framework keys like `LAST_ACTIVITY` in `all()` output.
-- Database adapter requires working DB/model setup before use.
+- Session values are encrypted in storage, so inspect them through `session()->get()` or `session()->all()` when you need app-level values.
+- Database adapter works best after the database connection, model layer, and session table are ready.
