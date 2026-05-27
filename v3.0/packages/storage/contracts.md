@@ -26,29 +26,35 @@ Use them only when the adapter is known to be local.
 
 ## Upload validation contract
 
-`UploadedFile::save()` enforces this flow:
+`UploadedFile::save()` applies this flow:
 
-1. upload error must be `UPLOAD_ERR_OK`
-2. temp file must exist
-3. MIME+extension must pass policy
-4. local destination must be valid (exists, writable)
-5. overwrite is blocked unless explicitly enabled
+1. upload status is read from the PHP upload metadata
+2. the temp file path is verified through the local adapter
+3. MIME+extension is matched against the active policy
+4. local destinations are prepared through directory and overwrite checks
+5. the file is written locally or forwarded to the configured remote adapter
 
-Any failed check throws before file write.
+Validation exceptions are raised before persistence when one of those checks does not pass.
 
 ## MIME policy contract
 
-`UploadedFile` starts from built-in MIME rules, then merges `uploads.allowed_mime_types` from config.
+`UploadedFile` starts from built-in MIME rules, then merges `uploads.allowed_mime_types` from config when that file is present.
 
-Runtime overrides are supported via `setAllowedMimeTypes()`.
+Runtime overrides are supported via `setAllowedMimeTypes()`. With the default `merge: true`, your additions are layered on top of the built-in rules. Pass `merge: false` when you want the runtime policy to become the full allow-list for that instance.
 
 ## Remote upload contract
 
 When a remote adapter is attached with `setRemoteFileSystem(...)`:
 
 - local destination checks are skipped
-- upload payload is streamed from local temp file
-- destination string is interpreted according to the remote adapter
+- the upload payload is still read from the PHP temp file through the local adapter
+- the destination string is interpreted according to the remote adapter
+
+That makes path-based adapters straightforward with `UploadedFile::save()`. For Google Drive parent-folder placement, the adapter-level `put($filename, $content, $parentId)` call is the clearer fit.
+
+## Non-HTTP source contract
+
+`UploadedFile::save()` also works with files constructed from non-upload temp paths in tests and CLI code. In that case, the storage layer copies the source file into the destination instead of using PHP's upload move path.
 
 ## Cloud token contract
 
