@@ -42,8 +42,3 @@ After setup:
 - Uncaught web exceptions use a 500 response.
 - Source snippets appear when the filesystem adapter can read local source files.
 
-## Read next
-
-- [Usage](usage.md)
-- [Contracts](contracts.md)
-- [Architecture](architecture.md)

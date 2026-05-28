@@ -40,8 +40,3 @@ The factory keeps one resolved `Captcha` wrapper per adapter name for the life o
 - verification returns only `true` or `false`; provider error details are reduced to the first stored error code from `getErrorMessage()`
 - tokens older than 60 seconds are treated as replay attacks even if the provider response is otherwise successful
 
-## Read next
-
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)
-- [Usage](usage.md)

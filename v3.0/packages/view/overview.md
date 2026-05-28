@@ -49,9 +49,3 @@ If you need trusted HTML to pass through unchanged, wrap that value in `RawParam
 - `getContent()` returns the body from the most recent full `render()`. Partial renders keep that previous full-render content in place.
 - The package delegates template lookup and adapter selection to the Renderer package.
 
-## Read next
-
-- [Architecture](architecture.md)
-- [Contracts](contracts.md)
-- [Helpers](helpers.md)
-- [Usage](usage.md)

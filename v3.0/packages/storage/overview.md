@@ -36,9 +36,3 @@ $uploadedFile->save(uploads_dir() . '/users');
 - `UploadedFile` validation depends on local temporary upload files.
 - Image modifications are best for local saves.
 
-## Read next
-
-- [Usage](usage.md)
-- [Contracts](contracts.md)
-- [Adapters](adapters.md)
-- [Helpers](helpers.md)

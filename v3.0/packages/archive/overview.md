@@ -45,9 +45,3 @@ That means archive name and adapter state are shared for that type inside the cu
 - extraction returns `bool`, so failed extracts are not always raised as exceptions
 - some adapter-specific behavior differs, especially around partial extraction and archive cleanup
 
-## Read next
-
-- [Usage](usage.md)
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)
-- [Architecture](architecture.md)

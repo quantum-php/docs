@@ -41,8 +41,3 @@ That makes the default flow single-use.
 - missing or mismatched tokens throw `CsrfException`
 - `csrf_token()` depends on `APP_KEY`; if that value is missing, the helper throws an app exception instead of returning a token
 
-## Read next
-
-- [Contracts](contracts.md)
-- [Helpers](helpers.md)
-- [Usage](usage.md)

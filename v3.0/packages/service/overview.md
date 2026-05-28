@@ -45,8 +45,3 @@ class PostService extends Service
 - `service($class)` is fresh-by-default.
 - Undefined method calls on services throw immediately.
 
-## Read next
-
-- [Usage](usage.md)
-- [Contracts](contracts.md)
-- [Dependency Injection](../../advanced-features/dependency-injection.md)

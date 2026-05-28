@@ -77,8 +77,3 @@ Most applications will interact with modules through Quantum bootstrapping or CL
 - inspecting module route definitions programmatically
 - generating modules from your own automation
 
-## Related pages
-
-- [Architecture](architecture.md)
-- [Usage](usage.md)
-- [Contracts](contracts.md)

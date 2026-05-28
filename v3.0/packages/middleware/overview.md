@@ -57,8 +57,3 @@ A middleware can:
 - Missing classes raise `MiddlewareException`; wrong base types raise the shared base exception for invalid inheritance.
 - Rate limiting, when present on the route, always runs before module middleware.
 
-## Read next
-
-- [Architecture](architecture.md)
-- [Contracts](contracts.md)
-- [Usage](usage.md)

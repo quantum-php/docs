@@ -70,8 +70,3 @@ Only the adapter-specific payload is required:
 - `Paginator` forwards calls to its adapter. Calling a method the adapter does not implement fails with `PaginatorException::methodNotSupported(...)`.
 - Page numbers are not normalized. If you pass a page beyond the available range, the paginator keeps that page number and the current page data can be empty.
 
-## Read next
-
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)
-- [Usage](usage.md)

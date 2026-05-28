@@ -57,9 +57,3 @@ $html = $renderer->render('posts/index', [
 - Renderer instances are cached per adapter name inside the factory service, so repeated `RendererFactory::get('twig')` calls reuse the same wrapper instance.
 - The `html` adapter does not apply adapter config options during rendering.
 
-## Read next
-
-- [Architecture](architecture.md)
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)
-- [Usage](usage.md)
