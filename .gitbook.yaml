@@ -1,0 +1,4 @@
+root: ./
+structure:
+  readme: v3.0/getting-started/introduction.md
+  summary: SUMMARY.md
