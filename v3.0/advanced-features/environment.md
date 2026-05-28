@@ -52,3 +52,11 @@ $env->load($setup);
 // Access a variable
 $dbHost = env('DB_HOST', 'localhost');
 ```
+
+## What to read next
+
+After environment loading behavior, continue with:
+
+- [Configuration](configuration.md)
+- [Request Lifecycle](request-lifecycle.md)
+- [Modules](../core-concepts/modules.md)

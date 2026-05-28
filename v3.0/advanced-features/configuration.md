@@ -84,4 +84,12 @@ When loading configurations, the framework resolves file locations using the fol
 
 *Note: The shared fallback only triggers if `hierarchical` is set to `true` in the `Setup` instance.*
 
+## What to read next
+
+After configuration fundamentals, continue with:
+
+- [Environment](environment.md)
+- [Dependency Injection](dependency-injection.md)
+- [Modules](../core-concepts/modules.md)
+
 

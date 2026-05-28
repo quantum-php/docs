@@ -164,7 +164,7 @@ Many people jump straight from route to controller. In real apps, middleware oft
 ### Treating views as independent from controllers
 Views are usually part of the response chosen by the controller, not a separate routing destination.
 
-## Related pages
+## What to read next
 
 To understand the lifecycle better, read these together:
 
@@ -172,7 +172,5 @@ To understand the lifecycle better, read these together:
 - [Controllers](../core-concepts/controllers.md)
 - [Views](../core-concepts/views.md)
 - [Middleware](../core-concepts/middleware.md)
-- [Modules Overview](../core-concepts/modules.md)
+- [Modules](../core-concepts/modules.md)
 - [Request Parsing Contract](../core-concepts/request.md#input-merge-precedence)
-
-Once these pages connect in your head as one flow, the framework stops feeling abstract.

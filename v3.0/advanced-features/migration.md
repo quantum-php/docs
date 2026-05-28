@@ -103,14 +103,11 @@ You can increase `--step` to revert more migrations.
 - Use migration rollback during development cautiously.
 - Keep migration files under version control.
 
-## Next Steps
+## What to read next
 
-Explore:
+After migration basics, continue with:
 
-- [Database](../advanced-features/database.md)
+- [Database](database.md)
 - [Models](../core-concepts/models.md)
 - [Services](../core-concepts/services.md)
-
-## Further Reading
-
-For more details, see the [migration CLI commands documentation](../cli/console-commands.md#migrations) for practical usage examples.
+- [CLI Console Commands](../cli/console-commands.md#migrations)
