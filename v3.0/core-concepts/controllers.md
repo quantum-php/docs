@@ -59,9 +59,9 @@ class MainController
 {
     public bool $csrfVerification = false;
 
-    public function index(Response $response)
+    public function index(): Response
     {
-        $response->json([
+        return response()->json([
             'status' => 'success',
             'message' => 'Module name module.'
         ]);
@@ -91,13 +91,13 @@ class MainController
         ]);
     }
 
-    public function index(Response $response, ViewFactory $view)
+    public function index(ViewFactory $view): Response
     {
         $view->setParams([
             'title' => config()->get('app.name'),
         ]);
 
-        $response->html($view->render('index'));
+        return response()->html($view->render('index'));
     }
 }
 ```

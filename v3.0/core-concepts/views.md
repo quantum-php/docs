@@ -49,13 +49,13 @@ public function __before(ViewFactory $view)
 Then the action can render the page itself:
 
 ```php
-public function index(Response $response, ViewFactory $view)
+public function index(ViewFactory $view): Response
 {
     $view->setParams([
         'title' => config()->get('app.name'),
     ]);
 
-    $response->html($view->render('index'));
+    return response()->html($view->render('index'));
 }
 ```
 
