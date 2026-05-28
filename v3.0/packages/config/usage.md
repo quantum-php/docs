@@ -82,9 +82,3 @@ Use unique filenames per imported section.
 
 `set()`, `delete()`, and `flush()` change the in-memory copy only.
 
-## Read next
-
-- [Overview](overview.md)
-- [Architecture](architecture.md)
-- [Contracts](contracts.md)
-- [Loader](../loader/overview.md)

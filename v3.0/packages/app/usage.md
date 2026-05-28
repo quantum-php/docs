@@ -77,9 +77,3 @@ Helpers like `base_dir()` and `public_dir()` require `AppContext` to be set. Cal
 
 The console adapter instantiates discovered command classes directly. If a command requires constructor arguments, it will not fit the built-in registration flow.
 
-## Related next steps
-
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)
-- [Console Commands](../../cli/console-commands.md)
-- [Request Lifecycle](../../advanced-features/request-lifecycle.md)

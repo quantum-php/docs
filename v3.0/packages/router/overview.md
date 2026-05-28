@@ -43,9 +43,3 @@ Supported parameter types:
 - Controllers are instantiated directly, so action parameters are the right place for DI-backed request values.
 - Route names stay unique inside a module.
 
-## Read next
-
-- [Usage](usage.md)
-- [Contracts](contracts.md)
-- [Helpers](helpers.md)
-- [Architecture](architecture.md)

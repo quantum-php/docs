@@ -103,8 +103,3 @@ Fields marked as `visible` in the schema are the only fields that Auth exposes i
 - Inactive accounts cannot sign in.
 - Email-based flows depend on the Mailer package and the shared email templates used by the package.
 
-## Read next
-
-- [Usage](usage.md)
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)

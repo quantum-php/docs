@@ -35,9 +35,3 @@ The base class also gives you small terminal helpers such as `info()`, `error()`
 - `CliCommand::execute()` always returns Symfony's success status after calling `exec()`. In practice, many command failures are printed as messages instead of returning a non-zero exit code.
 - Input and output objects are available only while the command is running. Calling `getArgument()`, `getOption()`, or output helpers before execution raises a runtime error.
 
-## Related pages
-
-- [Architecture](architecture.md)
-- [Contracts](contracts.md)
-- [Usage](usage.md)
-- [Built-in commands](built-in-commands.md)

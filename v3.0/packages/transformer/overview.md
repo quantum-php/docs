@@ -55,9 +55,3 @@ This package is a good fit when:
 - The package only transforms arrays of items. If you need to transform one record, wrap it in an array or call your transformer directly.
 - The package does not validate or normalize transformer output. Each `transform()` call may return any value.
 
-## Read next
-
-- [Usage](usage.md)
-- [Contracts](contracts.md)
-- [Helpers](helpers.md)
-- [Architecture](architecture.md)

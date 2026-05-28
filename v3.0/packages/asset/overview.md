@@ -54,9 +54,3 @@ Lower positions render first inside the same asset type. Assets without an expli
 - The helper returns one shared manager instance for the current process, so registered assets stay in memory until you flush them.
 - `assets()` only accepts the built-in type keys: `css` and `js`.
 
-## Read next
-
-- [Usage](usage.md)
-- [Contracts](contracts.md)
-- [Helpers](helpers.md)
-- [Architecture](architecture.md)

@@ -57,10 +57,3 @@ Practical effect:
 
 If you need a fresh runtime for the same type, call `AppFactory::destroy($type)` before creating it again.
 
-## Read next
-
-- [Architecture](architecture.md)
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)
-- [Helpers](helpers.md)
-- [Usage](usage.md)

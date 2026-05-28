@@ -39,9 +39,3 @@ When no adapter is passed, Session uses `session.default` from `config/session.p
 - Use Session APIs for reads and writes instead of relying on backend storage format.
 - Regenerate session IDs after authentication or privilege changes.
 
-## Read next
-
-- [Usage](usage.md)
-- [Contracts](contracts.md)
-- [Helpers](helpers.md)
-- [Adapters](adapters.md)

@@ -41,8 +41,3 @@ The factory keeps one resolved `Cache` instance per adapter name for the life of
 - batch methods accept arrays only, even though the PSR signatures say `iterable`
 - expiry cleanup is lazy for file and database storage: expired entries are removed when they are checked
 
-## Read next
-
-- [Adapters](adapters.md)
-- [Contracts](contracts.md)
-- [Usage](usage.md)
