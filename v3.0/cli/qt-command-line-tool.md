@@ -165,7 +165,7 @@ The same pattern applies to other commands.
 
 `qt` is the command-line front door of a Quantum PHP Framework project.
 
-## Suggested next reading
+## What to read next
 
 This page fits well with:
 

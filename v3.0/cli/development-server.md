@@ -90,7 +90,7 @@ Once you can run the development server successfully, the next good questions ar
 
 That is why the development server belongs near the beginning of the docs journey.
 
-## Related pages
+## What to read next
 
 - [Quickstart](../getting-started/quickstart.md)
 - [Project Structure](../getting-started/project-structure.md)

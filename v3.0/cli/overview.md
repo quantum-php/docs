@@ -98,9 +98,9 @@ The CLI section of the docs should help you answer questions like:
 
 This page is the entry point for that part of the documentation.
 
-## Suggested next reading
+## What to read next
 
-After this page, the best next step is usually:
+After this page, continue with:
 
 1. [Development Server](development-server.md)
 2. [Code Generation](code-generation.md)
