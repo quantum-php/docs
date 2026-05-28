@@ -62,19 +62,21 @@ This means:
 
 A controller contains the logic for handling the request.
 
-A very simple controller action might look like this:
+A simple Quantum-style action can look like this:
 
 ```php
-class HomeController extends Controller
+use Quantum\Http\Response;
+
+class HomeController
 {
-    public function hello()
+    public function hello(): Response
     {
-        return 'Hello from Quantum PHP Framework';
+        return response()->html('Hello from Quantum PHP Framework');
     }
 }
 ```
 
-This is enough for a first example because it shows the connection between route and controller clearly.
+This keeps the example aligned with Quantum's response helper flow while still showing the route-to-controller connection clearly.
 
 ## Step 3: return a view
 
@@ -83,9 +85,12 @@ In a normal web page flow, the controller usually prepares HTML through the resp
 A Quantum-style controller can look like this:
 
 ```php
-public function hello(Response $response, ViewFactory $view)
+use Quantum\View\Factories\ViewFactory;
+use Quantum\Http\Response;
+
+public function hello(ViewFactory $view): Response
 {
-    $response->html($view->render('home/hello'));
+    return response()->html($view->render('home/hello'));
 }
 ```
 
@@ -100,9 +105,11 @@ For APIs or asynchronous requests, the controller may return JSON instead.
 A Quantum-style response flow can look like this:
 
 ```php
-public function profile()
+use Quantum\Http\Response;
+
+public function profile(): Response
 {
-    response()->json([
+    return response()->json([
         'name' => 'John Doe',
         'framework' => 'Quantum PHP Framework'
     ]);
