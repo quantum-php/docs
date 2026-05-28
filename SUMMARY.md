@@ -1,7 +1,5 @@
 # Table of contents
 
-* [README](README.md)
-
 ## v3.0
 
 ### Introduction
