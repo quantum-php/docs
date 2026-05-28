@@ -25,6 +25,21 @@
 * [Services](v3.0/core-concepts/services.md)
 * [Modules](v3.0/core-concepts/modules.md)
 
+### Advanced Features
+* [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
+* [Configuration](v3.0/advanced-features/configuration.md)
+* [Environment](v3.0/advanced-features/environment.md)
+* [Database](v3.0/advanced-features/database.md)
+* [Migration](v3.0/advanced-features/migration.md)
+* [Dependency Injection](v3.0/advanced-features/dependency-injection.md)
+
+### CLI
+* [CLI Overview](v3.0/cli/overview.md)
+* [The qt Command-Line Tool](v3.0/cli/qt-command-line-tool.md)
+* [Development Server](v3.0/cli/development-server.md)
+* [Code Generation](v3.0/cli/code-generation.md)
+* [Console Commands](v3.0/cli/console-commands.md)
+
 ### Packages
 * App
   * [Overview](v3.0/packages/app/overview.md)
@@ -249,19 +264,4 @@
   * [Contracts](v3.0/packages/view/contracts.md)
   * [Helpers](v3.0/packages/view/helpers.md)
   * [Usage](v3.0/packages/view/usage.md)
-
-### Advanced Features
-* [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
-* [Configuration](v3.0/advanced-features/configuration.md)
-* [Environment](v3.0/advanced-features/environment.md)
-* [Database](v3.0/advanced-features/database.md)
-* [Migration](v3.0/advanced-features/migration.md)
-* [Dependency Injection](v3.0/advanced-features/dependency-injection.md)
-
-### CLI
-* [CLI Overview](v3.0/cli/overview.md)
-* [The `qt` Command-Line Tool](v3.0/cli/qt-command-line-tool.md)
-* [Development Server](v3.0/cli/development-server.md)
-* [Code Generation](v3.0/cli/code-generation.md)
-* [Console Commands](v3.0/cli/console-commands.md)
 
