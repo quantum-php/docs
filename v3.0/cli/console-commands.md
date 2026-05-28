@@ -289,11 +289,11 @@ When `cron:run` is invoked, the `CronManager`:
 
 *Note: The scheduler requires a system-level crontab entry to trigger `php qt cron:run` periodically.*
 
-## Suggested next reading
+## What to read next
 
 This page fits well with:
 
 - [CLI Overview](overview.md)
 - [Development Server](development-server.md)
 - [Code Generation](code-generation.md)
-- [Modules Overview](../core-concepts/modules.md)
+- [Modules](../core-concepts/modules.md)

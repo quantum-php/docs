@@ -201,11 +201,11 @@ A normal flow can look like this:
 7. run migrations with `php qt migration:migrate`
 8. publish OpenAPI resources when needed
 
-## Suggested next reading
+## What to read next
 
 These pages fit well with code generation:
 
 - [The `qt` Command-Line Tool](qt-command-line-tool.md)
 - [Console Commands](console-commands.md)
-- [Modules Overview](../core-concepts/modules.md)
+- [Modules](../core-concepts/modules.md)
 - [Project Structure](../getting-started/project-structure.md)
