@@ -18,11 +18,10 @@ The goal of this documentation is to help you move from first installation to a 
 
 If you are new to the framework, the best path is:
 
-1. [What is Quantum PHP Framework?](v3.0/introduction/what-is-quantum.md)
-2. [Why Quantum PHP Framework?](v3.0/introduction/why-quantum.md)
-3. [Installation](v3.0/installation.md)
-4. [Quickstart](v3.0/getting-started/quickstart.md)
-5. [Project Structure](v3.0/getting-started/project-structure.md)
+1. [Introduction](v3.0/getting-started/introduction.md)
+2. [Installation](v3.0/installation.md)
+3. [Quickstart](v3.0/getting-started/quickstart.md)
+4. [Project Structure](v3.0/getting-started/project-structure.md)
 
 This path is designed for developers who want both a fast start and a clearer understanding of the framework.
 
@@ -63,7 +62,7 @@ You can scaffold a demo module using:
 php qt install:demo
 ```
 
-If you want a deeper conceptual explanation of the framework itself, continue with [What is Quantum PHP Framework?](v3.0/introduction/what-is-quantum.md).
+If you want a deeper conceptual explanation of the framework itself, continue with [Introduction](v3.0/getting-started/introduction.md).
 
 ***
 
