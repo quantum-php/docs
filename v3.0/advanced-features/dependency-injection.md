@@ -67,18 +67,12 @@ Di::autowire(function(FooInterface $foo, BarService $bar) {
 - Avoid circular references.
 - Prefer autowiring with constructor injection.
 
-## Next Steps
+## What to read next
 
-Explore:
+After DI concepts, continue with:
 
-- [Service lifecycle management](../core-concepts/services.md)
-- [Integration with Quantum modules and services](../core-concepts/modules.md)
-
-
-## Related Topics
-
-- Learn about [Service discovery and lifetime management](../core-concepts/services.md)
-- Explore [Custom factory bindings](../core-concepts/services.md)
-- Discover [Integration with Quantum modules and services](../core-concepts/modules.md)
+- [Services](../core-concepts/services.md)
+- [Modules](../core-concepts/modules.md)
+- [Configuration](configuration.md)
 
 

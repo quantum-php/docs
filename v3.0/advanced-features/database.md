@@ -84,8 +84,10 @@ This keeps adapter-specific details behind model and service layers.
 - Use models/services for business queries; use raw SQL only when needed.
 - Use migrations for schema changes.
 
-## Next Steps
+## What to read next
 
-- [Database Migrations](../advanced-features/migration.md)
+After database setup and usage, continue with:
+
+- [Migration](migration.md)
 - [Models](../core-concepts/models.md)
 - [Services](../core-concepts/services.md)
