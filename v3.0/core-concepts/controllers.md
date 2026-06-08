@@ -71,7 +71,7 @@ class MainController
 
 This shows a few important ideas:
 
-- the action receives a `Response` object
+- the action returns a `Response` object
 - the controller can return JSON directly
 - CSRF behavior can be controlled on the controller
 
