@@ -75,8 +75,6 @@ This shows a few important ideas:
 - the controller can return JSON directly
 - CSRF behavior can be controlled on the controller
 
-This example does not receive any injected arguments. If an action declares parameters, Quantum can autowire them through the dispatcher.
-
 ## Example: a simple web controller
 
 From the upstream default web module template:
