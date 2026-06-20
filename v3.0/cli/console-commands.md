@@ -14,7 +14,7 @@ That means when you run commands such as `php qt serve`, you are using the frame
 
 The console command system is split across the core framework and the starter project.
 
-### In `quantum-php-core`
+### In `framework`
 The core framework provides:
 
 - the base command class: `Quantum\Console\CliCommand`
@@ -34,7 +34,7 @@ The core framework provides:
   - `debugbar`
   - `version`
 
-### In `quantum-php-project`
+### In `project`
 The starter project adds its own project-level commands under:
 
 ```text
@@ -259,8 +259,8 @@ This makes command code easier to read than manually working with raw Symfony Co
 A useful way to look at it is:
 
 - the `qt` file is the project entry point
-- `quantum-php-core` provides the command framework and built-in commands
-- `quantum-php-project` shows how projects add their own commands
+- `framework` provides the command framework and built-in commands
+- `project` shows how projects add their own commands
 - `CliCommand` is the base shape for framework-style console commands
 
 Once that clicks, the console side of Quantum becomes much easier to extend.

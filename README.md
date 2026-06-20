@@ -6,7 +6,7 @@
 
 Quantum is a lightweight, high-performance PHP framework built with simplicity, modularity, and developer experience in mind. Designed for both beginners and professionals, it allows rapid development of web applications using a clean and expressive syntax.
 
-[![](https://github.com/softberg/quantum-php-core/actions/workflows/php.yml/badge.svg)](https://github.com/softberg/quantum-php-core/actions/workflows/php.yml)[![](https://codecov.io/gh/softberg/quantum-php-core/branch/master/graph/badge.svg)](https://codecov.io/gh/softberg/quantum-php-core)[![](https://scrutinizer-ci.com/g/softberg/quantum-php-core/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/softberg/quantum-php-core)[![](https://img.shields.io/github/license/softberg/quantum-php-core)](https://github.com/softberg/quantum-php-core/blob/master/LICENSE)[![](https://img.shields.io/packagist/v/quantum/framework)](https://packagist.org/packages/quantum/framework)
+[![](https://github.com/quantum-php/framework/actions/workflows/php.yml/badge.svg)](https://github.com/quantum-php/framework/actions/workflows/php.yml)[![](https://codecov.io/gh/quantum-php/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/quantum-php/framework)[![](https://scrutinizer-ci.com/g/quantum-php/framework/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/quantum-php/framework)[![](https://img.shields.io/github/license/quantum-php/framework)](https://github.com/quantum-php/framework/blob/master/LICENSE)[![](https://img.shields.io/packagist/v/quantum/framework)](https://packagist.org/packages/quantum/framework)
 
 ***
 
@@ -89,4 +89,4 @@ Contributions are welcome. If you have suggestions for improving the framework o
 
 ### License
 
-Quantum PHP Framework is open-source and licensed under the [MIT license](https://raw.githubusercontent.com/softberg/quantum-php-core/refs/heads/master/LICENSE).
+Quantum PHP Framework is open-source and licensed under the [MIT license](https://raw.githubusercontent.com/quantum-php/framework/refs/heads/master/LICENSE).
