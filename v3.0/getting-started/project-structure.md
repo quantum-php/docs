@@ -8,14 +8,59 @@ This page is based on the current `quantum/project` application skeleton, not a 
 
 A typical Quantum PHP Framework project is organized around a few core areas:
 
+- `modules/` for feature-oriented application modules
+- `shared/` for cross-module configuration, services, commands, and shared resources
 - `public/` for the web entry point and public assets
-- `shared/` for application-wide configuration, models, services, commands, and shared views/resources
 - `migrations/` for database migrations
 - `tests/` for automated tests
-- `helpers/`, `hooks/`, and `libraries/` for supporting application behavior
 - `qt` for command-line framework usage
 
-This structure helps keep the public-facing web layer separate from shared application logic and supporting resources.
+This structure helps keep feature modules, shared application logic, the public web layer, and supporting resources clearly separated.
+
+## A practical folder map
+
+The easiest way to understand the skeleton is to look at it as a small set of important root areas instead of a long flat directory list.
+
+```text
+project-root/
+|-- modules/               Feature-oriented modules such as DemoWeb, DemoApi, Toolkit, or your own app modules
+|   |-- DemoWeb/
+|   |-- DemoApi/
+|   `-- ...
+|
+|-- shared/                Cross-module code and shared resources
+|   |-- Commands/
+|   |-- config/
+|   |-- DTOs/
+|   |-- emails/
+|   |-- Enums/
+|   |-- Models/
+|   |-- resources/
+|   |-- Services/
+|   |-- store/
+|   |-- Transformers/
+|   `-- views/
+|
+|-- public/                Web root
+|   |-- assets/
+|   |-- uploads/
+|   `-- index.php
+|
+|-- migrations/            Database migrations
+|-- tests/                 Unit and feature tests
+|-- helpers/               Optional project helpers
+|-- hooks/                 Optional hook/event extensions
+|-- libraries/             Optional custom library-style code
+|-- qt                     CLI entrypoint
+|-- composer.json
+`-- .env / .env.example
+```
+
+If you only remember one thing, remember this:
+
+- `modules/` is where feature/application structure lives
+- `shared/` is where cross-module project code lives
+- `public/` is what the web server exposes
 
 ## Main folders in the project skeleton
 
@@ -69,6 +114,33 @@ In the current project skeleton, it includes areas such as:
 - `shared/store/` for storage-related project data
 
 If you are trying to understand the core behavior of a project, this is one of the first places to study.
+
+### `modules/`
+
+This is one of the most important parts of a real Quantum project and should be treated as first-class project structure, not as an advanced afterthought.
+
+Modules are feature-oriented application units. In practice, that means a module can own:
+
+- controllers
+- middlewares
+- views
+- routes
+- services
+- resources
+- API or web surface for a bounded application area
+
+In the current starter project, this usually includes modules such as:
+
+- `DemoWeb`
+- `DemoApi`
+- `Toolkit`
+
+This matters because a Quantum application is not organized only around one giant `shared/` area. It is organized around:
+
+- feature modules in `modules/`
+- shared cross-module support code in `shared/`
+
+That split is one of the most useful mental models to learn early.
 
 ### `migrations/`
 
@@ -132,8 +204,9 @@ A few root-level files are worth recognizing early:
 
 If you are new to the framework, this simplified model is enough to get started:
 
+- `modules/` = where feature/application surfaces live
+- `shared/` = where cross-module code and config live
 - `public/` = what the web server sees
-- `shared/` = where most application-level code and config live
 - `migrations/` = database schema changes
 - `tests/` = automated test coverage
 - `qt` = command-line entry for framework tooling
@@ -147,7 +220,7 @@ This page explains the project layout at a structural level, but it does not yet
 - how routing is configured
 - how controllers are organized in practice
 - how views are rendered
-- how modules are structured when used in a larger application
+- how modules are structured internally when used in a larger application
 
 Those topics should be covered in their own dedicated pages.
 
