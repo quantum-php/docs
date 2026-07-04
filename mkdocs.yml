@@ -1,0 +1,7 @@
+site_name: Quantum PHP Framework
+site_description: Documentation for Quantum PHP Framework v3.0
+
+docs_dir: .rtd-docs
+
+theme:
+  name: readthedocs
