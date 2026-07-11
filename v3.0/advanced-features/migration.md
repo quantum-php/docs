@@ -5,6 +5,10 @@
 Database migrations provide a way to safely and consistently manage schema changes.
 Quantum's migration system supports creating, applying, reverting, and tracking migrations via CLI and programmatic APIs.
 
+This workflow is for relational databases only.
+
+If your project is still using the starter default `sleekdb` adapter, migration commands are not the active schema-management path yet.
+
 ## Migration Concepts
 
 - Migrations are PHP classes that contain `up()` and `down()` methods which apply and revert schema changes.
@@ -25,9 +29,9 @@ Each action corresponds to templates used in generated migration files.
 
 ```php
 use Quantum\Database\Factories\TableFactory;
-use Quantum\Migration\QtMigration;
+use Quantum\Migration\Migration;
 
-class CreateTableUsers extends QtMigration
+class CreateTableUsers extends Migration
 {
     public function up(?TableFactory $tableFactory): void
     {
@@ -87,6 +91,14 @@ php qt migration:migrate down --step=1
 ```
 
 You can increase `--step` to revert more migrations.
+
+These commands apply only when the active database driver is:
+
+- `mysql`
+- `pgsql`
+- `sqlite`
+
+They do not run against `sleekdb`.
 
 ## MigrationManager Responsibilities
 

@@ -40,6 +40,8 @@ return [
 ];
 ```
 
+In the current starter project, `database.default` is `sleekdb`, so a fresh project can boot without provisioning a relational database server immediately.
+
 ## Accessing Database Runtime
 
 Use the helper:
