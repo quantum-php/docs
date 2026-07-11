@@ -11,6 +11,8 @@ A typical Quantum PHP Framework project is organized around a few core areas:
 - `modules/` for feature-oriented application modules
 - `shared/` for cross-module configuration, services, commands, and shared resources
 - `public/` for the web entry point and public assets
+- `cache/` for runtime cache data
+- `logs/` for application log output
 - `migrations/` for database migrations
 - `tests/` for automated tests
 - `qt` for command-line framework usage
@@ -23,9 +25,9 @@ The easiest way to understand the skeleton is to look at it as a small set of im
 
 ```text
 project-root/
-|-- modules/               Feature-oriented modules such as DemoWeb, DemoApi, Toolkit, or your own app modules
-|   |-- DemoWeb/
-|   |-- DemoApi/
+|-- modules/               Feature-oriented modules such as Web, Api, or your own app modules
+|   |-- Api/
+|   |-- Web/
 |   `-- ...
 |
 |-- shared/                Cross-module code and shared resources
@@ -46,6 +48,8 @@ project-root/
 |   |-- uploads/
 |   `-- index.php
 |
+|-- cache/                 Runtime cache data
+|-- logs/                  Application logs
 |-- migrations/            Database migrations
 |-- tests/                 Unit and feature tests
 |-- helpers/               Optional project helpers
@@ -129,11 +133,14 @@ Modules are feature-oriented application units. In practice, that means a module
 - resources
 - API or web surface for a bounded application area
 
-In the current starter project, this usually includes modules such as:
+In the current starter project, this includes modules such as:
 
-- `DemoWeb`
-- `DemoApi`
-- `Toolkit`
+- `Web`
+- `Api`
+
+Those names matter because they represent the modules that are actually installed in a fresh starter project today.
+
+That is different from the module generator templates documented elsewhere. Templates such as `DemoWeb`, `DemoApi`, or `Toolkit` are available for scaffolding, but they are not the default root module names in the current starter skeleton.
 
 This matters because a Quantum application is not organized only around one giant `shared/` area. It is organized around:
 
@@ -153,6 +160,18 @@ In the current skeleton, it already includes example migration files such as:
 - `create_table_comments_...php`
 
 This gives a good early hint that the starter project is designed to demonstrate real application structure, not just a nearly empty shell.
+
+### `cache/`
+
+This folder stores runtime cache data created by the project.
+
+In the current starter project, it exists from the beginning so cache-backed framework features already have a conventional location to write into during local development.
+
+### `logs/`
+
+This folder stores application log output.
+
+Having it present in the starter skeleton makes it easier to see that local logging is part of the normal project shape, not an afterthought added later.
 
 ### `tests/`
 
@@ -195,6 +214,7 @@ This gives you a dedicated place for custom library-style code that does not fit
 A few root-level files are worth recognizing early:
 
 - `composer.json` for project dependencies and package metadata
+- `.env` and `.env.example` for environment setup
 - `.env.example` for environment setup guidance
 - `qt` for command-line framework operations
 - `phpunit.xml` for testing configuration
@@ -207,6 +227,8 @@ If you are new to the framework, this simplified model is enough to get started:
 - `modules/` = where feature/application surfaces live
 - `shared/` = where cross-module code and config live
 - `public/` = what the web server sees
+- `cache/` = runtime cache files
+- `logs/` = application logs
 - `migrations/` = database schema changes
 - `tests/` = automated test coverage
 - `qt` = command-line entry for framework tooling
