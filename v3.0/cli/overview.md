@@ -29,6 +29,8 @@ Instead of manually wiring every repetitive piece by hand, you can ask the frame
 - generate boilerplate
 - inspect routes
 - scaffold new modules or features
+- publish framework assets
+- prepare local project state such as `.env` and `APP_KEY`
 
 This keeps your workflow consistent and reduces setup mistakes.
 
@@ -51,9 +53,9 @@ Quantum provides generation commands that can create common files and folders fo
 Depending on your project type, this may include things like:
 
 - modules
-- controllers
-- middlewares
-- other framework-aligned structure
+- migration files
+- environment/bootstrap files
+- OpenAPI and DebugBar assets
 
 ### Inspect registered routes
 
@@ -94,6 +96,7 @@ The CLI section of the docs should help you answer questions like:
 - how do I run the app locally?
 - how do I inspect routes?
 - how do I generate modules and framework files?
+- how do I prepare `.env`, app keys, and published assets?
 - which commands should you learn first?
 
 This page is the entry point for that part of the documentation.

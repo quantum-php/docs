@@ -11,6 +11,7 @@ From the current upstream command set, `qt` can help create or publish things su
 - a local `.env` file from `.env.example`
 - an application key stored in `.env`
 - OpenAPI UI resources and OpenAPI specification files
+- DebugBar assets
 
 So code generation in Quantum is broader than only scaffolding code files. It also includes project setup and generated project resources.
 
@@ -163,6 +164,16 @@ From the upstream `OpenApiCommand`, this command can:
 - generate an OpenAPI `spec.json` file from controller annotations
 
 So `qt` is also able to generate API documentation resources, not only application scaffolding.
+
+## DebugBar asset publishing
+
+Quantum also includes:
+
+```bash
+php qt install:debugbar
+```
+
+This publishes the DebugBar resource files into the public assets directory so the toolbar can render correctly in a project that uses it.
 
 ## What generation usually does not mean here
 

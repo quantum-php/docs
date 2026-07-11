@@ -104,8 +104,6 @@ Modules can scale from small routing units to full feature packages.
 
 ## Fresh skeleton vs active modules
 
-A fresh project skeleton may not show populated module directories immediately, but module generation and module-driven routing are built in.
-
 In fact, Quantum includes a CLI command for generating modules:
 
 ```bash
@@ -116,10 +114,9 @@ This command uses built-in templates such as:
 
 - `DefaultWeb`
 - `DefaultApi`
-- other templates available in the framework
-
-- an empty or lightly populated fresh project
-- a modular application after modules are generated and enabled
+- `DemoWeb`
+- `DemoApi`
+- `Toolkit`
 
 ## Modules and route prefixes
 
