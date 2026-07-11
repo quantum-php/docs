@@ -27,6 +27,20 @@ This path is designed for developers who want both a fast start and a clearer un
 
 ***
 
+### Requirements
+
+The current Quantum 3.x baseline requires:
+
+- PHP 8.0 or newer
+- Composer
+- PHP extensions: `pdo`, `curl`, `json`, `simplexml`, `fileinfo`, `openssl`, `bcmath`
+
+Optional integrations may also require extra packages or extensions such as `redis`, `memcached`, `zip`, `dom`, or `twig/twig`.
+
+If you are upgrading older projects, do not assume PHP 7.4 remains supported. The current framework and starter project require the PHP 8 runtime line.
+
+***
+
 ### Overview
 
 Quantum is a modern MVC/HMVC framework that provides the core tools needed to build scalable web applications. Whether you're building APIs, websites, or admin panels, Quantum gives you full control without unnecessary complexity.

@@ -4,8 +4,10 @@ This guide summarizes required changes when upgrading Quantum projects from 2.x 
 
 ## 1. Platform Requirements
 
-- Minimum PHP version is now `7.4`.
-- PHP `7.3` and older are no longer supported.
+- Minimum PHP version is now `8.0`.
+- PHP `7.4` and older are no longer supported.
+
+If you are upgrading an early 3.0 project, re-check your runtime before troubleshooting application code. The current framework and starter project both target the PHP 8 runtime line.
 
 ## 2. Route and Middleware Response Contract
 

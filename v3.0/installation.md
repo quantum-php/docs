@@ -6,13 +6,20 @@ This guide walks you through installing and running a new Quantum PHP project.
 
 Make sure your environment includes:
 
-* **PHP 7.4+**;
+* **PHP 8.0+**;
 * **PHP extensions**:
   * PDO
+  * curl
   * JSON
+  * simplexml
+  * fileinfo
   * OpenSSL
-  * bcmath, curl, fileinfo, simplexml (as required by framework)&#x20;
+  * bcmath
 * **Composer** installed and accessible globally
+
+Optional framework features may require additional extensions or packages such as `redis`, `memcached`, `zip`, `dom`, or `twig/twig`.
+
+Practical note: current project dependencies are Composer-platform-checked for the PHP 8 runtime line. A PHP 7.4 environment will fail before the project boots.
 
 ### Installation Steps
 
