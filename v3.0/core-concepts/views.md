@@ -170,6 +170,8 @@ The project skeleton currently defines:
 - a default renderer of `html`
 - Twig-related configuration options as well
 
+That does not mean Twig is always installed. In the current framework, Twig is an optional renderer dependency, while the starter project defaults to the built-in HTML renderer.
+
 This suggests Quantum is designed to support more than one rendering mode, even if the default project uses the HTML renderer first.
 
 ## Practical view

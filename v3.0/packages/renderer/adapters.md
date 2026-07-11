@@ -24,6 +24,11 @@ return [
 
 The package passes `view.<adapter>` into the adapter constructor.
 
+In the current starter project, the default config is:
+
+- `view.default = 'html'`
+- `view.twig` contains optional Twig environment settings
+
 ## HTML adapter
 
 `HtmlAdapter` renders plain PHP view files.

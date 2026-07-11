@@ -17,6 +17,10 @@ Built-in adapter names:
 - `html`
 - `twig`
 
+The starter project currently defaults to `html`.
+
+Twig support is optional. The framework can resolve the `twig` adapter name, but the Twig package must also be installed in the project runtime before that adapter can be used successfully.
+
 ## How view lookup works
 
 Both built-in adapters use the same lookup order for a view such as `posts/index`:
@@ -33,6 +37,8 @@ That means module views override shared views automatically when both files exis
 If you do not request an adapter explicitly, the factory reads `view.default` from the framework view config.
 
 The package imports that config lazily on first use, so most applications can start rendering without a manual setup step as long as `config/view.php` contains a valid default.
+
+In the current starter project, `view.default` is `html`.
 
 ## Basic example
 
@@ -56,4 +62,5 @@ $html = $renderer->render('posts/index', [
 - Missing view files fail immediately with a renderer exception.
 - Renderer instances are cached per adapter name inside the factory service, so repeated `RendererFactory::get('twig')` calls reuse the same wrapper instance.
 - The `html` adapter does not apply adapter config options during rendering.
+- The `twig` adapter also requires the Twig package to be installed. If Twig is not available, adapter construction fails before rendering starts.
 
