@@ -1,14 +1,13 @@
 # Quantum PHP Framework Documentation
 
 [![Quantum](https://quantumphp.io/assets/img/quantum-favicon.png)](https://quantumphp.io)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs?ref=badge_shield)
 
 ## Quantum PHP Framework
 
 Quantum is a lightweight, high-performance PHP framework built with simplicity, modularity, and developer experience in mind. Designed for both beginners and professionals, it allows rapid development of web applications using a clean and expressive syntax.
 
 [![](https://github.com/quantum-php/framework/actions/workflows/php.yml/badge.svg)](https://github.com/quantum-php/framework/actions/workflows/php.yml)[![](https://codecov.io/gh/quantum-php/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/quantum-php/framework)[![](https://scrutinizer-ci.com/g/quantum-php/framework/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/quantum-php/framework)[![](https://img.shields.io/github/license/quantum-php/framework)](https://github.com/quantum-php/framework/blob/master/LICENSE)[![](https://img.shields.io/packagist/v/quantum/framework)](https://packagist.org/packages/quantum/framework)
-
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs?ref=badge_shield)
 ***
 
 ## Welcome
@@ -90,6 +89,3 @@ Contributions are welcome. If you have suggestions for improving the framework o
 ### License
 
 Quantum PHP Framework is open-source and licensed under the [MIT license](https://raw.githubusercontent.com/quantum-php/framework/refs/heads/master/LICENSE).
-
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs?ref=badge_large)
