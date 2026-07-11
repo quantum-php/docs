@@ -41,6 +41,33 @@ If you are upgrading older projects, do not assume PHP 7.4 remains supported. Th
 
 ***
 
+### Getting Started
+
+Creating a new Quantum project now does more than install dependencies.
+
+When you run:
+
+```bash
+composer create-project quantum/project my-project
+```
+
+the starter project also runs its post-create setup commands to prepare a usable local app. That setup currently:
+
+- creates `.env` from `.env.example`
+- generates an `APP_KEY`
+- installs the demo `Web` and `Api` modules
+- installs OpenAPI assets/routes for the `Api` module
+- publishes DebugBar assets
+
+After that, the normal next step is still:
+
+```bash
+cd my-project
+php qt serve
+```
+
+***
+
 ### Overview
 
 Quantum is a modern MVC/HMVC framework that provides the core tools needed to build scalable web applications. Whether you're building APIs, websites, or admin panels, Quantum gives you full control without unnecessary complexity.

@@ -14,6 +14,14 @@ Create a new project using Composer:
 composer create-project quantum/project my-project
 ```
 
+The current starter project also runs its post-create setup automatically. On a normal successful install, that setup:
+
+- creates `.env`
+- generates `APP_KEY`
+- installs the demo `Web` and `Api` modules
+- installs OpenAPI assets/routes for the `Api` module
+- publishes DebugBar assets
+
 Then move into the project directory:
 
 ```bash
@@ -34,7 +42,7 @@ If everything is working correctly, the application should now be available in y
 
 Open the local project URL in your browser.
 
-If the installation was successful, you should see the default welcome page.
+If the installation was successful, you should see the starter demo application.
 
 ## 4. Understand the goal of this first run
 
@@ -44,6 +52,7 @@ The goal is simply to confirm three things:
 
 - the framework is installed correctly
 - the CLI tooling is working
+- the starter project bootstrap steps completed successfully
 - the project can run locally in a normal development workflow
 
 ## 5. Learn how the project is organized

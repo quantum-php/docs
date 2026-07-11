@@ -29,6 +29,17 @@ Practical note: current project dependencies are Composer-platform-checked for t
     composer create-project quantum/project my-project
     ```
 
+    The current starter project runs a post-create setup sequence automatically after Composer finishes installing dependencies.
+
+    That setup currently:
+
+    - creates `.env` from `.env.example`
+    - generates an application key
+    - installs the demo `Web` and `Api` modules
+    - installs OpenAPI assets/routes for the `Api` module
+    - publishes DebugBar assets
+    - prints the installed framework version
+
 
 2.  **Navigate into the project directory**\
 
@@ -49,4 +60,11 @@ Practical note: current project dependencies are Composer-platform-checked for t
 
 ### Verification
 
-You should now see the Quantum default welcome page. That confirms your installation was successful!
+You should now see a working Quantum demo application in the browser.
+
+On a successful fresh install, you should also expect that:
+
+- `.env` already exists
+- `APP_KEY` has been generated
+- the starter demo modules are already installed
+- the CLI can boot successfully with `php qt serve`
