@@ -28,11 +28,11 @@ The core framework provides:
   - `core:env`
   - `core:key`
   - `install:toolkit`
-  - `resource:clear`
+  - `cache:clear`
   - `install:openapi`
   - `cron:run` (See [Cron Scheduling](#cron-scheduling))
-  - `debugbar`
-  - `version`
+  - `install:debugbar`
+  - `core:version`
 
 ### In `project`
 The starter project adds its own project-level commands under:
@@ -183,6 +183,15 @@ These commands help prepare the local project environment.
 `core:env` copies `.env.example` to `.env`.
 
 `core:key` generates an `APP_KEY` and writes it into `.env`.
+
+## Asset publishing and maintenance
+
+- `install:debugbar`
+- `install:openapi`
+- `install:toolkit`
+- `cache:clear`
+
+These commands handle framework-published assets, OpenAPI resources, Toolkit scaffolding, and resource cache cleanup.
 
 ## Project/demo commands
 
