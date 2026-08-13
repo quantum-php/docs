@@ -1,6 +1,6 @@
 # HttpClient Architecture
 
-The package wraps either `Curl\Curl` or `Curl\MultiCurl` behind the same `HttpClient` API.
+The package wraps Quantum-owned native cURL adapters behind the same `HttpClient` API.
 
 ## Runtime flow
 
@@ -12,15 +12,15 @@ You begin in one of three ways:
 - `createMultiRequest()` for a collected batch
 - `createAsyncMultiRequest($success, $error)` for callback-driven batches
 
-Each method replaces the current internal client instance.
+Each method replaces the current internal adapter instance.
 
 It does **not** reset the wrapper's other state. The current HTTP method, pending data payload, tracked request headers, collected responses, and collected errors all stay on the same `HttpClient` object until you overwrite them or create a fresh wrapper instance.
 
-## 2. Configure the underlying curl client
+## 2. Configure the underlying adapter
 
-`HttpClient` exposes a small native API (`setMethod()`, `setData()`, `start()`) and forwards unknown method calls to the underlying curl-class object through `__call()`.
+`HttpClient` exposes a small native API (`setMethod()`, `setData()`, `start()`) and forwards supported adapter methods through `__call()`.
 
-That means methods such as these come from the wrapped library, not from Quantum itself:
+Supported passthrough methods include:
 
 - `setHeader()`
 - `setHeaders()`
@@ -43,11 +43,11 @@ For a single request, `start()` calls an internal `startSingleRequest()` method 
 
 ### Multi request path
 
-For a normal multi request, `start()` simply calls `MultiCurl::start()`. Each completed request is then passed into `handleResponse()` by the callback registered in `createMultiRequest()`.
+For a normal multi request, `start()` calls the native `MultiCurlAdapter`. Each completed request is passed into `handleResponse()` by the callback registered in `createMultiRequest()`.
 
 ### Async multi request path
 
-For async multi requests, Quantum does not install its own completion collector. Your success and error callbacks are the primary output path.
+For async multi requests, Quantum installs the same completion collector used by normal multi requests and also wires your success and error callbacks. Your callbacks are useful for per-request side effects, while `getResponse()` and `getErrors()` remain available after `start()` finishes.
 
 ## Response storage model
 
@@ -86,7 +86,7 @@ This is only a bookkeeping layer for later reads through `getRequestHeaders()`. 
 
 Several read methods call `ensureSingleRequest()` first.
 
-If the current client is `MultiCurl`, these methods fail instead of guessing which request you meant:
+If the current adapter is a multi-request adapter, these methods fail instead of guessing which request you meant:
 
 - `getRequestHeaders()`
 - `getResponseHeaders()`
