@@ -68,6 +68,6 @@ The built-in commands are thin wrappers around other packages. For example:
 - `cron:run` delegates to the Cron package
 - `migration:*` delegates to the Migration package
 - `route:list` builds routes through Module and Router
-- `cache:clear` clears resource cache through Loader, Config, and Storage
+- `cache:clear` reads the module and view cache config through Config and clears the cache files through Storage
 
 That makes Console an orchestration layer rather than a separate application runtime.

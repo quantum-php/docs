@@ -216,10 +216,6 @@
   * [Contracts](v3.0/packages/logger/contracts.md)
   * [Helpers](v3.0/packages/logger/helpers.md)
   * [Usage](v3.0/packages/logger/usage.md)
-* Loader
-  * [Overview](v3.0/packages/loader/overview.md)
-  * [Architecture](v3.0/packages/loader/architecture.md)
-  * [Usage](v3.0/packages/loader/usage.md)
 * Transformer
   * [Overview](v3.0/packages/transformer/overview.md)
   * [Usage](v3.0/packages/transformer/usage.md)

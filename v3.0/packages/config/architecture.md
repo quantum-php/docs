@@ -1,13 +1,13 @@
 # Config Architecture
 
-Config sits between Quantum's file loader and the rest of the framework.
+Config sits between the PHP config files and the rest of the framework.
 
 ## Runtime flow
 
-1. Create a `Setup` object that points to a PHP config file.
-2. Call `load()` or `import()` on `Config`.
-3. Config resolves `Quantum\Loader\Loader` through DI.
-4. Loader reads the PHP file and returns its array.
+1. Create a `Setup` object that names a PHP config file.
+2. Call `load()`, `import()` or `importIfExists()` on `Config`.
+3. Config resolves the file path from the application base directory: the module's file first, then the `shared/` fallback (see [Path resolution](../../advanced-features/configuration.md#path-resolution-table)).
+4. Config requires the PHP file, which returns an array. A missing file throws `ConfigException` (`importIfExists()` returns `false` instead).
 5. Config stores the result in one in-memory data container.
 
 After that, reads come from memory through `get()`, `has()`, and `all()`.

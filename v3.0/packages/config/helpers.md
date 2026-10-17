@@ -11,7 +11,7 @@ function config(): Config
 Use it when you want the shared configuration store managed by Quantum DI.
 
 ```php
-use Quantum\Loader\Setup;
+use Quantum\Config\Setup;
 
 config()->import(new Setup('config', 'app'));
 

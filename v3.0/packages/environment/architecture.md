@@ -16,11 +16,10 @@ env()
 Before reads work, the shared `Environment` instance must be initialized:
 
 ```text
-Environment::load(Setup $setup)
-  -> ensure Loader is registered in DI
-  -> Di::get(Loader::class)->setup($setup)->load()
-  -> read app_env from loaded config
-  -> choose .env or .env.<app_env>
+Environment::load()
+  -> require <base>/shared/config/env.php (EnvException if missing)
+  -> read app_env from it
+  -> choose .env or .env.<app_env> (EnvException if missing)
   -> Dotenv::createArrayBacked(...)->load()
   -> cache loaded values in $envContent
 ```

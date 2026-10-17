@@ -2,24 +2,28 @@
 
 ## Import a normal package config file
 
-This is the common Quantum pattern.
+This is the pattern every Quantum factory uses: import the file once, then read from it.
 
 ```php
-use Quantum\Loader\Setup;
+use Quantum\Config\Setup;
 
-config()->import(new Setup('config', 'mailer'));
+if (!config()->has('mailer')) {
+    config()->import(new Setup('config', 'mailer'));
+}
 
 $defaultAdapter = config()->get('mailer.default');
 $smtpHost = config()->get('mailer.smtp.host');
 ```
 
-Use `import()` when the file should live under its own top-level section.
+The `has()` check matters: importing the same section twice throws a `ConfigException`. A missing file throws too, which is what you want for config the code cannot work without.
+
+For a file the app can run without, `importIfExists()` returns `false` instead of throwing.
 
 ## Load one file as the whole root store
 
 ```php
 use Quantum\Config\Config;
-use Quantum\Loader\Setup;
+use Quantum\Config\Setup;
 
 $config = new Config();
 $config->load(new Setup('config', 'app'));
