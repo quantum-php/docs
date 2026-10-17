@@ -54,29 +54,53 @@ If the adapter does not implement the requested method, the call throws an app e
 
 ### What it exposes
 
-- base directory
-- DI container
-- DI-resolved `Environment`
-- DI-resolved `Config`
-- DI-resolved `Request`
-- DI-resolved `Response`
-- DI-resolved `RouteCollection`
+- base directory (`getBaseDir()`)
+- DI container (`getContainer()`)
+- DI-resolved `Environment` (`getEnvironment()`)
+- DI-resolved `Config` (`getConfig()`)
+
+These are what both the web and the console boot provide.
+
+### Runtime contexts
+
+`WebContext` and `ConsoleContext` extend `AppContext` and add what only their kind of run has:
+
+- `WebContext`: `getRequest()`, `getRoutes()` and `getViewCache()` from the container, `getMatchedRoute()` from the request, the response to send (`getResponse()` / `setResponse()`), and `stop()` / `isStopped()`
+- `ConsoleContext`: `getApplication()`, `getInput()` and `getOutput()` from the container, `getBootFailure()`, and the exit code (`getExitCode()` / `setExitCode()`)
 
 ### Constraint
 
-Those typed getters assume the corresponding object has already been registered in the container. If you call them before the relevant boot stage runs, resolution depends on the DI package being able to build that class.
+Those typed getters assume the corresponding object has already been registered in the container. If you call them before the relevant boot stage runs, the container throws because the dependency is not registered.
 
-## Boot stage contract
+## Stage and pipeline contract
 
-Every boot stage must implement `BootStageInterface`:
+Every stage implements `Quantum\App\Contracts\StageInterface` and states the context it works with in its class docblock:
 
 ```php
-public function process(AppContext $context): void;
+/**
+ * @implements StageInterface<WebContext>
+ */
+class MyStage implements StageInterface
+{
+    /**
+     * @param WebContext $context
+     */
+    public function process(AppContext $context): void
+    {
+        // ...
+    }
+}
 ```
 
-`BootPipeline` validates that every supplied stage implements that interface before running.
+`Quantum\App\Pipeline` runs stages in order with one context:
 
-If you pass another object type into the pipeline constructor, it throws `InvalidArgumentException` immediately.
+```php
+(new Pipeline([new FirstStage(), new SecondStage()]))->run($context);
+```
+
+- The context type is a PHPDoc template (`Pipeline<TContext>`, `StageInterface<TContext>`), checked by PHPStan: running web stages with a console context, mixing stages of different kinds, or a stage without its `@implements` line fails static analysis. PHP itself only requires an `AppContext`.
+- The constructor throws `InvalidArgumentException` immediately when an item does not implement `StageInterface`.
+- A stage may declare `BEFORE` and `AFTER` class constants holding event names. The pipeline dispatches them around the stage with `['context' => $context]` as the payload, skips them while the `event()` helper is not loaded yet, and does not dispatch `AFTER` when the stage throws. Today only boot stages declare events (`boot.environment`, `boot.config`, `boot.error_handler`, `boot.http`, `boot.modules`, each with `.before` / `.after`).
 
 ## Exit codes
 
@@ -86,4 +110,4 @@ The package exposes three constants:
 - `ExitCode::FAILURE` = `1`
 - `ExitCode::INVALID` = `2`
 
-The built-in adapters mainly return `SUCCESS` for handled execution paths. Console command exit codes from Symfony are passed through, with falsy values normalized to `0`.
+The web adapter returns `SUCCESS` after sending a response. The console adapter returns the exit code of the command that ran, as Symfony reports it.
