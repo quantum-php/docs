@@ -43,7 +43,7 @@ That gives Quantum a base directory and tells it to use the console application 
 ### 2. Quantum builds the console adapter
 In core, console mode uses `ConsoleAppAdapter`.
 
-That adapter creates:
+Before anything else, it sets up:
 
 - `ArgvInput` for reading CLI arguments
 - `ConsoleOutput` for writing output
@@ -51,17 +51,10 @@ That adapter creates:
 
 So `qt` is not a shell wrapper around random scripts. It boots a real console application.
 
-### 3. Quantum runs boot stages
-Before commands are executed, the console adapter runs a boot pipeline.
+### 3. Quantum boots the project
+Next, Quantum loads what commands usually rely on: helper functions, `.env`, the app config, and the error handler. It also names the console application from `app.name` and `app.version`.
 
-Depending on the command, that includes stages such as:
-
-- loading helper functions
-- loading environment values
-- loading app config
-- setting up the error handler
-
-**Note**: Some boot stages, specifically those related to environment loading, are special-cased by `ConsoleAppAdapter` to ensure stable discovery and execution.
+This boot is the same for every command. If one of its steps fails, Quantum does not stop here; see [When the boot fails](#when-the-boot-fails).
 
 ### 4. Core commands are registered
 Quantum then registers the framework's built-in commands from:
@@ -98,7 +91,8 @@ That means `qt` can run both:
 The console app reads the first CLI argument as the command name.
 
 If the command does not exist, Quantum throws an error.
-If it exists, Symfony Console runs it.
+If the boot failed and the command requires the environment, Quantum throws the original boot error.
+Otherwise, Symfony Console runs it.
 
 ## What `qt` does for developers
 
@@ -160,6 +154,45 @@ this is roughly what happens:
 5. the command loads routes and renders them in a console table
 
 The same pattern applies to other commands.
+
+## When the boot fails
+
+Picture a fresh clone of a project: there is no `.env` yet, and the first thing you run is:
+
+```bash
+php qt core:env
+```
+
+That command creates `.env` from `.env.example`, so it has to work exactly when loading `.env` cannot. This is why the console boot keeps going when one of its steps fails: Quantum remembers the error and still registers and runs commands.
+
+Each command then decides whether it can run without the failed part:
+
+- `core:env`, and Symfony's `list` and `help`, run normally.
+- A command that needs the environment, such as `migration:migrate`, stops with the original error (for example ``The file `.env` not found.``) instead of failing later with a confusing one.
+
+Your own commands need the environment by default. If a command must also run without it, for example a setup check, set `$requiresEnvironment` to `false`:
+
+```php
+namespace Shared\Commands;
+
+use Quantum\Console\CliCommand;
+
+class DoctorCommand extends CliCommand
+{
+    protected ?string $name = 'app:doctor';
+
+    protected ?string $description = 'Checks the project setup';
+
+    protected bool $requiresEnvironment = false;
+
+    public function exec(): void
+    {
+        $this->info('Checking the project setup...');
+    }
+}
+```
+
+After a failed boot the application name is not read from your config, so `php qt list` shows it as `UNKNOWN`.
 
 ## In one sentence
 

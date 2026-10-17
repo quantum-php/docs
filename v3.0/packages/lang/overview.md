@@ -60,9 +60,7 @@ $value = t('custom.test');
 
 ## What happens at runtime
 
-In a normal web request, Quantum loads the package during app bootstrap through `WebAppTrait::loadLanguage()`. If `lang.enabled` is true, the shared `Lang` instance calls `load()` once and keeps translations in memory for the rest of the container lifetime.
-
-`lang.enabled` controls that bootstrap load step. The package service can still be resolved manually when the flag is false.
+In a web request that matched a route, Quantum resolves the shared `Lang` instance before dispatching (`PrepareRequestStage` calls `LangFactory::get()`), so the language is detected once, from that request. Translations are not read at that point: the file adapter loads them on the first `t()` call and keeps them in memory for the rest of the container lifetime.
 
 If a key is missing, `t()` returns the key string unchanged instead of throwing an exception.
 

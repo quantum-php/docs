@@ -77,25 +77,23 @@ This is a thin proxy to `request()->getReferrer()`.
 ## `page_not_found_response()`
 
 ```php
-function page_not_found_response(): Response
+function page_not_found_response(?Request $request = null): Response
 ```
 
-This helper chooses between a JSON 404 response and an HTML 404 response.
+When a request matches no route, Quantum answers with this helper, and you can call it yourself, for example when a record in a route does not exist:
 
-Decision rule:
+```php
+$post = $this->postService->getPost($uuid);
 
-- if `request()->getHeader('Accept') === ContentType::JSON`, return JSON
-- otherwise, render HTML from `partial('errors' . DS . StatusCode::NOT_FOUND)`
+if ($post->isEmpty()) {
+    return page_not_found_response();
+}
+```
 
-Both branches return status code `404`.
+A browser gets your HTML error page, rendered from `partial('errors' . DS . StatusCode::NOT_FOUND)`. A client that wants JSON, decided by [`Request::expectsJson()`](request.md#does-the-client-want-json), gets:
 
-### Important caveat
+```json
+{"status": "error", "message": "Page not found"}
+```
 
-The JSON branch uses exact string equality.
-
-So headers like these do **not** count as JSON in the current implementation:
-
-- `application/json; charset=utf-8`
-- `application/json, text/plain, */*`
-
-Those values fall back to the HTML 404 response path.
+Both return status code `404`. Without an argument the helper checks the current `request()`; pass a `Request` to check that one instead.

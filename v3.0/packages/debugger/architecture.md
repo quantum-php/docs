@@ -11,16 +11,16 @@ The Debugger package follows a simple pipeline:
 
 ### 1. Boot stage
 
-`Quantum\App\Stages\InitDebuggerStage` runs in the web app boot pipeline and calls `debugbar()->initStore()`.
+`Quantum\App\Stages\Boot\InitDebuggerStage` runs in the web boot pipeline and calls `debugbar()->initStore()`.
 
-In `Quantum\App\Adapters\WebAppAdapter`, that happens after helpers, environment, config, error handler, and HTTP initialization, but before modules are loaded.
+It runs after helpers, environment, config, error handler, and HTTP initialization, but before modules are loaded; see the [web boot order](../app/architecture.md#web-boot-order).
 
 ### 2. Producers write into the store
 
 Several framework components write diagnostics into the same store:
 
 - `Quantum\Logger\Adapters\MessageAdapter` writes log messages into `messages` or a caller-provided tab
-- `Quantum\App\Traits\WebAppTrait::logDebugInfo()` writes registered hooks into `hooks`
+- `Quantum\App\Stages\Web\PrepareRequestStage` writes the registered event listeners (`event()->getRegistered()`) into `events` when the debug bar is enabled, once a route has matched
 - `Quantum\View\View::updateDebugger()` rewrites the `routes` tab to include the resolved view file
 - mailer code routes failures into the `mails` tab through logger helpers
 
@@ -45,7 +45,7 @@ Important consequences:
 
 `Debugger::render()` loops over the built-in tab names and calls `createTab($tab)` for each one.
 
-That list is fixed to `messages`, `queries`, `routes`, `hooks`, and `mails`.
+That list is fixed to `messages`, `queries`, `routes`, `events`, and `mails`.
 
 `createTab()`:
 

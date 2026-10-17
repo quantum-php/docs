@@ -52,15 +52,13 @@ exit($app->start() ?? 0);
 
 ### What it does
 
-The console adapter:
+Every `php qt <command>` goes the same way: the adapter boots the project (helpers, `.env`, app config, error handler), registers the framework commands and your commands from `shared/Commands`, checks that the requested command exists, runs it through Symfony Console, and returns its exit code.
 
-- creates Symfony `ArgvInput` and `ConsoleOutput`
-- loads helpers for every command
-- loads environment, app config, and error handling for all commands except `core:env`
-- marks the shared `Environment` instance mutable for non-`core:env` commands
-- creates the Symfony application using `app.name` and `app.version`
-- registers framework and app command classes
-- validates that the requested command exists before running
+The boot is the same for every command. If it fails, for example on a fresh clone without `.env`, commands are still registered and can run; see [When the boot fails](../../cli/qt-command-line-tool.md#when-the-boot-fails).
+
+The adapter does not make the environment writable. A command that changes `.env` through `environment()->updateRow()` calls `setMutable(true)` first, as `core:key` does.
+
+The stages behind these steps are listed in [Architecture](architecture.md#console-boot-order).
 
 ### Command registration contract
 
