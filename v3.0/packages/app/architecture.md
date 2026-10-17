@@ -1,6 +1,8 @@
 # App Architecture
 
-The App package builds a runtime in three layers: factory, context, and adapter pipelines.
+Whether a browser requests a page or you run `php qt migration:migrate`, Quantum does the same two things: it boots the project once, then handles one run (a request or a command). Both parts are pipelines: short, ordered lists of stages, each doing one job. That makes the order easy to read, easy to test stage by stage, and gives you fixed points to hook into.
+
+This page follows that path: the factory that creates the app, the context every stage receives, then the stages in the order they run.
 
 ## 1) Factory
 
@@ -43,6 +45,22 @@ Each adapter runs two pipelines, both with the generic `Quantum\App\Pipeline`:
 
 The pipeline contract is simple: every stage receives the context and runs once, in order. A stage may declare `BEFORE` / `AFTER` event names that the pipeline dispatches around it; see [Contracts](contracts.md#stage-and-pipeline-contract).
 
+### Hooking into the boot
+
+Say you want to register something right after the modules are loaded, or measure how long the config takes to load. The boot stages dispatch events around themselves, such as `boot.modules.before` and `boot.modules.after`, with the context in the payload.
+
+Listen in a file under your project's `helpers/` directory. Helpers load first, so the listener is in place before the other boot stages run:
+
+```php
+event()->listen('boot.modules.after', function (array $payload) {
+    $baseDir = $payload['context']->getBaseDir();
+
+    // the module routes are loaded at this point
+});
+```
+
+The full list of events and when they are skipped is in [Contracts](contracts.md#stage-and-pipeline-contract).
+
 ## Web boot order
 
 The web adapter runs these stages during construction:
@@ -77,7 +95,7 @@ The console adapter runs these stages during construction:
 5. `SetupErrorHandlerStage`
 6. `SetupConsoleApplicationStage`
 
-`InitConsoleStage` runs first so a console application, input, and output exist even when a later stage fails. The boot runs for every command. When it fails, the adapter keeps the failure instead of stopping: commands that do not need the environment, such as `core:env`, `list`, and `help`, still run, and a command that needs it gets the original error. `SetupConsoleApplicationStage` names the Symfony application from `app.name` and `app.version`; after a failed boot it is not reached and the name stays `UNKNOWN`.
+`InitConsoleStage` runs first, so the console application, input and output exist even when a later stage fails. A failure does not stop the adapter: it is stored on the `ConsoleContext` and `RunCommandStage` decides per command. What the user sees is described in [When the boot fails](../../cli/qt-command-line-tool.md#when-the-boot-fails).
 
 ## Console runtime order
 

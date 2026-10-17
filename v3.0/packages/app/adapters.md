@@ -52,21 +52,13 @@ exit($app->start() ?? 0);
 
 ### What it does
 
-The console adapter:
+Every `php qt <command>` goes the same way: the adapter boots the project (helpers, `.env`, app config, error handler), registers the framework commands and your commands from `shared/Commands`, checks that the requested command exists, runs it through Symfony Console, and returns its exit code.
 
-- registers the Symfony `Application`, `ArgvInput`, and `ConsoleOutput` in DI before anything else, so they exist even when a later boot stage fails
-- loads helpers, environment, app config, and error handling for every command
-- keeps a failed boot instead of stopping: commands that do not need the environment (`core:env`, `list`, `help`) still run, and a command that needs it gets the original error
-- names the Symfony application from `app.name` and `app.version` once the whole boot succeeded (`UNKNOWN` otherwise)
-- registers framework and app command classes
-- validates that the requested command exists before running
-- returns the command's exit code
+The boot is the same for every command. If it fails, for example on a fresh clone without `.env`, commands are still registered and can run; see [When the boot fails](../../cli/qt-command-line-tool.md#when-the-boot-fails).
 
 The adapter does not make the environment writable. A command that changes `.env` through `environment()->updateRow()` calls `setMutable(true)` first, as `core:key` does.
 
-### Commands that work without the environment
-
-A command extending `Quantum\Console\CliCommand` requires the environment by default. Set `protected bool $requiresEnvironment = false;` on a command that must also run when the environment or app config cannot be loaded, as `core:env` does.
+The stages behind these steps are listed in [Architecture](architecture.md#console-boot-order).
 
 ### Command registration contract
 
