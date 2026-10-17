@@ -53,7 +53,6 @@ project-root/
 |-- migrations/            Database migrations
 |-- tests/                 Unit and feature tests
 |-- helpers/               Optional project helpers
-|-- hooks/                 Optional hook/event extensions
 |-- libraries/             Optional custom library-style code
 |-- qt                     CLI entrypoint
 |-- composer.json
@@ -195,13 +194,7 @@ In the current skeleton, it includes:
 
 - `helpers/functions.php`
 
-This is typically where reusable procedural helpers can live when they do not naturally belong in a service or class.
-
-### `hooks/`
-
-The skeleton includes a `hooks/` directory, currently kept alive with a `.gitkeep` file.
-
-This suggests the framework/project layout reserves a place for hook-based extensions or related project behavior, even if the demo project does not actively use it yet.
+This is typically where reusable procedural helpers can live when they do not naturally belong in a service or class. It is also the place to register event listeners; see [Event Usage](../packages/event/usage.md#where-to-register-listeners).
 
 ### `libraries/`
 

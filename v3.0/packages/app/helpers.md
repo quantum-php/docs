@@ -30,14 +30,13 @@ Otherwise it returns `<base>/modules`.
 
 That makes it useful both for default module lookup and for callers that want to override the module root explicitly.
 
-### `public_dir()`, `uploads_dir()`, `assets_dir()`, `hooks_dir()`
+### `public_dir()`, `uploads_dir()`, `assets_dir()`
 
 These resolve to:
 
 - `<base>/public`
 - `<base>/public/uploads`
 - `<base>/public/assets`
-- `<base>/hooks`
 
 ## File and class helpers
 
