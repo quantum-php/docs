@@ -174,6 +174,31 @@ Invalid or non-decodable Basic auth values return `null`.
 
 `getReferrer()` simply proxies `server()->referrer()`.
 
+### Does the client want JSON?
+
+The same URL is often hit by a browser and by a script: a browser should get an HTML error page, while an API client or a `fetch()` call should get JSON it can parse. `expectsJson()` makes that call from the request headers:
+
+```php
+if (request()->expectsJson()) {
+    return response()->json(['status' => 'error', 'message' => 'Not allowed'], 403);
+}
+```
+
+It returns `true` when the `Accept` header lists a JSON media type: exactly `application/json`, or any type ending in `+json` such as `application/problem+json`. Parameters, spaces and case are ignored, and so are the order of the types and their `q` weights:
+
+| `Accept` header | `expectsJson()` |
+|---|---|
+| `application/json` | `true` |
+| `application/json; charset=utf-8` | `true` |
+| `text/html, application/json;q=0.1` | `true` |
+| `application/vnd.api+json` | `true` |
+| `application/jsonp` | `false` |
+| `text/html` | `false` |
+
+An AJAX request (see `isAjax()` above) also counts as wanting JSON when it accepts anything: its `Accept` header is missing or starts with `*/*` or `*`, and does not list `text/html`. So an AJAX call sending `X-Requested-With` and `Accept: */*` gets JSON, while one that asks for `text/html` gets HTML.
+
+Quantum's own 404 response uses this rule; see `page_not_found_response()` in [Http helpers](helpers.md).
+
 ## Query string helpers
 
 The query helpers work on the raw stored query string, not on a decoded map.
