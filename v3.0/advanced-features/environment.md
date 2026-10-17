@@ -13,10 +13,11 @@ The framework selects the environment file based on the `app_env` setting, which
 
 The `Environment` service implements a "one-shot" loading pattern.
 
-### `load(Setup $setup)`
+### `load()`
 
 - **One-shot**: Once the environment is loaded, subsequent calls to `load()` are no-ops. 
-- **Initialization**: It identifies the target `.env` file, validates its existence, loads the variables, and marks the environment as loaded.
+- **Initialization**: It reads `app_env` from `shared/config/env.php`, picks the matching `.env` file, validates that both files exist (`EnvException` otherwise), loads the variables, and marks the environment as loaded.
+- The boot does this for you; you call it yourself only in custom bootstraps or tests.
 
 ### `env(string $key, $default = null)`
 
@@ -44,10 +45,13 @@ The `Server` class provides a controlled gateway to the server state.
 
 
 ```php
-$setup = new Setup('config', 'env', true, 'php');
+use Quantum\Environment\Environment;
+use Quantum\Di\Di;
 
-$env = Di::get(Environment::class);
-$env->load($setup);
+$env = new Environment();
+$env->load();
+
+Di::set(Environment::class, $env);
 
 // Access a variable
 $dbHost = env('DB_HOST', 'localhost');

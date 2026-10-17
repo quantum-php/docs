@@ -28,7 +28,7 @@ debugbar()->initStore();
 - `messages`
 - `queries`
 - `routes`
-- `hooks`
+- `events`
 - `mails`
 
 The store is still tolerant of missing keys because reads fall back to `[]`, but this boot stage is what pre-seeds the standard tabs used by the rest of the framework.
@@ -56,7 +56,7 @@ Framework integrations then add package-specific messages into named tabs:
 
 - logger messages go to `messages` by default
 - mail failures can be routed to `mails`
-- web bootstrap stores registered hooks in `hooks`
+- for a matched web route, the registered event listeners go to `events` (see [Architecture](architecture.md#2-producers-write-into-the-store))
 - view rendering updates the `routes` tab with the final view path
 
 The built-in render flow only replays those five tab names. If you write data into some other store key, it stays in the store unless you extend the debugger package yourself.
@@ -87,4 +87,4 @@ The package does not publish those files by itself during normal request handlin
 - `render()` replays stored entries into the same collector objects each time, so calling it more than once in the same request can duplicate toolbar messages.
 - `addToStoreCell()` ignores empty payloads, so `''`, `[]`, `0`, and `'0'` are not recorded.
 - Message levels are invoked dynamically on `MessagesCollector`; unsupported level names would fail at call time.
-- Only `messages`, `queries`, `routes`, `hooks`, and `mails` are auto-created as store-backed tabs.
+- Only `messages`, `queries`, `routes`, `events`, and `mails` are auto-created as store-backed tabs.

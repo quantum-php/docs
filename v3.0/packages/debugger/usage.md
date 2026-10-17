@@ -13,7 +13,7 @@ Those entries are rendered into the `messages` tab when `app.debug` is enabled.
 
 ## Writing to a specific tab
 
-Quantum uses named tabs such as `queries`, `routes`, `hooks`, and `mails`.
+Quantum uses named tabs such as `queries`, `routes`, `events`, and `mails`.
 
 ```php
 use Quantum\Debugger\Debugger;
@@ -23,7 +23,7 @@ debugbar()->addToStoreCell(Debugger::MAILS, 'warning', 'SMTP handshake failed');
 
 You can also route logger output into a tab by passing a `tab` context value to the framework's message logger path.
 
-Stick to the built-in tab constants for normal usage. `render()` only replays `messages`, `queries`, `routes`, `hooks`, and `mails` from the store.
+Stick to the built-in tab constants for normal usage. `render()` only replays `messages`, `queries`, `routes`, `events`, and `mails` from the store.
 
 ## Rendering in a layout
 

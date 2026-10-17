@@ -8,8 +8,8 @@ This page covers the behavior other code can rely on when using `Quantum\Config\
 $config->load($setup);
 ```
 
-- expects a `Quantum\Loader\Setup`
-- loads one PHP file through `Loader`
+- expects a `Quantum\Config\Setup`
+- loads one PHP file resolved from the `Setup`
 - stores the returned array as the root config payload
 - does nothing if the store has already been loaded once
 
@@ -21,7 +21,7 @@ Use `load()` when you control the whole store shape.
 $config->import($setup);
 ```
 
-- expects a `Quantum\Loader\Setup`
+- expects a `Quantum\Config\Setup`
 - reads the setup filename and uses it as the top-level key
 - stores the loaded payload as `[$fileName => $data]`
 - throws `ConfigException` if that truthy top-level key already exists
@@ -39,6 +39,15 @@ $driver = config()->get('database.default');
 The package only performs collision checks when the setup filename is truthy.
 
 In practice, treat a non-empty filename as required for `import()`. It gives you predictable access paths and the intended collision guard.
+
+## Optional import contract
+
+```php
+$config->importIfExists($setup): bool
+```
+
+- returns `false` and changes nothing when the file cannot be resolved
+- otherwise behaves like `import()`, including the collision check, and returns `true`
 
 ## Read contract
 
@@ -79,6 +88,6 @@ Keys use dot notation because the backing store is a dot-accessible data contain
 
 ## Failure behavior
 
-- missing files and loader resolution problems bubble up from `Loader`
+- a missing file in `load()` or `import()` raises `ConfigException` with the `Setup` exception message (by default ``File `<pathPrefix>/<fileName>` not found!``)
 - duplicate imported section names raise `ConfigException`
 - helper resolution can fail if DI registration or resolution fails

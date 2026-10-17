@@ -1,6 +1,6 @@
 # Lang Helpers
 
-The package exposes three global helpers.
+The package exposes three global helpers. All three use the shared `Lang` instance of the default adapter (`lang.default`), resolved through `LangFactory::get()`.
 
 ## `current_lang()`
 
@@ -8,14 +8,14 @@ The package exposes three global helpers.
 function current_lang(): ?string
 ```
 
-Returns the current language string from the shared `Lang` instance.
+Returns the current language code of the shared `Lang` instance.
 
 Use it when you need the language code for routing, view logic, or response metadata.
 
 ## `t()`
 
 ```php
-function t(string $key, $params = null): ?string
+function t(string $key, array|string $params = null): ?string
 ```
 
 Returns the translated string for a key.
@@ -27,16 +27,14 @@ $message = t('custom.info', ['new']);
 
 Behavior:
 
-- reads from the shared language service used by the current app container
+- the `file` adapter loads the translation files on the first call
 - returns the key unchanged when no translation exists
-- applies placeholder substitution when `$params` is provided
-
-`$params` can be a string or an array.
+- replaces `{%1}`, `{%2}`, ... placeholders when `$params` is provided; `$params` can be a string or an array
 
 ## `_t()`
 
 ```php
-function _t(string $key, $params = null): void
+function _t(string $key, array|string $params = null): void
 ```
 
 Echoes the result of `t()` directly.
@@ -49,6 +47,5 @@ This is mainly convenient in views when you want immediate output instead of ass
 
 ## Helper caveats
 
-- The helpers do not load translations by themselves. They rely on the shared `Lang` instance already being loaded, which normally happens during web app bootstrap when multilingual support is enabled.
-- If translations were not loaded yet, lookups fall back to the key string.
-- Helpers use the same shared language instance across the request/container lifecycle, so manual runtime changes to that instance affect later helper calls.
+- With the `file` adapter, the first `t()` throws `Translation files not found.` when neither `shared/resources/lang/<lang>/` nor the current module has translation files.
+- The helpers share one `Lang` instance per adapter for the container's lifetime, so `setLang()` on that instance changes the language of every later helper call.

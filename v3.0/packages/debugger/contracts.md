@@ -88,7 +88,7 @@ The package only renders five store-backed tabs:
 - `messages`
 - `queries`
 - `routes`
-- `hooks`
+- `events`
 - `mails`
 
 You can write to any key in `DebuggerStore`, but `Debugger::render()` only replays those built-in names.
