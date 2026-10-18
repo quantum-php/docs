@@ -53,7 +53,6 @@ project-root/
 |-- migrations/            Database migrations
 |-- tests/                 Unit and feature tests
 |-- helpers/               Optional project helpers
-|-- libraries/             Optional custom library-style code
 |-- qt                     CLI entrypoint
 |-- composer.json
 `-- .env / .env.example
@@ -116,6 +115,8 @@ In the current project skeleton, it includes areas such as:
 - `shared/emails/` for email-related assets
 - `shared/store/` for storage-related project data
 
+The folder is autoloaded under the `Shared\` namespace, so it is also the natural home for your own reusable classes.
+
 If you are trying to understand the core behavior of a project, this is one of the first places to study.
 
 ### `modules/`
@@ -162,9 +163,9 @@ This gives a good early hint that the starter project is designed to demonstrate
 
 ### `cache/`
 
-This folder stores runtime cache data created by the project.
+This folder stores runtime data created while the project runs. By default, the file cache and the rate limiter both keep their files in `cache/data`.
 
-In the current starter project, it exists from the beginning so cache-backed framework features already have a conventional location to write into during local development.
+The folder ships with the starter project, so these features have a place to write into on a fresh install. Git ignores its contents; only a `.gitkeep` file keeps the empty folder in the repository.
 
 ### `logs/`
 
@@ -196,19 +197,12 @@ In the current skeleton, it includes:
 
 This is typically where reusable procedural helpers can live when they do not naturally belong in a service or class. It is also the place to register event listeners; see [Event Usage](../packages/event/usage.md#where-to-register-listeners).
 
-### `libraries/`
-
-The project also includes a `libraries/` directory, currently empty except for `.gitkeep`.
-
-This gives you a dedicated place for custom library-style code that does not fit cleanly into other project areas.
-
 ## Important root files
 
 A few root-level files are worth recognizing early:
 
 - `composer.json` for project dependencies and package metadata
-- `.env` and `.env.example` for environment setup
-- `.env.example` for environment setup guidance
+- `.env` and `.env.example` for environment setup: `.env.example` is the template, and `php qt core:env` creates `.env` from it
 - `qt` for command-line framework operations
 - `phpunit.xml` for testing configuration
 - `LICENSE`, `.gitignore`, and CI-related files for project maintenance
