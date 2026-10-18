@@ -19,7 +19,7 @@ Make sure your environment includes:
 
 Optional framework features may require additional extensions or packages such as `redis`, `memcached`, `zip`, `dom`, or `twig/twig`.
 
-Practical note: current project dependencies are Composer-platform-checked for the PHP 8 runtime line. A PHP 7.4 environment will fail before the project boots.
+Practical note: run `php -v` to check your PHP version before you start. Quantum needs PHP 8.0 or newer.
 
 ### Installation Steps
 
@@ -41,10 +41,10 @@ Practical note: current project dependencies are Composer-platform-checked for t
     - prints the installed framework version
 
 
-2.  **Navigate into the project directory**\
+2.  **Navigate into the project directory**
 
 
-    ```
+    ```bash
     cd my-project
     ```
 
@@ -56,7 +56,7 @@ Practical note: current project dependencies are Composer-platform-checked for t
     ```
 
 
-    A built-in server will launch (typically at `http://localhost:8000/`)
+    The development server starts and prints its address, by default `http://127.0.0.1:8000/`. If port 8000 is busy, it uses the next free port. The options are described under [`serve`](packages/console/built-in-commands.md#serve).
 
 ### Verification
 
