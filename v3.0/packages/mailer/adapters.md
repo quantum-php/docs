@@ -39,7 +39,7 @@ The method name is literally `setReplay`, not `setReply`.
 
 ### Runtime behavior
 
-- in debug mode, PHPMailer SMTP debug output is forwarded to the debugger mails tab through `warning(...)`
+- in debug mode, PHPMailer's exchange with the SMTP server is recorded in the [transport log](contracts.md#transport-log)
 - array bodies are concatenated with `implode('')`
 - rendered HTML bodies have newline characters stripped before send
 - after each send, the adapter clears recipients, headers, and attachments on the PHPMailer instance
@@ -155,7 +155,7 @@ The method name is literally `setReplay`, not `setReply`.
 The API adapters all share these limits:
 
 - they use `HttpClient` directly and catch transport exceptions internally
-- `send()` reports failure as `false`; provider-specific error details come from `HttpClient::getErrors()`
+- `send()` reports failure as `false`; the provider's error details (`HttpClient::getErrors()`) are kept in the [transport log](contracts.md#transport-log)
 - they do not expose reply-to, CC, BCC, file attachments, or string attachments through the package surface
 - array bodies are concatenated with `implode('')` before send
 - template and raw body output is trimmed and newline-stripped before being sent as HTML

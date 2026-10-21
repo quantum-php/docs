@@ -58,27 +58,14 @@ Use `daily` when you want automatic file splitting by day.
 
 ## `message`
 
-`MessageAdapter` sends accepted log entries to Quantum's debugger message store instead of the filesystem.
+`MessageAdapter` is the logger of debug mode. It writes no file: it keeps each message in memory as `[level => message]`, in the order they were logged, and `getMessages()` returns them ([example](usage.md#check-what-was-logged-in-debug-mode)). The debug toolbar reads them into its `messages` tab when it renders ([Debugger Architecture](../debugger/architecture.md#where-each-tabs-data-comes-from)).
 
-### How tab routing works
-
-The adapter uses:
-
-- `Debugger::MESSAGES` by default
-- `context['tab']` when you pass one
-
-Example:
-
-```php
-logger()->info('Mailer connected', ['tab' => 'mails']);
-```
-
-The debugger store receives the level and raw message as separate values. File-style formatting and `trace` appends are specific to the file adapters.
+The adapter keeps only the level and the message. The context is not used, so file-style formatting and `trace` appends are specific to the file adapters, and a `tab` key does not move a message to another toolbar tab; to add an entry to another tab, write to the debugger directly ([Debugger Usage](../debugger/usage.md#writing-to-a-specific-tab)).
 
 ### Contract
 
 - available only in debug mode
-- writes only when `debugbar()->isEnabled()` is true
+- keeps the messages for the life of the process; nothing clears them
 - ignores file-path config because it has no constructor parameters
 
 Outside debug mode, explicitly requesting `message` causes the factory to throw an adapter-not-supported exception.

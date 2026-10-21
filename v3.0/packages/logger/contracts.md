@@ -51,22 +51,16 @@ It is appended verbatim after the formatted message.
 
 No placeholder interpolation or structured context rendering happens.
 
-## Debugger logging uses one routing key
+## The `message` adapter ignores the context
 
-For the `message` adapter, the special context key is:
-
-- `tab`
-
-It chooses the debugger store cell that receives the message.
-
-If you omit it, the package uses the default messages tab.
+The `message` adapter keeps only the level and the message; no context key, `trace` or `tab` included, changes what it keeps. See [the `message` adapter](adapters.md#message).
 
 ## Adapter implementations must satisfy `ReportableInterface`
 
 Custom adapters resolved through the factory must implement:
 
 ```php
-public function report(string $level, string $message, ?array $context = []): void;
+public function report(string $level, string|Stringable $message, ?array $context = []): void;
 ```
 
 If the resolved adapter instance does not implement that contract, the factory throws an adapter-not-supported exception.
