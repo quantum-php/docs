@@ -22,7 +22,7 @@ A listener can be any PHP callable: a closure, an invokable object, or `[$object
 
 ## Where to register listeners
 
-A listener only runs if it was registered before the event is dispatched. The safe place is a file in your project's `helpers/` directory, or in a module's `helpers/` directory. Quantum loads those files first, before the rest of the boot, so their listeners are in place for every event, the [boot events](../app/architecture.md#hooking-into-the-boot) included:
+A listener only runs if it was registered before the event is dispatched. The safe place is a file in your project's `helpers/` directory, or in a module's `helpers/` directory. Quantum loads those files early in the boot, so their listeners are in place for every event, the framework's [request and command events](../app/architecture.md#hooking-into-the-running-app) included:
 
 ```php
 // helpers/events.php

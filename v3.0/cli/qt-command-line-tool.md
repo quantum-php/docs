@@ -51,13 +51,8 @@ Before anything else, it sets up:
 
 So `qt` is not a shell wrapper around random scripts. It boots a real console application.
 
-### 3. Quantum boots the project
-Next, Quantum loads what commands usually rely on: helper functions, `.env`, the app config, and the error handler. It also names the console application from `app.name` and `app.version`.
-
-This boot is the same for every command. If one of its steps fails, Quantum does not stop here; see [When the boot fails](#when-the-boot-fails).
-
-### 4. Core commands are registered
-Quantum then registers the framework's built-in commands from:
+### 3. Helpers load and core commands are registered
+Next, Quantum loads the helper functions and registers the framework's built-in commands from:
 
 ```text
 Quantum\Console\Commands
@@ -73,14 +68,17 @@ These include commands such as:
 - `core:env`
 - `core:key`
 
+### 4. Quantum loads the project
+Then Quantum loads what commands usually rely on: `.env`, the app config, and the error handler. It also names the console application from `app.name` and `app.version`.
+
 ### 5. App commands are registered
-After that, Quantum registers project-level commands from:
+Last, Quantum registers project-level commands from:
 
 ```text
 shared/Commands/
 ```
 
-in the starter project.
+in the starter project. They come after the environment and the config, so a command's constructor can use `env()` and `config()`.
 
 That means `qt` can run both:
 
@@ -90,8 +88,7 @@ That means `qt` can run both:
 ### 6. The command is validated and executed
 The console app reads the first CLI argument as the command name.
 
-If the command does not exist, Quantum throws an error.
-If the boot failed and the command requires the environment, Quantum throws the original boot error.
+If the command does not exist, Quantum throws ``Command `<name>` is not defined``.
 Otherwise, Symfony Console runs it.
 
 ## What `qt` does for developers
@@ -155,7 +152,7 @@ this is roughly what happens:
 
 The same pattern applies to other commands.
 
-## When the boot fails
+## Commands without a working environment
 
 Picture a fresh clone of a project: there is no `.env` yet, and the first thing you run is:
 
@@ -163,36 +160,16 @@ Picture a fresh clone of a project: there is no `.env` yet, and the first thing 
 php qt core:env
 ```
 
-That command creates `.env` from `.env.example`, so it has to work exactly when loading `.env` cannot. This is why the console boot keeps going when one of its steps fails: Quantum remembers the error and still registers and runs commands.
+That command creates `.env` from `.env.example`, so it has to work exactly when loading `.env` cannot. When `.env` is missing or cannot be parsed, Quantum therefore looks at the requested command before it loads the rest of the project:
 
-Each command then decides whether it can run without the failed part:
+- `core:env`, and Symfony's `list` and `help`, run. The boot stops before the environment, so nothing that needs it is loaded: no app config, no error handler, and none of your own commands.
+- Every other command stops right away with the error of the environment file, for example ``The file `.env` not found.`` or ``Failed to parse dotenv file``, instead of failing later with a confusing one.
 
-- `core:env`, and Symfony's `list` and `help`, run normally.
-- A command that needs the environment, such as `migration:migrate`, stops with the original error (for example ``The file `.env` not found.``) instead of failing later with a confusing one.
+Once `.env` works again, for example after `php qt core:env --yes` has recreated it from `.env.example`, every command runs as usual.
 
-Your own commands need the environment by default. If a command must also run without it, for example a setup check, set `$requiresEnvironment` to `false`:
+Your own commands are registered last ([step 5](#5-app-commands-are-registered)), after the point where the boot stops, so `php qt list` shows only the framework's commands and running one of yours reports the environment error. Which framework commands can run without the environment is set with `CliCommand::$requiresEnvironment`, which `core:env` sets to `false`.
 
-```php
-namespace Shared\Commands;
-
-use Quantum\Console\CliCommand;
-
-class DoctorCommand extends CliCommand
-{
-    protected ?string $name = 'app:doctor';
-
-    protected ?string $description = 'Checks the project setup';
-
-    protected bool $requiresEnvironment = false;
-
-    public function exec(): void
-    {
-        $this->info('Checking the project setup...');
-    }
-}
-```
-
-After a failed boot the application name is not read from your config, so `php qt list` shows it as `UNKNOWN`.
+Without a working `.env` the application name is not read from your config, so `php qt list` shows it as `UNKNOWN`.
 
 ## In one sentence
 

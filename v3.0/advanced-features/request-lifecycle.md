@@ -23,7 +23,7 @@ Follow one request, `GET /dashboard`, from the browser to the response:
 6. If the page is in the view cache, that copy is the response. Otherwise the controller action runs.
 7. The response is sent with the CORS headers from `config/cors`.
 
-Each of these steps is a stage in a pipeline. The stage names and their exact order are listed in [App Architecture](../packages/app/architecture.md#web-boot-order).
+Each of these steps is a stage in a pipeline. The stage names and their exact order are listed in [App Architecture](../packages/app/architecture.md#web-boot-order), and the events each step dispatches for your own listeners are in [Hooking into the running app](../packages/app/architecture.md#hooking-into-the-running-app).
 
 ## 1. The request enters the application
 

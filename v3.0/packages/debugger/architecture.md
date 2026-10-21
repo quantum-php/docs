@@ -11,7 +11,7 @@ The Debugger package follows a simple pipeline:
 
 ### 1. Boot stage
 
-`Quantum\App\Stages\Boot\InitDebuggerStage` runs in the web boot pipeline and calls `debugbar()->initStore()`.
+`Quantum\App\Adapters\Web\Stages\Boot\InitDebuggerStage` runs in the web boot pipeline and calls `debugbar()->initStore()`.
 
 It runs after helpers, environment, config, error handler, and HTTP initialization, but before modules are loaded; see the [web boot order](../app/architecture.md#web-boot-order).
 
@@ -20,7 +20,7 @@ It runs after helpers, environment, config, error handler, and HTTP initializati
 Several framework components write diagnostics into the same store:
 
 - `Quantum\Logger\Adapters\MessageAdapter` writes log messages into `messages` or a caller-provided tab
-- `Quantum\App\Stages\Web\PrepareRequestStage` writes the registered event listeners (`event()->getRegistered()`) into `events` when the debug bar is enabled, once a route has matched
+- `Quantum\App\Adapters\Web\Stages\Runtime\PrepareRequestStage` writes the registered event listeners (`event()->getRegistered()`) into `events` when the debug bar is enabled, once a route has matched
 - `Quantum\View\View::updateDebugger()` rewrites the `routes` tab to include the resolved view file
 - mailer code routes failures into the `mails` tab through logger helpers
 
