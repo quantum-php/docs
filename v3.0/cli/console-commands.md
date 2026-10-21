@@ -80,7 +80,7 @@ That base class gives commands:
 - optional help text
 - argument definitions
 - option definitions
-- `$requiresEnvironment` (`true` by default), which says whether the command needs `.env` and the app config; see [When the boot fails](qt-command-line-tool.md#when-the-boot-fails)
+- `$requiresEnvironment` (`true` by default), which lets a framework command such as `core:env` run when `.env` is missing or malformed; see [Commands without a working environment](qt-command-line-tool.md#commands-without-a-working-environment)
 - helper methods such as:
   - `getArgument()`
   - `getOption()`

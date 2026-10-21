@@ -66,7 +66,7 @@ event()->listen('console.command.before', function (array $payload) {
 });
 ```
 
-A stage that does not run fires no events, so a listener never has to check whether the request was stopped. The send stage runs for every request that does not fail, so `web.send.before` above also covers a `404` and an `OPTIONS` response.
+A stage that does not run fires no events, so a listener never has to check whether the request was stopped. The send stage is the closing stage, so the header above is also added to a `404` and an `OPTIONS` response.
 
 The boot stages dispatch no events: the boot is the framework's own setup, and app code hooks in once it is finished. The first event of a request is `web.preflight.before`, and the first event of a command is `console.command.before`.
 
@@ -110,7 +110,7 @@ The full list of events and the order they fire in is in [Contracts](contracts.m
 8. `SetupConsoleApplicationStage`: names the application from `app.name` and `app.version`
 9. `RegisterAppCommandsStage`: registers your commands from `shared/Commands`
 
-`ResolveEnvironmentStage` loads `.env` once to see whether it works. If the file is missing or malformed, a framework command that does not need the environment (`core:env`) and Symfony's `list` and `help` can still run: the stage stops the boot, and the command runs in `start()`. Every other command fails with the error of the environment file. What this looks like on the command line is in [Commands without a working environment](../../cli/qt-command-line-tool.md#commands-without-a-working-environment).
+`ResolveEnvironmentStage` loads `.env` once to see whether it works. If it does not, the stage stops the boot for a command that can run without the environment, and lets every other command fail with the error; which commands those are is in [Commands without a working environment](../../cli/qt-command-line-tool.md#commands-without-a-working-environment).
 
 The framework's commands are registered before the environment so that `core:env` can be found when `.env` cannot be loaded; their constructors therefore use neither the environment nor the config. Your commands are registered last, after the environment, the config and the error handler, so their constructors can use `env()` and `config()`.
 
@@ -122,7 +122,7 @@ The framework's commands are registered before the environment so that `core:env
 
 ## Runtime contexts
 
-`WebContext` and `ConsoleContext` extend `AppContext`, with the same base directory and container. Each run starts with its own context, so a stop in the boot does not carry over into the run.
+`WebContext` and `ConsoleContext` extend `AppContext`, with the same base directory and container.
 
 - `WebContext` reads the request, the routes, and the view cache from the container, and the matched route from the request. It stores the response to send.
 - `ConsoleContext` reads the Symfony application, input, and output from the container.
