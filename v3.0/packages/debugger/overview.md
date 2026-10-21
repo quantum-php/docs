@@ -17,7 +17,7 @@ That means every caller writes into the same `DebuggerStore` and the same underl
 
 ### Boot-time initialization
 
-Web apps initialize the package through `Quantum\App\Stages\InitDebuggerStage`, which calls:
+Web apps initialize the package through `Quantum\App\Adapters\Web\Stages\Boot\InitDebuggerStage`, which calls:
 
 ```php
 debugbar()->initStore();

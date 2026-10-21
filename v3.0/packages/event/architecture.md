@@ -22,7 +22,7 @@ Both methods reject an empty name with `EventException::emptyEventName()` (`The 
 
 ## Who dispatches inside the framework
 
-- The app pipeline dispatches the boot stage events, such as `boot.modules.before` and `boot.modules.after`. The full list and the rules are on [App Contracts](../app/contracts.md#stage-and-pipeline-contract).
+- The app pipeline dispatches the runtime stage events, such as `web.preflight.before` and `console.command.before`; the boot dispatches none. The full list and the order they fire in are on [App Contracts](../app/contracts.md#lifecycle-events).
 - When the debug bar is enabled, a matched web request writes `getRegistered()` to the debug bar's `events` tab; see [Debugger Architecture](../debugger/architecture.md).
 
 Everything else is up to your application.

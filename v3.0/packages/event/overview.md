@@ -8,7 +8,7 @@ Say a user signs up. The code that creates the account should not also have to k
 event()->dispatch('user.registered', ['user' => $user]);
 ```
 
-The framework uses the same mechanism for its boot: you can listen to `boot.modules.after` and similar events to run code at a fixed point of the boot. See [Hooking into the boot](../app/architecture.md#hooking-into-the-boot).
+The framework uses the same mechanism around each request and command: you can listen to `web.send.before`, `console.command.before` and similar events to run code at a fixed point of the run. See [Hooking into the running app](../app/architecture.md#hooking-into-the-running-app).
 
 ## Package shape
 
