@@ -2,7 +2,7 @@
 
 Quantum ships two built-in app adapters: `web` and `console`.
 
-Both satisfy the same `start(): ?int` contract, but they boot different runtime services and handle different entry-point work.
+Both follow the same lifecycle, `boot()` and then `start(): ?int` (see [Contracts](contracts.md#appinterface)), but they boot different runtime services and handle different entry-point work.
 
 ## Web adapter
 
@@ -52,9 +52,9 @@ exit($app->start() ?? 0);
 
 ### What it does
 
-Every `php qt <command>` goes the same way: the adapter boots the project (helpers, `.env`, app config, error handler), registers the framework commands and your commands from `shared/Commands`, checks that the requested command exists, runs it through Symfony Console, and returns its exit code.
+Every `php qt <command>` goes the same way: the adapter boots the project (helpers, the framework commands, `.env`, app config, error handler, then your commands from `shared/Commands`), checks that the requested command exists, runs it through Symfony Console, and returns its exit code.
 
-The boot is the same for every command. If it fails, for example on a fresh clone without `.env`, commands are still registered and can run; see [When the boot fails](../../cli/qt-command-line-tool.md#when-the-boot-fails).
+On a fresh clone without `.env`, or with a malformed one, `core:env`, `list` and `help` still run, and every other command stops with the error of the environment file; see [Commands without a working environment](../../cli/qt-command-line-tool.md#commands-without-a-working-environment).
 
 The adapter does not make the environment writable. A command that changes `.env` through `environment()->updateRow()` calls `setMutable(true)` first, as `core:key` does.
 
@@ -67,6 +67,8 @@ App commands are discovered only from `shared/Commands`.
 Framework commands are discovered from the framework's own `Console/Commands` directory.
 
 Discovered classes are instantiated directly, so constructor-injected command dependencies are not part of this adapter's command-loading model.
+
+Your commands are created at the end of the boot, after the environment, the config and the error handler, so their constructors can use `env()` and `config()`. The framework's commands are created before the environment, so that `core:env` can run without it.
 
 ## Unsupported adapter types
 
