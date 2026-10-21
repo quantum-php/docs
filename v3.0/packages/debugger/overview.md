@@ -1,11 +1,11 @@
 # Debugger
 
-The Debugger package is Quantum's bridge to PHP DebugBar. It collects request-time diagnostics in an in-memory store and renders them into a debug toolbar at the end of a web response.
+The Debugger package is Quantum's bridge to PHP DebugBar. When a layout renders the toolbar, it shows the matched route and view, the queries, the log messages, the mail transport log and the event listeners of the request, together with anything your code added.
 
-In current core code, the package is built around two pieces:
+The package is built around two pieces:
 
-- `Quantum\Debugger\Debugger`, which owns the DebugBar instance and rendering flow
-- `Quantum\Debugger\DebuggerStore`, which keeps per-process tab data until render time
+- `Quantum\Debugger\Debugger`, which owns the DebugBar instance, collects the data of the tabs and renders the toolbar
+- `Quantum\Debugger\DebuggerStore`, which keeps the entries code writes directly with `addToStoreCell()`
 
 ## Entry points
 
@@ -15,15 +15,9 @@ In current core code, the package is built around two pieces:
 
 That means every caller writes into the same `DebuggerStore` and the same underlying `DebugBar` instance.
 
-### Boot-time initialization
+### Tabs
 
-Web apps initialize the package through `Quantum\App\Adapters\Web\Stages\Boot\InitDebuggerStage`, which calls:
-
-```php
-debugbar()->initStore();
-```
-
-`initStore()` creates five built-in tabs:
+The toolbar has five built-in tabs:
 
 - `messages`
 - `queries`
@@ -31,7 +25,7 @@ debugbar()->initStore();
 - `events`
 - `mails`
 
-The store is still tolerant of missing keys because reads fall back to `[]`, but this boot stage is what pre-seeds the standard tabs used by the rest of the framework.
+The package needs no boot step: a tab exists from its first write. `debugbar()->initStore()` creates the five tabs empty up front if your code wants them before anything is written.
 
 ## Enablement
 
@@ -39,8 +33,8 @@ The store is still tolerant of missing keys because reads fall back to `[]`, but
 
 Practical effect:
 
-- truthy values such as `true`, `1`, or `'true'` enable rendering and logging
-- falsey values return an empty string from `render()` and make framework log adapters skip writes
+- truthy values such as `true`, `1`, or `'true'` enable rendering
+- falsey values make `render()` return an empty string without collecting anything
 
 ## What the package collects
 
@@ -52,24 +46,11 @@ The package ships these default DebugBar collectors on construction:
 - `TimeDataCollector`
 - `MemoryCollector`
 
-Framework integrations then add package-specific messages into named tabs:
+The five named tabs are filled when the toolbar renders; [Architecture](architecture.md#where-each-tabs-data-comes-from) shows where each tab's data comes from.
 
-- logger messages go to `messages` by default
-- mail failures can be routed to `mails`
-- for a matched web route, the registered event listeners go to `events` (see [Architecture](architecture.md#2-producers-write-into-the-store))
-- view rendering updates the `routes` tab with the final view path
+## Rendering
 
-The built-in render flow only replays those five tab names. If you write data into some other store key, it stays in the store unless you extend the debugger package yourself.
-
-## Rendering contract
-
-`render()` does three things when debugging is enabled:
-
-1. ensures each built-in tab has a `MessagesCollector`
-2. replays stored messages into the matching collector
-3. returns `renderHead()` and `render()` output from the DebugBar JavaScript renderer
-
-Quantum's default web module templates print that HTML directly in the main layout with `<?= debugbar()->render() ?>`.
+`render()` returns the DebugBar head assets and the toolbar markup, or an empty string when debugging is off. Quantum's default web module templates print it in the main layout with `<?= debugbar()->render() ?>`.
 
 ## Asset requirement
 
@@ -83,8 +64,5 @@ The package does not publish those files by itself during normal request handlin
 ## Important constraints
 
 - The store is static in `DebuggerStore`, so data is process-scoped, not request-object-scoped.
-- `render()` does not clear the store after output.
-- `render()` replays stored entries into the same collector objects each time, so calling it more than once in the same request can duplicate toolbar messages.
 - `addToStoreCell()` ignores empty payloads, so `''`, `[]`, `0`, and `'0'` are not recorded.
-- Message levels are invoked dynamically on `MessagesCollector`; unsupported level names would fail at call time.
-- Only `messages`, `queries`, `routes`, `events`, and `mails` are auto-created as store-backed tabs.
+- The level of an entry is passed to `MessagesCollector::log()` and shown as its label; any string works.

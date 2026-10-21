@@ -73,13 +73,13 @@ So this write:
 $debugger->addToStoreCell('messages', 'warning', 'Disk nearly full');
 ```
 
-is later replayed roughly as:
+is later replayed as:
 
 ```php
-$debugBar['messages']->warning('Disk nearly full');
+$debugBar['messages']->log('warning', 'Disk nearly full');
 ```
 
-The level string is therefore part of the runtime contract, not just metadata.
+The level becomes the entry's label in the toolbar. `MessagesCollector::log()` accepts any level string, so a custom level shows up as its own label.
 
 ## Built-in tab contract
 
@@ -91,6 +91,10 @@ The package only renders five store-backed tabs:
 - `events`
 - `mails`
 
-You can write to any key in `DebuggerStore`, but `Debugger::render()` only replays those built-in names.
+You can write to any key in `DebuggerStore`, but `Debugger::render()` only renders those built-in names.
+
+## The store holds only direct writes
+
+The store contains exactly what code wrote with `addToStoreCell()`: `render()` never writes into it or clears it, so a direct write is always shown, before the [collected entries](architecture.md#render-flow) of its tab.
 
 If you need additional tabs, treat that as package customization rather than normal application usage.
