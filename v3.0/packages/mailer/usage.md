@@ -120,5 +120,5 @@ This keeps the current subject and body explicit on every message, which matches
 - Build the full message before calling `send()`. The shared fluent fields reset after each attempt, and composing every field on every message keeps reused adapters predictable.
 - Create `shared/emails` before enabling mail trap so saved `.eml` files have a local destination.
 - In mail-trap mode, a non-template array body produces an empty generated body unless the adapter supplies its own rendered MIME message.
-- Transport errors are mirrored into the debugger mails tab, so debugger output is the built-in place to inspect delivery details.
+- To find out why a send failed, read `getTransportLog()` on the mailer; see [Transport log](contracts.md#transport-log).
 - Because message IDs are cached in static state, long-running workers should treat the generated local mail-trap filename as reusable state and provide their own unique naming strategy when needed.

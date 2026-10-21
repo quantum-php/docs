@@ -10,7 +10,7 @@ Use it when you need to start either a web request lifecycle or a console comman
 - `App` as the adapter-backed application object
 - `AppContext` for base-directory and DI-backed shared runtime access
 - built-in `web` and `console` adapters
-- bootstrap stages for helpers, environment, config, HTTP, debugger, modules, and error handling
+- bootstrap stages for helpers, environment, config, HTTP, modules, and error handling
 - path and utility helpers such as `base_dir()`, `modules_dir()`, `slugify()`, and `uuid_random()`
 
 ## Quick start

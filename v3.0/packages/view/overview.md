@@ -28,7 +28,7 @@ $html = view()->render('pages/home', [
 ]);
 ```
 
-Use `renderPartial()` when you only need a fragment and do not want layout, asset, debugger, or cache behavior.
+Use `renderPartial()` when you only need a fragment and do not want layout, asset, or cache behavior.
 
 ## Default rendering behavior
 

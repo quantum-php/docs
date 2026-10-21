@@ -81,8 +81,7 @@ The full list of events and the order they fire in is in [Contracts](contracts.m
 3. `LoadAppConfigStage`
 4. `SetupErrorHandlerStage`
 5. `InitHttpStage`
-6. `InitDebuggerStage`
-7. `LoadModulesStage`
+6. `LoadModulesStage`
 
 ## Web runtime order
 
@@ -91,7 +90,7 @@ The full list of events and the order they fire in is in [Contracts](contracts.m
 1. `HandlePreflightStage`: `OPTIONS` requests get `204 No Content`, and the run stops
 2. `ResolveRouteStage`: matches the request against the loaded module routes and stores the match on the request
 3. `HandleRouteNotFoundStage`: a request without a match gets Quantum's not-found response, and the run stops
-4. `PrepareRequestStage`: resolves the Lang package (translations load on first use), logs the registered events to the debugbar in debug mode, and sets up the view cache when it is enabled
+4. `PrepareRequestStage`: resolves the Lang package (translations load on first use) and sets up the view cache when it is enabled
 5. `DispatchRequestStage`: middleware wraps the route dispatch or the cached response lookup
 
 `SendResponseStage` is the closing stage: it appends the CORS headers, sends the response, and clears the request's route and input state, also when sending fails. It runs after a stop too, so the `204` and the not-found response are sent the same way.

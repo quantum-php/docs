@@ -27,7 +27,7 @@ The practical effect is simple:
 
 `LoggerFactory::resolve()` imports the `logging` config only when `config()->has('logging')` is false.
 
-So Logger does not eagerly load configuration during bootstrap. The first logger access can trigger config import.
+In practice that first access happens during boot: both the web and the console boot resolve a logger for the error handler (`SetupErrorHandlerStage`), so the config is loaded by the time application code runs.
 
 After that, the factory reads:
 
@@ -70,9 +70,4 @@ All other context keys are ignored by file adapters.
 
 ## Message adapter flow
 
-`MessageAdapter` does not write files. It sends messages into the debugger store:
-
-- default tab: `Debugger::MESSAGES`
-- custom tab: `context['tab']`
-
-If `debugbar()->isEnabled()` is false, the adapter drops the message silently.
+`MessageAdapter` appends each reported message to its in-memory list. It does not know about the debugger: the debug toolbar reads the list through `logger()` when it renders. See [the `message` adapter](adapters.md#message).

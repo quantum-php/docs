@@ -1,34 +1,52 @@
 # Debugger Architecture
 
-The Debugger package follows a simple pipeline:
+When a layout calls `debugbar()->render()`, the toolbar is built from two sources: the entries your code wrote with `addToStoreCell()`, and what the debugger reads at that moment from the packages that own the data. Nothing is pushed into the debugger while the request runs; each package keeps its own state and does not reference the Debugger package.
 
-1. boot the shared debugger instance
-2. initialize tab storage
-3. let framework components append structured messages into store cells
-4. replay those messages into DebugBar collectors during layout render
+Reading at render time needs no wiring: there is no listener to register and no boot step. A tab also shows what is true when the page renders, for example an event listener a controller added late in the request.
 
-## Runtime flow
+## Render flow
 
-### 1. Boot stage
+`Debugger::render()`:
 
-`Quantum\App\Adapters\Web\Stages\Boot\InitDebuggerStage` runs in the web boot pipeline and calls `debugbar()->initStore()`.
+1. returns an empty string when `app.debug` is off, without collecting anything
+2. collects the entries of each tab from the packages (see below)
+3. for each of the five tabs, gives the tab's `MessagesCollector` its stored entries first and the collected entries after them
+4. returns `renderHead()` and `render()` output from the DebugBar JavaScript renderer
 
-It runs after helpers, environment, config, error handler, and HTTP initialization, but before modules are loaded; see the [web boot order](../app/architecture.md#web-boot-order).
+The collected entries go straight to the collectors. `render()` never writes them into the store and never clears it, so the store keeps only what code wrote into it directly.
 
-### 2. Producers write into the store
+## Where each tab's data comes from
 
-Several framework components write diagnostics into the same store:
+| Tab | Collected from | Only when |
+|---|---|---|
+| `messages` | the debug-mode logger: `logger()->getAdapter()->getMessages()` | always in debug mode; the logger is built during boot for the error handler |
+| `queries` | `Database::queryLog()`, one entry per query | the request started the database, it is still connected, and its adapter keeps a query log (SleekDB does not) |
+| `routes` | the matched route (`request()->getMatchedRoute()`) and the last rendered view (`View::getViewFile()`) | a route matched or a view was rendered |
+| `events` | `event()->getRegistered()` | at least one listener is registered |
+| `mails` | the default mailer's `getTransportLog()` | the request used the mailer |
 
-- `Quantum\Logger\Adapters\MessageAdapter` writes log messages into `messages` or a caller-provided tab
-- `Quantum\App\Adapters\Web\Stages\Runtime\PrepareRequestStage` writes the registered event listeners (`event()->getRegistered()`) into `events` when the debug bar is enabled, once a route has matched
-- `Quantum\View\View::updateDebugger()` rewrites the `routes` tab to include the resolved view file
-- mailer code routes failures into the `mails` tab through logger helpers
+The debugger never builds a database connection or a mailer the request did not use.
 
-Each write is appended as `[$level => $data]`.
+The `routes` entry holds the route's methods, pattern, module, controller and action (`Closure` for a closure route), name, group, prefix, middlewares and params, plus the view path; values that are not set are left out:
+
+```php
+[
+    'Methods' => 'GET',
+    'Pattern' => '/[:alpha:2]?/posts',
+    'Module' => 'Web',
+    'Controller' => 'Modules\Web\Controllers\PostController',
+    'Action' => 'posts',
+    'Name' => 'posts',
+    'Params' => ['_segment0' => 'en'],
+    'View' => 'Web/Views/post/post',
+]
+```
+
+The `mails` tab reads only the default mailer (`mailer()`), so the transport log of another adapter does not appear there; a failed send is also logged as a warning, which reaches the `messages` tab.
 
 ## Store model
 
-`DebuggerStore` keeps data in a private static array:
+`DebuggerStore` keeps the direct writes in a private static array:
 
 ```php
 private static array $store = [];
@@ -41,32 +59,10 @@ Important consequences:
 - `flush()` removes the entire store array
 - `get($key)` returns `[]` when the key does not exist
 
-## Render model
+## Collector replay
 
-`Debugger::render()` loops over the built-in tab names and calls `createTab($tab)` for each one.
+Each entry, stored or collected, has the shape `[$level => $data]`. `createTab()` creates a `MessagesCollector` for the tab if it does not exist yet and calls `log($level, $data)` for each entry.
 
-That list is fixed to `messages`, `queries`, `routes`, `events`, and `mails`.
+The collectors live as long as the `Debugger` instance, so calling `render()` twice in one request hands them every entry again and the toolbar lists them twice.
 
-`createTab()`:
-
-1. creates a `MessagesCollector` for the tab if it does not already exist
-2. fetches stored messages for that tab
-3. calls the collector method named by the stored level (`info`, `warning`, and so on)
-
-Because the level name is executed as a method call, the write side and the collector API must stay in sync.
-
-It also means store-backed custom tab names are not replayed automatically. Writing to some other cell is only useful if you add your own render path around the package.
-
-## View-path merge behavior
-
-The `routes` tab is not append-only.
-
-`Quantum\View\View::updateDebugger()` reads the first existing `info` payload from `routes`, merges in:
-
-```php
-['View' => request()->getCurrentModule() . '/Views/' . $viewFile]
-```
-
-and then clears and rewrites the tab.
-
-So the final `routes` payload is a merged structure, not a chronological list of route-related events.
+Only the five built-in tab names are rendered. Writing to some other store key is only useful if you add your own render path around the package.

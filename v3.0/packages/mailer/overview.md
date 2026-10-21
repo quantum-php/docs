@@ -56,6 +56,6 @@ After `send()` finishes, the package clears the sender, recipients, subject, bod
 - Adapter-specific methods are available only when the underlying adapter implements them.
 - Only the SMTP adapter supports reply-to, CC, BCC, and attachments.
 - Template paths are stored without the `.php` suffix. The package always requires `<template>.php`.
-- `send()` returns `false` on transport failure and logs transport errors to the debugger mails tab through `warning(...)`.
+- On a transport failure the API adapters return `false` from `send()`, while the SMTP adapter throws; what went wrong is in the [transport log](contracts.md#transport-log).
 - Message IDs can be reused across sends in long-running processes, so do not assume every send gets a fresh generated message ID automatically.
 - When `mailer.mail_trap` is enabled, the package saves a local `.eml` file instead of contacting the transport.
