@@ -15,7 +15,7 @@ The request lifecycle is that connection.
 
 Follow one request, `GET /dashboard`, from the browser to the response:
 
-1. Quantum boots the project: helpers, `.env`, config, the error handler, request and response, the debugger, and the modules with their routes.
+1. Quantum boots the project: helpers, `.env`, config, the error handler, request and response, and the modules with their routes.
 2. A browser's CORS preflight (`OPTIONS`) is answered right away with `204 No Content`.
 3. The router looks for a route matching `/dashboard`. If there is none, the visitor gets a 404.
 4. The route matched, so Quantum detects the language and prepares the view cache.
@@ -39,7 +39,7 @@ Quantum checks the request against the routes the modules registered.
 
 If no route matches, the request ends in a 404. A browser gets your HTML error page, and an API client gets JSON; see [`page_not_found_response()`](../packages/http/helpers.md).
 
-If a route matches, Quantum prepares what the rest of the request may need: it detects the language from the request (translations load on the first `t()` call), writes the registered event listeners to the debug bar when it is enabled, and sets up the view cache when it is enabled. A 404 does none of this work.
+If a route matches, Quantum prepares what the rest of the request may need: it detects the language from the request (translations load on the first `t()` call) and sets up the view cache when it is enabled. A 404 does none of this work.
 
 ## 3. Middleware runs before the controller action
 

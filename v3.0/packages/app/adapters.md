@@ -24,7 +24,6 @@ The web adapter:
 - loads environment and app config
 - installs the error handler
 - registers request and response objects in DI
-- initializes the debugger store
 - loads module routes into a `RouteCollection`
 - matches the current request and dispatches it through middleware
 
