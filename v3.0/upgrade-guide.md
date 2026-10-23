@@ -71,6 +71,52 @@ Quantum's error handler used to turn every reported PHP error into an `ErrorExce
 
 You do not need to change anything, but check your log after the upgrade: deprecations from your own code and your dependencies show up there as warnings. A test that expects a deprecation to throw an `ErrorException` must be updated. The [Tracer contracts](packages/tracer/contracts.md#error-conversion-contract) describe the rule.
 
+### 4. `Hook` is replaced by `Event`
+
+If your code calls `hook()`, it needs three renames and a clean-up. The names changed, and so did a few rules:
+
+```php
+// before
+hook()->on('user.registered', function ($args) {
+    // ...
+});
+hook()->fire('user.registered', ['user' => $user]);
+
+// after
+event()->listen('user.registered', function (array $payload) {
+    // ...
+});
+event()->dispatch('user.registered', ['user' => $user]);
+```
+
+- `hook()` is `event()`, `on()` is `listen()` and `fire()` is `dispatch()`. No aliases remain.
+- Delete `shared/config/hooks.php`: event names no longer need to be registered, and the file is not read. Dispatching a name nobody listens to does nothing. An empty name throws `EventException`.
+- A listener always receives one array, which is empty when `dispatch()` got no payload. A hook listener received `null` in that case.
+- Listeners stay registered after `dispatch()` and run on every dispatch. A hook listener ran once and was removed. If a listener must run only once, guard it with a flag inside the listener.
+- Register listeners in a `helpers/` file of the project or of a module, which loads early enough to catch the framework's own events. See [Event usage](packages/event/usage.md#where-to-register-listeners).
+- The debugger constant `Debugger::HOOKS` is `Debugger::EVENTS`, the debugbar tab is `events` and lists only events that have listeners, and the unused `hooks_dir()` helper is gone.
+
+### 5. `Quantum\Loader` is removed
+
+`Setup` moved to the config package, and the loading itself moved to the packages that own it. The constructor of `Setup` is unchanged, so for most code the upgrade is one import:
+
+```php
+// before
+use Quantum\Loader\Setup;
+
+// after
+use Quantum\Config\Setup;
+
+config()->import(new Setup('config', 'payments'));
+```
+
+- A required config file that is missing throws `ConfigException` (there is no `LoaderException` any more). To load a file only when it exists, use `config()->importIfExists(new Setup(...))`, which returns `false` for a missing file.
+- Config paths resolve from the application base directory, not from the working directory of the process, so a command run from another folder finds the same files.
+- `Environment::load()` takes no argument. It reads `shared/config/env.php` and the matching `.env` file, and reports a missing file with `EnvException`. Remove a `new Setup(...)` argument if you call it yourself.
+- No action needed for the helper files: the boot loads the component, app and module helpers directly.
+
+See the [Config package](packages/config/overview.md) for the loading rules.
+
 ## Upgrading from 2.x to 3.0
 
 This part summarizes the required changes when upgrading Quantum projects from 2.x to 3.0.
