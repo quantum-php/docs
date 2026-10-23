@@ -217,6 +217,31 @@ $application = Di::get(Application::class);
 
 **No action needed:** your commands are registered last, after the environment and the config load, so their constructors can use `env()` and `config()`.
 
+### 8. The debug toolbar reads its data when it renders
+
+Packages no longer write into the debugger while a request runs. The logger, the mailer, the database layer and the view each keep their own state, and the toolbar collects it when it renders. If you only use `debugbar()->addToStoreCell()` to add your own entries, nothing changes. Check the cases below if you wrote a custom mailer adapter, built a `View` yourself, or read the toolbar's tabs. [Debugger architecture](packages/debugger/architecture.md#where-each-tabs-data-comes-from) lists where each tab's data comes from.
+
+**A custom mailer adapter.** `MailerInterface` gains `getTransportLog(): array`, which `MailerTrait` implements. An adapter that implements the interface without the trait must add the method:
+
+```php
+public function getTransportLog(): array
+{
+    return $this->transportLog;
+}
+```
+
+See [Transport log](packages/mailer/contracts.md#transport-log) for what the log holds.
+
+**The logger's `message` adapter.** In debug mode the web app's logger keeps its messages in memory (`getMessages()`) instead of writing them into the debugger store, and it ignores the `tab` key of the log context. A message logged with a tab is listed in the `messages` tab, and `debugbar()->getStoreCell('messages')` returns only what you wrote there directly.
+
+**The `View` constructor.** `View::__construct()` no longer takes a `Debugger`. It is `(Renderer, AssetManager, ViewCache)`. Code that gets the view through `view()` or `ViewFactory` is unaffected. `View::getViewFile()` returns the last view rendered with `render()`.
+
+**Tabs on first write.** `InitDebuggerStage` (`Quantum\App\Stages\InitDebuggerStage` in 3.0) is removed from the web boot, and the debugger store creates a tab on its first write. Remove the stage from a custom boot pipeline. Code that wants all the tabs up front calls `debugbar()->initStore()`. The `events` tab lists the listeners registered when the toolbar renders, so listeners added later in the request, for example in a controller, are listed too.
+
+**New limits.** The `message` adapter keeps the last `logging.message.limit` messages, and a mailer cuts its transport log to the last `mailer.transport_log_limit` lines at the start of each send. Both default to `1000`, and `0` keeps everything. Add the keys to `shared/config/logging.php` and `shared/config/mailer.php` only if you want another value; see the [`message` adapter](packages/logger/adapters.md#message) and the [transport log](packages/mailer/contracts.md#transport-log).
+
+**The console logs to files in debug mode.** The in-memory `message` adapter is used by the web app only. In debug mode the console logs to the adapter you configured, or the one you ask for, so a command's log lines are written instead of lost.
+
 ## Upgrading from 2.x to 3.0
 
 This part summarizes the required changes when upgrading Quantum projects from 2.x to 3.0.
