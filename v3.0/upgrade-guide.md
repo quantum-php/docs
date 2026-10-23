@@ -242,6 +242,54 @@ See [Transport log](packages/mailer/contracts.md#transport-log) for what the log
 
 **The console logs to files in debug mode.** The in-memory `message` adapter is used by the web app only. In debug mode the console logs to the adapter you configured, or the one you ask for, so a command's log lines are written instead of lost.
 
+### 9. The Lang configuration selects an adapter
+
+Lang can now translate through DeepL or Google Translate, so `default` in `shared/config/lang.php` selects the adapter, and the fallback locale moved to `default_locale`. The unused `enabled` toggle is gone:
+
+```php
+// before
+return [
+    'enabled' => true,
+    'supported' => ['en', 'es'],
+    'default' => 'en',
+    'url_segment' => 1,
+];
+
+// after
+return [
+    'supported' => ['en', 'es'],
+    'default' => 'file',
+    'default_locale' => 'en',
+    'url_segment' => 1,
+];
+```
+
+- `default` is the adapter: `file` (translation files, the behavior you had), `deepl` or `google_translate`. A missing value throws a `LangException`.
+- `default_locale` is the language used when none is detected. It holds what `default` held before.
+- Remove `enabled`. `Lang::isEnabled()` is removed too, because it no longer affected anything; delete the calls.
+- Translation files load on first use now, not during the web boot.
+
+The starter project's `shared/config/lang.php` already has the new shape. For the DeepL and Google Translate sections, see [Translate with DeepL or Google Translate](packages/lang/usage.md#translate-with-deepl-or-google-translate).
+
+### 10. Check the upgrade
+
+Update the dependencies and run the checks you already use:
+
+```bash
+composer update
+vendor/bin/phpunit
+composer phpstan
+```
+
+Then look for the names this guide replaced. Each hit is a section above:
+
+```bash
+grep -rnF -e 'hook(' -e 'Quantum\Loader' -e 'BootPipeline' -e 'BootStageInterface' \
+  -e 'InitDebuggerStage' -e 'createApplication' -e '@OA\' shared modules helpers
+```
+
+Finally, smoke-test one web request and one `php qt` command, with `app.debug` on and off, and read your log for the deprecation warnings from [section 3](#3-deprecations-are-logged-not-thrown).
+
 ## Upgrading from 2.x to 3.0
 
 This part summarizes the required changes when upgrading Quantum projects from 2.x to 3.0.
