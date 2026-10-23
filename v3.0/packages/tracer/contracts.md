@@ -15,6 +15,8 @@ $handler->setup($logger);
 
 `handleError()` converts enabled PHP errors into `ErrorException`.
 
+A deprecation (`E_DEPRECATED` or `E_USER_DEPRECATED`) is the exception. It only warns about a future PHP version, often from a library you do not control, so it should not stop the request. `handleError()` logs it with `warning()` as `<message> in <file>:<line>` and returns `true`, and the script goes on. When no logger is set, the deprecation is ignored.
+
 Suppressed or masked severities are ignored (`false` return), so `@` suppression still works.
 
 ## Severity mapping contract

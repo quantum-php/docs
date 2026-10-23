@@ -25,7 +25,8 @@ $handler->setup($logger);
 After setup:
 
 - enabled PHP errors become `ErrorException` instances
-- uncaught throwables are routed by runtime (`cli` or web)
+- deprecations are [logged as warnings](contracts.md#error-conversion-contract) instead, and the script goes on
+- uncaught throwables are routed by app type (console or web)
 - web requests return HTTP 500 for uncaught exceptions
 - production web requests log the exception before rendering the response
 
