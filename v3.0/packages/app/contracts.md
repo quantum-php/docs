@@ -73,11 +73,26 @@ No adapter catches exceptions: a failing stage, in the boot or in the run, throw
 
 - base directory (`getBaseDir()`)
 - DI container (`getContainer()`)
+- app type (`getType()`): `AppType::WEB` or `AppType::CONSOLE`
 - DI-resolved `Environment` (`getEnvironment()`)
 - DI-resolved `Config` (`getConfig()`)
 - the run state: `stop()` / `isStopped()` and the exit code (`getExitCode()` / `setExitCode()`, `ExitCode::SUCCESS` by default)
 
 The services are what both the web and the console boot provide.
+
+### Creating one yourself
+
+`AppFactory` builds the context for you. A test or a custom bootstrap that creates one directly passes the app type as the third, required argument:
+
+```php
+use Quantum\App\Enums\AppType;
+use Quantum\Di\DiContainer;
+use Quantum\App\AppContext;
+
+$context = new AppContext($baseDir, new DiContainer(), AppType::CONSOLE);
+```
+
+There is no default, so a context built by hand is never taken for the web app by accident. Code that needs to know which app is running asks [`is_web_app()` or `is_console_app()`](helpers.md#is_web_app-and-is_console_app).
 
 ### Runtime contexts
 
@@ -86,7 +101,7 @@ The services are what both the web and the console boot provide.
 - `WebContext`: `getRequest()`, `getRoutes()` and `getViewCache()` from the container, `getMatchedRoute()` from the request, and the response to send (`getResponse()` / `setResponse()`)
 - `ConsoleContext`: `getApplication()`, `getInput()` and `getOutput()` from the container
 
-A runtime context is built from the `AppContext` with the same base directory and container, but its own run state: a stop in the boot does not carry over into the run.
+A runtime context is built from the `AppContext` with the same base directory, container and app type, but its own run state: a stop in the boot does not carry over into the run.
 
 ### Constraint
 

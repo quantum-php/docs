@@ -64,6 +64,8 @@ These `Database` static methods are forwarded to the active adapter:
 
 Important: these APIs are implemented by `IdiormDbal` (SQL adapters). If `database.default` is `sleekdb`, SQL-only methods are not supported.
 
+`Database::lastQuery()` and `Database::queryLog()` return queries only in debug mode ([query logging](../packages/database/adapters.md#connection-behavior)).
+
 ## Transactions
 
 `Database::beginTransaction()`, `commit()`, `rollback()`, and `transaction(callable)` are available when using SQL adapters (`mysql`, `sqlite`, `pgsql`).

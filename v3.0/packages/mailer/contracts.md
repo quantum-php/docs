@@ -78,7 +78,15 @@ if (!$mailer->setFrom('noreply@example.com')->setAddress('jane@example.com')->se
 }
 ```
 
-The log belongs to the adapter instance and nothing clears it. `MailerFactory` reuses one adapter per name, so in a long-running process it spans every send through that adapter. In debug mode the debug toolbar shows the default mailer's log in its `mails` tab ([Debugger Architecture](../debugger/architecture.md#where-each-tabs-data-comes-from)).
+The log belongs to the adapter instance, and `MailerFactory` reuses one adapter per name. A worker that sends mail all day would keep every line, so each `send()` first cuts the log to its last `mailer.transport_log_limit` lines:
+
+```php
+'transport_log_limit' => 1000,
+```
+
+Without the key the limit is `1000`; `0` keeps every line. The cut happens at the start of a send because every send reaches that point, also after a previous SMTP send threw. So after a send the log holds up to the limit plus the lines of that send, which is never cut halfway.
+
+In debug mode the debug toolbar shows the default mailer's log in its `mails` tab ([Debugger Architecture](../debugger/architecture.md#where-each-tabs-data-comes-from)).
 
 ## Mail trap contract
 

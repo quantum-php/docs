@@ -23,7 +23,7 @@ So the app you get back is already booted, and `start()` handles the run. The fa
 
 ## 2) Shared context
 
-`AppContext` carries the application base directory and the DI container used to resolve shared services. From that context, code can resolve the objects both the web and the console boot provide:
+`AppContext` carries the application base directory, the app type (web or console) and the DI container used to resolve shared services. From that context, code can resolve the objects both the web and the console boot provide:
 
 - `Environment`
 - `Config`
@@ -121,7 +121,7 @@ The framework's commands are registered before the environment so that `core:env
 
 ## Runtime contexts
 
-`WebContext` and `ConsoleContext` extend `AppContext`, with the same base directory and container.
+`WebContext` and `ConsoleContext` extend `AppContext`, with the same base directory, container and app type.
 
 - `WebContext` reads the request, the routes, and the view cache from the container, and the matched route from the request. It stores the response to send.
 - `ConsoleContext` reads the Symfony application, input, and output from the container.

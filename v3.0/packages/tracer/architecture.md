@@ -7,13 +7,15 @@ Tracer runs as a short pipeline:
 3. route uncaught throwables to CLI or web flow
 4. print or render the final error output
 
+The flow in step 3 follows the app that was booted ([`is_console_app()`](../app/helpers.md#is_web_app-and-is_console_app)), so `php qt` gets terminal output, and a request gets an error page, whether PHP-FPM or `php qt serve` serves it.
+
 ## Registration
 
 `ErrorHandler::setup()` registers both error and exception handlers on the same instance. Call it once during bootstrap so the same handler owns both flows.
 
 ## CLI flow
 
-For `PHP_SAPI === 'cli'`:
+For the console app:
 
 - output goes to the injected CLI output, or to Symfony `ConsoleOutput` when you do not provide one
 - production prints the exception message for compact terminal output
@@ -21,7 +23,7 @@ For `PHP_SAPI === 'cli'`:
 
 ## Web flow
 
-For non-CLI runtime:
+For the web app:
 
 - severity is resolved from the throwable before logging
 - production requests log through the matching logger method when available, with `error()` as the fallback method

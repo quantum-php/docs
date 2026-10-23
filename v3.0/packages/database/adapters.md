@@ -20,7 +20,9 @@ Driver-specific behavior:
 - `mysql` and `pgsql` use `host`, `dbname`, optional `port`, and optional `charset`
 - MySQL and PostgreSQL also set `username`, `password`, and a `PDO::MYSQL_ATTR_INIT_COMMAND` driver option for `SET NAMES <charset>`
 
-`logging` is enabled when `config()->get('app.debug', false)` is truthy.
+Idiorm's `logging` option follows `is_debug_mode()`. In debug mode Idiorm keeps every query it runs, and that list is what `Database::lastQuery()`, `Database::queryLog()` and the debug toolbar's queries tab read. Outside debug mode it keeps none, so `lastQuery()` returns `null` and `queryLog()` returns `[]`. Since `is_debug_mode()` reads `app.debug` as a boolean, `DEBUG=false` from `.env` turns it off.
+
+The list has no limit, so a long-running command in debug mode holds it in memory until the command ends.
 
 ### Query behavior
 
