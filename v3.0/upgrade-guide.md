@@ -28,6 +28,49 @@ public function info(string|Stringable $message, array $context = []): void
 
 **No action needed:** private properties that are only set in the constructor are `readonly` now, so subclasses are unaffected, and `ErrorHandler` registers closures instead of array callables. Only a test that reads the registered handler back from PHP sees the difference.
 
+### 2. OpenAPI documentation is written as attributes
+
+The `DefaultApi` and `DemoApi` module templates describe the API with PHP attributes (`#[OA\Get(...)]`) instead of `@OA\...` docblock annotations, and the framework no longer requires `doctrine/annotations`. Modules you generate from 3.1 on need nothing. See [OpenAPI resource generation](cli/code-generation.md#openapi-resource-generation) for what `install:openapi` produces.
+
+An existing module still has `@OA` docblocks in `Controllers/OpenApi`. A `spec.json` that was already generated keeps being served. Generating a new one from those docblocks fails with `Required @OA\PathItem() not found`, because swagger-php reads docblock annotations only when `doctrine/annotations` is installed. Do one of these:
+
+- convert the annotations to attributes, or
+- keep them and run `composer require doctrine/annotations`.
+
+Converting is mechanical. A nested annotation becomes a named argument of its parent, `{...}` becomes `[...]`, and `=` becomes `:`:
+
+```php
+// before
+/**
+ * @OA\Get(
+ *     path="/api/status",
+ *     summary="Get status",
+ *     @OA\Response(response=200, description="Success")
+ * )
+ */
+abstract public function status();
+
+// after
+use OpenApi\Attributes as OA;
+
+#[OA\Get(
+    path: '/api/status',
+    summary: 'Get status',
+    responses: [
+        new OA\Response(response: 200, description: 'Success'),
+    ]
+)]
+abstract public function status();
+```
+
+Several nested responses, parameters or properties go in one list (`responses: [...]`, `parameters: [...]`, `properties: [...]`). A single `@OA\JsonContent`, `@OA\Schema` or `@OA\RequestBody` is passed as one `new OA\...(...)` to `content`, `schema` or `requestBody`.
+
+### 3. Deprecations are logged, not thrown
+
+Quantum's error handler used to turn every reported PHP error into an `ErrorException`, deprecations too. On PHP 8.1 and newer, that meant a library calling a deprecated function could stop a request. Now a deprecation (`E_DEPRECATED` or `E_USER_DEPRECATED`) is logged as a warning, `<message> in <file>:<line>`, and the script goes on. Notices, warnings and other errors still throw.
+
+You do not need to change anything, but check your log after the upgrade: deprecations from your own code and your dependencies show up there as warnings. A test that expects a deprecation to throw an `ErrorException` must be updated. The [Tracer contracts](packages/tracer/contracts.md#error-conversion-contract) describe the rule.
+
 ## Upgrading from 2.x to 3.0
 
 This part summarizes the required changes when upgrading Quantum projects from 2.x to 3.0.
