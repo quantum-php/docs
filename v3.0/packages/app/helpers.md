@@ -85,6 +85,18 @@ Returns `true` only when the string matches the package's base64 validation patt
 
 Reads `config('app.debug')` and validates it as a boolean flag.
 
+### `is_web_app()` and `is_console_app()`
+
+Tell whether the running application is the web app or the console, from the type on the current [`AppContext`](contracts.md#appcontext). Use them when a piece of shared code should behave differently in a request and in a `php qt` command:
+
+```php
+if (is_console_app()) {
+    // a command: no response to render
+}
+```
+
+The logger and the error handler make their web-or-console choices with these helpers too. Like the path helpers, they need `App::getContext()` to be initialized.
+
 ### `export($var)`
 
 Exports a PHP value through Symfony VarExporter.
