@@ -117,6 +117,73 @@ config()->import(new Setup('config', 'payments'));
 
 See the [Config package](packages/config/overview.md) for the loading rules.
 
+### 6. The app boots and runs through pipelines of stages
+
+The web and the console app now run their boot and their runtime as a `Quantum\App\Pipeline` of stages. If your entry point goes through `AppFactory`, nothing changes:
+
+```php
+AppFactory::create(AppType::WEB, $baseDir)->start();
+```
+
+The sections below matter only if you create an adapter yourself, write your own boot stage, import one of the moved classes or build an `AppContext`. [App architecture](packages/app/architecture.md) explains the model.
+
+**Boot is its own step.** The adapter constructors only store the context, and `AppFactory` calls `boot()` right after creating the adapter. When you create an adapter yourself, call `boot()` before `start()`:
+
+```php
+$adapter = new WebAppAdapter($context);
+$adapter->boot();
+$adapter->start();
+```
+
+**Moved and removed classes.** Update your imports:
+
+| 3.0 | 3.1 |
+| --- | --- |
+| `Quantum\App\Adapters\WebAppAdapter` | `Quantum\App\Adapters\Web\WebAppAdapter` |
+| `Quantum\App\Adapters\ConsoleAppAdapter` | `Quantum\App\Adapters\Console\ConsoleAppAdapter` |
+| `Quantum\App\Stages\InitHttpStage`, `LoadModulesStage` | `Quantum\App\Adapters\Web\Stages\Boot\...` |
+| `Quantum\App\Stages\LoadAppConfigStage`, `LoadEnvironmentStage`, `LoadHelpersStage`, `SetupErrorHandlerStage` | `Quantum\App\Stages\Boot\...` |
+| `Quantum\App\BootPipeline` | `Quantum\App\Pipeline` |
+| `Quantum\App\Contracts\BootStageInterface` | `Quantum\App\Contracts\StageInterface` |
+| `AppAdapter`, `WebAppTrait`, `ConsoleAppTrait` | removed: the adapters implement `AppInterface` directly |
+
+**Custom stages.** A stage implements `StageInterface` and names the context it works with in its class docblock. The type is checked by PHPStan only, so the method signature stays the same:
+
+```php
+// before
+class WarmCacheStage implements BootStageInterface
+{
+    public function process(AppContext $context): void
+    {
+        // ...
+    }
+}
+
+(new BootPipeline([new WarmCacheStage()]))->run($context);
+
+// after
+/**
+ * @implements StageInterface<AppContext>
+ */
+class WarmCacheStage implements StageInterface
+{
+    public function process(AppContext $context): void
+    {
+        // ...
+    }
+}
+
+(new Pipeline([new WarmCacheStage()]))->run($context);
+```
+
+A stage that calls `$context->stop()` ends the run, and an optional closing stage, the second argument of `Pipeline`, runs last.
+
+**`AppContext`.**
+
+- Its constructor takes the app type as a third, required argument: `new AppContext($baseDir, $container, AppType::WEB)`. `AppFactory` passes it for you.
+- `getRequest()`, `getResponse()` and `getRoutes()` are gone from `AppContext`. In a web stage use `WebContext::getRequest()` and `WebContext::getRoutes()` (`WebContext::getResponse()` is the response about to be sent). Elsewhere use `request()` and `response()`.
+- It gained `getType()`, `stop()`, `isStopped()`, `getExitCode()` and `setExitCode()`. To ask which app is running, use `is_web_app()` and `is_console_app()`.
+
 ## Upgrading from 2.x to 3.0
 
 This part summarizes the required changes when upgrading Quantum projects from 2.x to 3.0.
