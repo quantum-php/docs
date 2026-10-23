@@ -34,14 +34,24 @@ After that, the factory reads:
 - `logging.default` for the default adapter name
 - `logging.<adapter>.level` for the severity threshold
 - `logging.<adapter>` for adapter-specific constructor parameters
+- `logging.message.limit` for the number of messages the `message` adapter keeps
 
 ## Debug-mode override
 
 Debug mode changes the package behavior in two ways.
 
-### Adapter selection is forced to `message`
+### The web app logs to `message`
 
-When `is_debug_mode()` is true, the factory ignores the requested adapter and the configured default and resolves `message` instead.
+While you work on a page in debug mode, you want its log lines in the debug toolbar, not in a file you have to open. So when `is_debug_mode()` is true and the running app is the web app (`is_web_app()`), the factory ignores the requested adapter and the configured default and resolves `message` instead.
+
+A console command in debug mode has no toolbar to show its messages, so it keeps the requested adapter or the configured default and writes to the log file:
+
+```php
+// inside a console command, in debug mode
+info('Import finished'); // written by the default adapter, for example `single` to logs/app.log
+```
+
+Asking for `message` explicitly with `logger(LoggerType::MESSAGE)` still works in the console in debug mode.
 
 ### Threshold filtering is bypassed
 

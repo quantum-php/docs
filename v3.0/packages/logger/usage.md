@@ -57,7 +57,7 @@ File adapters JSON-format array messages before writing them. The global level h
 
 ## Check what was logged in debug mode
 
-In debug mode the messages stay in memory, so a test or a debug page can read them back from the [`message` adapter](adapters.md#message):
+In debug mode the web app keeps the messages in memory, so a test or a debug page can read them back from the [`message` adapter](adapters.md#message):
 
 ```php
 info('Import started');
@@ -80,12 +80,12 @@ $messages = logger()->getAdapter()->getMessages();
 
 ### Rely on debug-mode `message` when:
 
-- you are troubleshooting locally
-- you want logs in the debug toolbar instead of on disk
+- you are troubleshooting a page locally
+- you want its logs in the debug toolbar instead of on disk
 
 ## Practical caveats
 
 - `logger(LoggerType::MESSAGE)` is valid only in debug mode.
-- `logger(LoggerType::DAILY)` or `logger(LoggerType::SINGLE)` still resolves to `message` in debug mode.
+- In the web app, `logger(LoggerType::DAILY)` or `logger(LoggerType::SINGLE)` still resolves to `message` in debug mode.
 - Reusing a resolved logger reuses the adapter instance behind it.
 - Calling `log()` with a non-standard level string is not rejected by the package, but it can produce uneven behavior. Prefer the standard level methods instead.

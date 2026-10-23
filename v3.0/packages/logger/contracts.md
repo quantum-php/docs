@@ -37,7 +37,7 @@ If one part of the app resolves a logger whose config level is `debug`, and anot
 
 `LoggerFactory::resolve()` rejects `message` outside debug mode.
 
-In debug mode, the opposite happens: the factory forces `message` even when you requested another adapter.
+In debug mode, the opposite happens in the web app: the factory forces `message` even when you requested another adapter ([Debug-mode override](architecture.md#debug-mode-override)).
 
 So adapter selection is environment-sensitive, not purely call-driven.
 
