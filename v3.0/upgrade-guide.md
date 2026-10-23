@@ -184,6 +184,39 @@ A stage that calls `$context->stop()` ends the run, and an optional closing stag
 - `getRequest()`, `getResponse()` and `getRoutes()` are gone from `AppContext`. In a web stage use `WebContext::getRequest()` and `WebContext::getRoutes()` (`WebContext::getResponse()` is the response about to be sent). Elsewhere use `request()` and `response()`.
 - It gained `getType()`, `stop()`, `isStopped()`, `getExitCode()` and `setExitCode()`. To ask which app is running, use `is_web_app()` and `is_console_app()`.
 
+### 7. The console boots in explicit steps
+
+`php qt` boots as a pipeline now (see the previous section). Most commands run exactly as before. Check the cases below if you have your own commands in `shared/Commands` or you touched the console adapter.
+
+**A command that changes `.env`.** The console no longer makes the environment writable for every command. A command that calls `environment()->updateRow()` must call `setMutable(true)` first, otherwise it throws `EnvException::environmentImmutable()`. `core:key` and the Toolkit installer already do it themselves.
+
+```php
+// before
+public function exec(): void
+{
+    environment()->updateRow('FEATURE_X', 'on');
+}
+
+// after
+public function exec(): void
+{
+    environment()->setMutable(true);
+    environment()->updateRow('FEATURE_X', 'on');
+}
+```
+
+**Getting the Symfony application.** `ConsoleAppAdapter::createApplication()` is gone. The boot registers the application in the container, so get it from there:
+
+```php
+use Symfony\Component\Console\Application;
+
+$application = Di::get(Application::class);
+```
+
+**A broken `.env`.** The console no longer decides by the `core:env` command name. With a missing or malformed `.env`, the framework commands that set `$requiresEnvironment` to `false` (`core:env`) and Symfony's `list` and `help` still run, and every other command stops with the error of the environment file. Your own commands need no change and keep the default (`true`). With a valid `.env`, `core:env` now runs the full boot. [Commands without a working environment](cli/qt-command-line-tool.md#commands-without-a-working-environment) explains the rule.
+
+**No action needed:** your commands are registered last, after the environment and the config load, so their constructors can use `env()` and `config()`.
+
 ## Upgrading from 2.x to 3.0
 
 This part summarizes the required changes when upgrading Quantum projects from 2.x to 3.0.
