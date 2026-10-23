@@ -6,7 +6,7 @@ This guide walks you through installing and running a new Quantum PHP project.
 
 Make sure your environment includes:
 
-* **PHP 8.0+**;
+* **PHP 8.1+**;
 * **PHP extensions**:
   * PDO
   * curl
@@ -19,7 +19,7 @@ Make sure your environment includes:
 
 Optional framework features may require additional extensions or packages such as `redis`, `memcached`, `zip`, `dom`, or `twig/twig`.
 
-Practical note: run `php -v` to check your PHP version before you start. Quantum needs PHP 8.0 or newer.
+Practical note: run `php -v` to check your PHP version before you start. Quantum needs PHP 8.1 or newer.
 
 ### Installation Steps
 

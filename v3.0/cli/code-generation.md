@@ -150,18 +150,50 @@ This is another example where `qt` generates project state, not just source file
 
 ## OpenAPI resource generation
 
-Quantum also includes:
+Say you generated an API module from the `DefaultApi` or `DemoApi` template and want a page where you can read and try the API. Run:
 
 ```bash
 php qt install:openapi Api
 ```
 
-From the upstream `OpenApiCommand`, this command can:
+Then open `/api/docs` for the Swagger UI page. The specification itself is served at `/api/spec`. Both routes sit under the module's route prefix, so a module with another prefix serves them there.
 
-- publish OpenAPI UI resources into the public assets directory
-- update the target module routes for OpenAPI endpoints when needed
-- create the module `resources/openapi/` directory
-- generate an OpenAPI `spec.json` file from controller annotations
+The command:
+
+- publishes the Swagger UI resources into the public assets directory, and creates that folder when it is missing
+- adds an `openapi` route group with the `docs` and `spec` routes to the module's routes when it has none
+- creates the module's `resources/openapi/` directory, and `resources/` when the module has none
+- generates `spec.json` from the controllers in the module's `Controllers/OpenApi` folder
+
+The API templates ship that folder with the documentation already written as PHP attributes. `OpenApiController` describes the API and its security scheme, and each operation is an attribute on an abstract controller method:
+
+```php
+use OpenApi\Attributes as OA;
+
+abstract class OpenApiMainController extends OpenApiController
+{
+    #[OA\Get(
+        path: '/Api',
+        tags: ['Api'],
+        summary: 'Get status of Api',
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Successful response',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                    ]
+                )
+            ),
+        ]
+    )]
+    abstract public function index();
+}
+```
+
+Documentation written as `@OA\...` docblock annotations is only read when `doctrine/annotations` is installed, and the framework no longer requires it. Without it `install:openapi` fails with `Required @OA\PathItem() not found`. Convert the annotations to attributes, or require `doctrine/annotations` in your application.
 
 So `qt` is also able to generate API documentation resources, not only application scaffolding.
 

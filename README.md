@@ -31,7 +31,7 @@ This path is designed for developers who want both a fast start and a clearer un
 
 The current Quantum 3.x baseline requires:
 
-- PHP 8.0 or newer
+- PHP 8.1 or newer
 - Composer
 - PHP extensions: `pdo`, `curl`, `json`, `simplexml`, `fileinfo`, `openssl`, `bcmath`
 
