@@ -89,6 +89,7 @@ Contract:
 
 - the command requires `.env.example` in the project base directory
 - if `.env` already exists, the command asks before overwriting unless `--yes` is passed
+- both files are looked up in the project base directory, not in the folder you run the command from, so the question appears wherever you start it
 
 ### `core:key`
 

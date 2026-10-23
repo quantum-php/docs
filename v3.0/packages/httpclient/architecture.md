@@ -47,7 +47,7 @@ For a normal multi request, `start()` calls the native `MultiCurlAdapter`. Each 
 
 ### Async multi request path
 
-For async multi requests, Quantum installs the same completion collector used by normal multi requests and also wires your success and error callbacks. Your callbacks are useful for per-request side effects, while `getResponse()` and `getErrors()` remain available after `start()` finishes.
+For async multi requests, Quantum installs the same completion collector used by normal multi requests and also wires your success and error callbacks. For each finished request the collector runs first, so inside your callback `getResponse()` and `getErrors()` already hold that request. Your callbacks are useful for per-request side effects, while `getResponse()` and `getErrors()` remain available after `start()` finishes.
 
 ## Response storage model
 
@@ -78,7 +78,7 @@ The package keeps a separate `$requestHeaders` array for headers you set through
 - `setHeader($name, $value)`
 - `setHeaders([...])`
 
-Those keys are lowercased before storage.
+Those keys are lowercased before storage, so read them back in lowercase too: after `setHeader('X-Token', 'abc')`, `getRequestHeaders('x-token')` returns `abc` and `getRequestHeaders('X-Token')` returns `null`. `setHeader()` adds one entry, while `setHeaders()` replaces the whole tracked set.
 
 This is only a bookkeeping layer for later reads through `getRequestHeaders()`. It does not inspect headers set through unrelated low-level cURL options.
 

@@ -12,7 +12,7 @@ This package is intentionally small. It does not add retries, middleware, authen
 
 ## Package shape
 
-The package is built from three pieces:
+The package is built from these pieces:
 
 - `Quantum\HttpClient\HttpClient` is the runtime wrapper
 - `Quantum\HttpClient\Factories\HttpClientFactory` creates fresh request facades
@@ -61,7 +61,9 @@ Use this when your application wants callback handling while still allowing late
 - `PATCH`
 - `DELETE`
 
-Any other method triggers `HttpClientException::requestMethodNotAvailable(...)`.
+Any other method triggers `HttpClientException::requestMethodNotAvailable(...)`. The list is also available as `HttpClient::METHODS`.
+
+You can read back what you set with `getMethod()` and `getData()`, get the underlying adapter with `getAdapter()`, and ask `isMultiRequest()` which kind of request the client holds.
 
 ## Response model
 
@@ -72,6 +74,13 @@ Responses are stored in three sections:
 - `body`
 
 Headers are normalized to lowercase before storage, so `Content-Type` becomes `content-type` when you read it back.
+
+The `body` is decoded for you:
+
+- when the `Content-Type` contains `json` and the body is valid JSON, it is the result of `json_decode()`, so an object (`stdClass`), not an array
+- when the `Content-Type` contains `xml` and the body is valid XML, it is a `SimpleXMLElement`
+- a body sent with `Content-Encoding: gzip` is decompressed first
+- in every other case, including invalid JSON or XML, it is the raw string
 
 For a single request, `getResponse()` returns one response array.
 

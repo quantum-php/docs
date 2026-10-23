@@ -43,7 +43,7 @@ Use it when the app runs on one machine or when each node can keep its own indep
 
 ### What it guarantees
 
-- The storage directory is created if it does not exist.
+- The storage directory is created if it does not exist, together with its missing parent folders (for example `cache/data` when `cache/` is missing).
 - Each hit stores `count` and `reset_at`.
 - When the window expires, the next hit starts a fresh counter.
 - `retryAfter()` returns `0` when the state file is missing or unreadable.
