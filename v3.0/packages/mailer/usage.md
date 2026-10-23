@@ -75,7 +75,9 @@ If you need reply-to, the method name is `setReplay()` in this package.
 
 ## Enable local mail trapping
 
-When `mailer.mail_trap` is truthy, `send()` saves a `.eml` file to `shared/emails` instead of contacting the transport.
+When `mailer.mail_trap` is on, `send()` saves a `.eml` file to `shared/emails` instead of contacting the transport.
+
+The setting is read as a boolean, so it also works from `.env` (`'mail_trap' => env('MAIL_TRAP')`): `true`, `1`, `on` and `yes`, in any case, turn it on. Any other value leaves it off and sends real mail: `false`, `0`, `off`, `no`, an empty value, and also a typo such as `flase`.
 
 That is useful for local development and tests where you want to inspect the generated message. Create the `shared/emails` directory as part of project setup so each saved message has a destination.
 
