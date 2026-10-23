@@ -16,6 +16,8 @@ The Logger package is small, but a few runtime contracts matter when you build o
 - `debug()`
 - `log()`
 
+Each method takes the message as `string|Stringable $message` and an optional `array $context`; `log()` takes the level first. A class that extends `Logger` and overrides these methods must declare the same parameter type.
+
 But the package does not validate arbitrary custom level strings in `log()`.
 
 Instead:
