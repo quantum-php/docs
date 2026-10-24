@@ -2,7 +2,7 @@
 
 Quantum ships two built-in app adapters: `web` and `console`.
 
-Both satisfy the same `start(): ?int` contract, but they boot different runtime services and handle different entry-point work.
+Both follow the same lifecycle, `boot()` and then `start(): ?int` (see [Contracts](contracts.md#appinterface)), but they boot different runtime services and handle different entry-point work.
 
 ## Web adapter
 
@@ -24,7 +24,6 @@ The web adapter:
 - loads environment and app config
 - installs the error handler
 - registers request and response objects in DI
-- initializes the debugger store
 - loads module routes into a `RouteCollection`
 - matches the current request and dispatches it through middleware
 
@@ -52,15 +51,13 @@ exit($app->start() ?? 0);
 
 ### What it does
 
-The console adapter:
+Every `php qt <command>` goes the same way: the adapter boots the project (helpers, the framework commands, `.env`, app config, error handler, then your commands from `shared/Commands`), checks that the requested command exists, runs it through Symfony Console, and returns its exit code.
 
-- creates Symfony `ArgvInput` and `ConsoleOutput`
-- loads helpers for every command
-- loads environment, app config, and error handling for all commands except `core:env`
-- marks the shared `Environment` instance mutable for non-`core:env` commands
-- creates the Symfony application using `app.name` and `app.version`
-- registers framework and app command classes
-- validates that the requested command exists before running
+Without a working `.env`, only a few commands such as `core:env` can run; see [Commands without a working environment](../../cli/qt-command-line-tool.md#commands-without-a-working-environment).
+
+The adapter does not make the environment writable. A command that changes `.env` through `environment()->updateRow()` calls `setMutable(true)` first, as `core:key` does.
+
+The stages behind these steps are listed in [Architecture](architecture.md#console-boot-order).
 
 ### Command registration contract
 

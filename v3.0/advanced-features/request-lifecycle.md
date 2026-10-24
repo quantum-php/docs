@@ -13,63 +13,37 @@ The request lifecycle is that connection.
 
 ## High-level flow
 
-A simple view of the flow looks like this:
+Follow one request, `GET /dashboard`, from the browser to the response:
 
-1. a request enters the application.
-2. Quantum boots the required framework pieces.
-3. The system checks the request method; `OPTIONS` requests short-circuit to a `204 No Content` response.
-4. The router matches the request (or returns a `404`).
-5. Route middleware runs.
-6. The framework checks the view cache for a response; if hit, the response is served, skipping controller dispatch.
-7. If no cache exists, the controller action is dispatched.
-8. The response is prepared.
-9. Output is returned to the client.
+1. Quantum boots the project: helpers, `.env`, config, the error handler, request and response, and the modules with their routes.
+2. A browser's CORS preflight (`OPTIONS`) is answered right away with `204 No Content`.
+3. The router looks for a route matching `/dashboard`. If there is none, the visitor gets a 404.
+4. The route matched, so Quantum detects the language and prepares the view cache.
+5. The route's middleware runs, for example `Auth`. It can let the request through or answer itself.
+6. If the page is in the view cache, that copy is the response. Otherwise the controller action runs.
+7. The response is sent with the CORS headers from `config/cors`.
 
-### The Bootstrapping Pipeline
-
-Before a request is processed, the `WebAppAdapter` executes a pre-dispatch bootstrap flow:
-
-1. `LoadHelpersStage`: Initializes helper functions.
-2. `LoadEnvironmentStage`: Loads environment variables.
-3. `LoadAppConfigStage`: Loads application configurations.
-4. `SetupErrorHandlerStage`: Configures global error handling.
-5. `InitHttpStage`: Initializes HTTP request/response objects.
-6. `InitDebuggerStage`: Sets up the debugging environment.
-7. `LoadModulesStage`: Boots registered application modules.
-
-This sequence ensures the execution environment is fully prepared before the router attempts to match the URL.
-
+Each of these steps is a stage in a pipeline. The stage names and their exact order are listed in [App Architecture](../packages/app/architecture.md#web-boot-order), and the events each step dispatches for your own listeners are in [Hooking into the running app](../packages/app/architecture.md#hooking-into-the-running-app).
 
 ## 1. The request enters the application
 
 Every HTTP request starts from the public entry point of the app.
 
-At this stage, Quantum needs to:
+Before Quantum looks at the URL, the boot has loaded the configuration, the framework services and the module routes, and created the request and response objects.
 
-- load configuration
-- bootstrap the framework services needed for the request
-- prepare request and response objects
-
-Before routing occurs, the `WebAppAdapter` checks the request method. If it is `OPTIONS`, the framework returns a `204 No Content` response immediately, bypassing all further processing.
+The first thing Quantum checks is the method. A browser sends an `OPTIONS` preflight before some cross-origin requests to ask what is allowed. Quantum answers it with `204 No Content` and the CORS headers, and skips routing, middleware and the controller.
 
 ## 2. The router tries to match the request
 
-Once the application is ready, Quantum checks the request against the registered routes.
+Quantum checks the request against the routes the modules registered.
 
-If no route matches, the request ends in a not found response. If a route matches, the framework loads language definitions, logs debug information, and initiates the view caching component.
+If no route matches, the request ends in a 404. A browser gets your HTML error page, and an API client gets JSON; see [`page_not_found_response()`](../packages/http/helpers.md).
 
-## 3. The matched route and conditional dispatch
+If a route matches, Quantum prepares what the rest of the request may need: it detects the language from the request (translations load on the first `t()` call) and sets up the view cache when it is enabled. A 404 does none of this work.
 
-The framework proceeds to middleware execution. The terminal closure of this process defines how the response is generated:
+## 3. Middleware runs before the controller action
 
-1. It attempts to serve the response from the view cache using the request URI.
-2. If the cache is missed (unsupported for the URI, expired, or absent), it uses the `RouteDispatcher` to dispatch the matched controller action.
-
-This ensures that controller logic runs only when necessary, providing a performance optimization layer.
-
-## 4. Middleware runs before the controller action
-
-If middleware is attached to the route, Quantum runs it before the terminal closure above is invoked.
+If middleware is attached to the route, Quantum runs it first.
 
 Middleware can:
 
@@ -79,11 +53,11 @@ Middleware can:
 - validate inputs
 - block unauthorized access
 
-This is why middleware belongs in the core flow of the framework.
+A request does not always go from route to controller: sometimes middleware answers first, and the controller never runs.
 
-A request does not always go directly from route to controller.
-Sometimes middleware stops it first.
-If the response is served from the view cache, controller action dispatch is entirely skipped.
+## 4. The view cache or the controller
+
+When the middleware lets the request through, Quantum first looks for a cached copy of the page under the request URI. On a hit, that copy is the response and the controller is skipped. On a miss (caching is off, the entry is missing or has expired), the controller action is dispatched.
 
 ## 5. The controller action is dispatched
 
@@ -115,7 +89,7 @@ That output becomes the response sent back to the browser or client.
 
 ## 7. The client receives the final result
 
-After processing is complete, Quantum sends the final response back to the requester.
+After processing is complete, Quantum adds the CORS headers from `config/cors`, sends the final response back to the requester, and clears the request state.
 
 That might mean:
 

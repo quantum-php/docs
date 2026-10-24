@@ -89,6 +89,7 @@ Contract:
 
 - the command requires `.env.example` in the project base directory
 - if `.env` already exists, the command asks before overwriting unless `--yes` is passed
+- both files are looked up in the project base directory, not in the folder you run the command from, so the question appears wherever you start it
 
 ### `core:key`
 
@@ -113,7 +114,7 @@ Publishes DebugBar assets into `public/assets/DebugBar/Resources`.
 
 Publishes Swagger UI assets if needed, injects an `openapi` route group into the module route file when missing, and writes `resources/openapi/spec.json` for the target module.
 
-Use it only after the module exists and has OpenAPI-annotated controllers in `Controllers/OpenApi`.
+Use it only after the module exists and has controllers with OpenAPI attributes in `Controllers/OpenApi`. See [OpenAPI resource generation](../../cli/code-generation.md#openapi-resource-generation) for what it produces and how the documentation is written.
 
 ### `install:toolkit <username> <password>`
 

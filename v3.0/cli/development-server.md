@@ -14,7 +14,7 @@ php qt serve
 
 This starts the local development server for your application.
 
-Once the server starts, Quantum will show the local address where the app is available.
+Once the server starts, Quantum will show the local address where the app is available. By default that is `http://127.0.0.1:8000`; if port 8000 is busy, the server starts on the next free port and shows the address it chose. The `--host`, `--port` and `--open` options are described under [`serve`](../packages/console/built-in-commands.md#serve).
 
 Open that address in your browser to test the project.
 

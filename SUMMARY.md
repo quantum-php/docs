@@ -8,7 +8,7 @@
 * [Quickstart](v3.0/getting-started/quickstart.md)
 * [Project Structure](v3.0/getting-started/project-structure.md)
 * [First App](v3.0/getting-started/first-app.md)
-* [Upgrade Guide (2.x to 3.0)](v3.0/upgrade-guide.md)
+* [Upgrade Guide](v3.0/upgrade-guide.md)
 
 ### Core Concepts
 * [Routing](v3.0/core-concepts/routing.md)
@@ -110,11 +110,11 @@
   * [Contracts](v3.0/packages/debugger/contracts.md)
   * [Helpers](v3.0/packages/debugger/helpers.md)
   * [Usage](v3.0/packages/debugger/usage.md)
-* Hook
-  * [Overview](v3.0/packages/hook/overview.md)
-  * [Architecture](v3.0/packages/hook/architecture.md)
-  * [Helpers](v3.0/packages/hook/helpers.md)
-  * [Usage](v3.0/packages/hook/usage.md)
+* Event
+  * [Overview](v3.0/packages/event/overview.md)
+  * [Architecture](v3.0/packages/event/architecture.md)
+  * [Helpers](v3.0/packages/event/helpers.md)
+  * [Usage](v3.0/packages/event/usage.md)
 * HttpClient
   * [Overview](v3.0/packages/httpclient/overview.md)
   * [Architecture](v3.0/packages/httpclient/architecture.md)
@@ -216,10 +216,6 @@
   * [Contracts](v3.0/packages/logger/contracts.md)
   * [Helpers](v3.0/packages/logger/helpers.md)
   * [Usage](v3.0/packages/logger/usage.md)
-* Loader
-  * [Overview](v3.0/packages/loader/overview.md)
-  * [Architecture](v3.0/packages/loader/architecture.md)
-  * [Usage](v3.0/packages/loader/usage.md)
 * Transformer
   * [Overview](v3.0/packages/transformer/overview.md)
   * [Usage](v3.0/packages/transformer/usage.md)

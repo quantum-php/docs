@@ -55,17 +55,16 @@ logger()->info([
 
 File adapters JSON-format array messages before writing them. The global level helpers accept string messages, so `logger()` is the better fit for this style.
 
-## Route debug messages into a custom debugger tab
+## Check what was logged in debug mode
 
-In debug mode, you can place a message in a specific DebugBar tab:
+In debug mode the web app keeps the messages in memory, so a test or a debug page can read them back from the [`message` adapter](adapters.md#message):
 
 ```php
-logger()->info('SMTP transport ready', [
-    'tab' => 'mails',
-]);
-```
+info('Import started');
 
-If the debugger is disabled, the message adapter drops the message silently.
+$messages = logger()->getAdapter()->getMessages();
+// [['info' => 'Import started']]
+```
 
 ## Pick the right backend
 
@@ -81,12 +80,12 @@ If the debugger is disabled, the message adapter drops the message silently.
 
 ### Rely on debug-mode `message` when:
 
-- you are troubleshooting locally
-- you want logs in DebugBar instead of on disk
+- you are troubleshooting a page locally
+- you want its logs in the debug toolbar instead of on disk
 
 ## Practical caveats
 
 - `logger(LoggerType::MESSAGE)` is valid only in debug mode.
-- `logger(LoggerType::DAILY)` or `logger(LoggerType::SINGLE)` still resolves to `message` in debug mode.
+- In the web app, `logger(LoggerType::DAILY)` or `logger(LoggerType::SINGLE)` still resolves to `message` in debug mode.
 - Reusing a resolved logger reuses the adapter instance behind it.
 - Calling `log()` with a non-standard level string is not rejected by the package, but it can produce uneven behavior. Prefer the standard level methods instead.

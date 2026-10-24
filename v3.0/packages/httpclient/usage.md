@@ -21,6 +21,8 @@ Because response headers are normalized to lowercase, read them like this:
 $contentType = $client->getResponseHeaders('content-type');
 ```
 
+A JSON or XML response body arrives already decoded; see the [response model](overview.md#response-model).
+
 ## Send JSON or form data in a single request
 
 ```php
@@ -31,9 +33,21 @@ $client = httpRequest('https://api.example.com/users')
     ->start();
 ```
 
-`setData()` is passed through the native adapter's post-data builder before the request is executed.
+How `setData()` is sent depends on the `Content-Type` header you set before `start()`:
 
-## Check transport errors
+- an array (or a `JsonSerializable`) with an `application/json` or `application/...+json` header is sent as a JSON body
+- an array without a JSON header is form-encoded, like `name=Arman&role=admin`
+- an array with a `multipart/form-data` header, or one that holds a `CURLFile`, is sent as multipart, which is how you upload a file
+- a string is sent as it is
+
+```php
+$client = httpRequest('https://api.example.com/avatar')
+    ->setMethod('POST')
+    ->setData(['user' => 'arman', 'avatar' => new CURLFile('/path/to/avatar.png')])
+    ->start();
+```
+
+## Check errors
 
 ```php
 $errors = $client->getErrors();
@@ -44,22 +58,31 @@ if (!empty($errors)) {
 }
 ```
 
-The package records transport-layer curl errors. It does not treat HTTP 4xx or 5xx responses as package exceptions by itself.
+`getErrors()` is empty when the request worked. It holds an entry when cURL failed to complete the request, and also when the server answered with an HTTP 4xx or 5xx status. A request to a missing page gives:
+
+```php
+['code' => 404, 'message' => 'HTTP/1.1 404 Not Found']
+```
+
+For a cURL failure, `code` is the cURL error number and `message` is its description. Neither case throws an exception. The response body of a 4xx or 5xx answer is still available through `getResponseBody()`.
 
 ## Queue multiple requests
 
 ```php
 $client = httpMultiRequest();
 
-$client->addGet('https://api.example.com/users');
+$client->addGet('https://api.example.com/users', ['page' => 2]);
 $client->addGet('https://api.example.com/teams');
+$client->addPost('https://api.example.com/teams', ['name' => 'Core']);
 $client->start();
 
 $responses = $client->getResponse();
 $errors = $client->getErrors();
 ```
 
-In multi mode, `$responses` is keyed by curl request ID. Inspect each entry's `headers`, `cookies`, and `body` sections.
+`addGet()` appends its data array to the URL as a query string, with `&` when the URL already has one, so the first request above asks for `/users?page=2`. `addPost()` builds its body the same way as `setData()`.
+
+In multi mode, `$responses` is keyed by curl request ID. Inspect each entry's `headers`, `cookies`, and `body` sections. `$errors` is keyed the same way and holds only the requests that failed.
 
 ## Use async callbacks for multi requests
 
@@ -79,7 +102,7 @@ $client->addGet('https://api.example.com/users');
 $client->start();
 ```
 
-In this mode, handle each result inside your callbacks when you need per-request side effects. `getResponse()` and `getErrors()` are also populated after `start()` finishes.
+In this mode, handle each result inside your callbacks when you need per-request side effects. A request that failed, including one that got an HTTP 4xx or 5xx answer, goes to the error callback; every other request goes to the success callback. `getResponse()` and `getErrors()` are also populated after `start()` finishes.
 
 ## Recommended usage patterns
 

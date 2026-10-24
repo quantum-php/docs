@@ -2,13 +2,13 @@
 
 The Config package gives Quantum one shared in-memory configuration store.
 
-Use it when you want to load PHP config files through `Loader`, read values with dot notation, and override values at runtime.
+Use it when you want to load PHP config files, read values with dot notation, and override values at runtime.
 
 ## What this package does
 
-- loads config arrays from PHP files through `Quantum\Loader\Setup`
+- loads config arrays from PHP files described by a `Quantum\Config\Setup`
 - stores values in one dot-accessible container
-- supports two loading modes: `load()` for the root store and `import()` for named config sections
+- supports two loading modes: `load()` for the root store and `import()` for named config sections, plus `importIfExists()` for optional files
 - exposes a DI-backed `config()` helper for shared access
 
 ## Most applications use `import()`
@@ -16,7 +16,7 @@ Use it when you want to load PHP config files through `Loader`, read values with
 Quantum's package-level config files are usually imported under their file name:
 
 ```php
-use Quantum\Loader\Setup;
+use Quantum\Config\Setup;
 
 config()->import(new Setup('config', 'app'));
 config()->import(new Setup('config', 'database'));
@@ -33,7 +33,7 @@ Use `load()` when you want one config file to become the entire root store inste
 
 ```php
 use Quantum\Config\Config;
-use Quantum\Loader\Setup;
+use Quantum\Config\Setup;
 
 $config = new Config();
 $config->load(new Setup('config', 'app'));
@@ -47,8 +47,9 @@ With `load()`, keys come from the file directly. With `import()`, the same file 
 
 - `Quantum\Config\Config` manages the in-memory store
 - `Quantum\Config\Contracts\ConfigInterface` defines the public API
+- `Quantum\Config\Setup` describes which file to load
 - `Quantum\Config\Helpers\config.php` exposes the shared helper
-- `Quantum\Config\Exceptions\ConfigException` reports import-name collisions
+- `Quantum\Config\Exceptions\ConfigException` reports missing files and import-name collisions
 
 ## Important runtime constraints
 

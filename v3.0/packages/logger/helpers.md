@@ -22,7 +22,7 @@ $logger = logger(LoggerType::DAILY);
 $logger->warning('Slow downstream response');
 ```
 
-Remember that debug mode overrides adapter selection to `message`.
+Remember that in the web app, debug mode overrides adapter selection to `message` ([Debug-mode override](architecture.md#debug-mode-override)).
 
 ## Level helpers
 
@@ -50,6 +50,5 @@ A few limits are easy to miss:
 - there are no global helpers for `critical`, `alert`, or `emergency`
 - the convenience helpers accept string messages, while `logger()` also lets you send array payloads through the PSR-3 methods
 - every helper call goes back through the shared factory
-- in debug mode, helper output goes to the debugger message store instead of files
 
 Use `logger()` when you need the full PSR-3 surface, adapter selection, or structured array messages.

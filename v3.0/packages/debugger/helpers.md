@@ -24,11 +24,6 @@ Behavior:
 
 ## Where the helper is used in core
 
-Current framework usage includes:
-
-- `InitDebuggerStage` for store initialization
-- `MessageAdapter` for logging into debug tabs
-- default web layout templates for final rendering
-- `ViewFactory` for injecting the debugger into `Quantum\View\View`
+Outside the Debugger package, the framework calls it in one place: the default web layout templates render the toolbar with `<?= debugbar()->render() ?>`.
 
 For application code, this helper is the supported API. The framework does not expose a separate factory class for the package.

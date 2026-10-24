@@ -4,7 +4,7 @@ The Logger package gives Quantum a small PSR-3-compatible logging layer with thr
 
 - write to one file
 - write to a date-based daily file
-- send messages to the DebugBar message store during debug mode
+- keep messages in memory while the web app runs in debug mode, for the debug toolbar
 
 Use it when you want framework-level logging through `logger()` or the global level helpers, while keeping the output backend configurable.
 
@@ -14,7 +14,7 @@ Reach for Logger when you need to:
 
 - record application errors or warnings to disk
 - switch between a single log file and one file per day
-- surface debug messages inside Quantum's debugger instead of writing files
+- see the messages of a request in the debug toolbar instead of in files
 
 If you only need a raw filesystem append, use Storage directly. Logger is useful when you want severity filtering and adapter selection.
 
@@ -38,7 +38,7 @@ Logger supports these adapter names:
 
 In normal runtime, the factory uses the requested adapter or the configured default.
 
-In debug mode, the factory always resolves the `message` adapter instead. That means debug runs send logs to the debugger message store, not to file-based adapters.
+In debug mode, the web app resolves the [`message` adapter](adapters.md#message) instead, so its messages go to the debug toolbar ([Debug-mode override](architecture.md#debug-mode-override)).
 
 ## Severity filtering
 

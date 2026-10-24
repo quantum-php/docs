@@ -11,7 +11,7 @@ The View package sits on top of Renderer and coordinates the rest of the page-re
 - the current layout file
 - accumulated view params
 - layout asset definitions collected through `setLayout()`
-- the last rendered page body from a full page render
+- the last rendered page body and view file from a full page render
 
 It does not resolve template files itself. It always delegates the final template render to `Renderer`.
 
@@ -35,11 +35,10 @@ If a param is wrapped in `RawParam`, the View package skips HTML escaping for th
 
 1. require a layout to be set
 2. merge any runtime params into the existing param bag
-3. render the page view through the renderer
+3. render the page view through the renderer and remember its file name
 4. register layout assets, if any were attached through `setLayout()`
-5. update debugger route metadata when the debugger is enabled
-6. render the layout through the renderer
-7. optionally cache the final layout HTML by request URI when view cache is enabled
+5. render the layout through the renderer
+6. optionally cache the final layout HTML by request URI when view cache is enabled
 
 The body view renders before the layout. Layout templates can then read the rendered body through `getContent()`.
 
@@ -49,7 +48,7 @@ When view cache is enabled, the package still renders the page and layout first.
 
 `renderPartial()` is deliberately smaller.
 
-It merges params into the shared param bag and renders the requested file. It does not require a layout and does not trigger asset registration, debugger updates, or view-cache writes.
+It merges params into the shared param bag and renders the requested file. It does not require a layout, does not change the remembered view file, and does not trigger asset registration or view-cache writes.
 
 ## Escaping boundary
 
@@ -70,5 +69,5 @@ The package relies on other packages for surrounding concerns:
 
 - Renderer: template adapter and file lookup
 - Asset: registers layout assets before layout render
-- Debugger: records the rendered view path when enabled
+- Debugger: reads the last rendered view file (`getViewFile()`) when the debug toolbar renders; the View does not depend on it
 - ResourceCache: caches final layout output by request URI

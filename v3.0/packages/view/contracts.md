@@ -81,6 +81,10 @@ Failure behavior:
 
 If your code only used `renderPartial()`, `getContent()` is still considered unavailable.
 
+### `getViewFile(): ?string`
+
+Returns the view file name passed to the last full `render()`, as given (for example `post/post`), or `null` before the first one. Partial renders do not change it.
+
 ## Cache contract
 
 `render()` renders body and layout, then writes the final HTML using the current request URI as the cache key when view cache is enabled.

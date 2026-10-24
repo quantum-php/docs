@@ -67,8 +67,6 @@ In practice, that means a command is discovered when it:
 - extends `Quantum\Console\CliCommand`
 - can be instantiated
 
-**Note**: The `ConsoleAppAdapter` special-cases `core:env` boot stages to ensure the environment is ready for command discovery and execution.
-
 This makes the console layer convention-based, similar to other Quantum subsystems.
 
 ## The base command class
@@ -82,6 +80,7 @@ That base class gives commands:
 - optional help text
 - argument definitions
 - option definitions
+- `$requiresEnvironment` (`true` by default), which lets a framework command such as `core:env` run when `.env` is missing or malformed; see [Commands without a working environment](qt-command-line-tool.md#commands-without-a-working-environment)
 - helper methods such as:
   - `getArgument()`
   - `getOption()`

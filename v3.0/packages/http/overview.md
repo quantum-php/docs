@@ -64,4 +64,4 @@ If the current `Content-Type` does not match one of those formatters, `getConten
 - `Request::flush()` clears headers, payload, files, protocol, host, port, URI, and query, but it does not clear the matched route object.
 - `Response::send()` emits headers and the formatted body directly; it does not return the content.
 - `redirect()` only sets status and `Location`; it does not build a body automatically.
-- `page_not_found_response()` treats the request as JSON only when the `Accept` header is exactly `application/json`.
+- `page_not_found_response()` answers with JSON or HTML depending on [`Request::expectsJson()`](request.md#does-the-client-want-json).

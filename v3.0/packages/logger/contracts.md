@@ -16,6 +16,8 @@ The Logger package is small, but a few runtime contracts matter when you build o
 - `debug()`
 - `log()`
 
+Each method takes the message as `string|Stringable $message` and an optional `array $context`; `log()` takes the level first. A class that extends `Logger` and overrides these methods keeps working with no parameter type or with `string|Stringable`; PHP rejects an override that narrows the type, for example to `string`.
+
 But the package does not validate arbitrary custom level strings in `log()`.
 
 Instead:
@@ -37,7 +39,7 @@ If one part of the app resolves a logger whose config level is `debug`, and anot
 
 `LoggerFactory::resolve()` rejects `message` outside debug mode.
 
-In debug mode, the opposite happens: the factory forces `message` even when you requested another adapter.
+In debug mode, the opposite happens in the web app: the factory forces `message` even when you requested another adapter ([Debug-mode override](architecture.md#debug-mode-override)).
 
 So adapter selection is environment-sensitive, not purely call-driven.
 
@@ -51,22 +53,16 @@ It is appended verbatim after the formatted message.
 
 No placeholder interpolation or structured context rendering happens.
 
-## Debugger logging uses one routing key
+## The `message` adapter ignores the context
 
-For the `message` adapter, the special context key is:
-
-- `tab`
-
-It chooses the debugger store cell that receives the message.
-
-If you omit it, the package uses the default messages tab.
+The `message` adapter keeps only the level and the message; no context key, `trace` or `tab` included, changes what it keeps. See [the `message` adapter](adapters.md#message).
 
 ## Adapter implementations must satisfy `ReportableInterface`
 
 Custom adapters resolved through the factory must implement:
 
 ```php
-public function report(string $level, string $message, ?array $context = []): void;
+public function report(string $level, string|Stringable $message, ?array $context = []): void;
 ```
 
 If the resolved adapter instance does not implement that contract, the factory throws an adapter-not-supported exception.

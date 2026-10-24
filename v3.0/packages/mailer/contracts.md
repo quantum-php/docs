@@ -19,8 +19,9 @@ That gives you this common API:
 - `setBody(array|string|null $message)`
 - `getBody()`
 - `send(): bool`
+- `getTransportLog(): array`
 
-If you want code that works across all mailer adapters, stay within that surface.
+If you want code that works across all mailer adapters, stay within that surface. The built-in adapters implement it through `Quantum\Mailer\Traits\MailerTrait`; a custom adapter that implements the interface without the trait has to provide every method, `getTransportLog()` included.
 
 ## Adapter-specific methods
 
@@ -56,9 +57,36 @@ If the body is an array, the package extracts it into local variables before req
 
 ## Delivery result contract
 
-`send()` reports delivery state as `true` or `false`.
+`send()` reports delivery state as `true` or `false`; it does not return a provider response object.
 
-It does not return a provider response object. Built-in transport details are mirrored into the debugger mails tab from the adapter error list.
+The API adapters catch transport failures and return `false`. The SMTP adapter runs PHPMailer with exceptions enabled, so a failed SMTP send throws `PHPMailer\PHPMailer\Exception` instead.
+
+## Transport log
+
+`getTransportLog()` returns what the adapter recorded while sending, oldest first:
+
+- the transport errors of every send that returned `false`; they are also logged with `warning()`
+- in debug mode, the SMTP adapter's exchange with the server, one entry per PHPMailer debug line. PHPMailer writes `[credentials hidden]` in place of the login lines.
+
+```php
+use Quantum\Mailer\Enums\MailerType;
+
+$mailer = mailer(MailerType::MAILGUN);
+
+if (!$mailer->setFrom('noreply@example.com')->setAddress('jane@example.com')->setSubject('Hi')->setBody('Hello')->send()) {
+    $errors = $mailer->getTransportLog();
+}
+```
+
+The log belongs to the adapter instance, and `MailerFactory` reuses one adapter per name. A worker that sends mail all day would keep every line, so each `send()` first cuts the log to its last `mailer.transport_log_limit` lines:
+
+```php
+'transport_log_limit' => 1000,
+```
+
+Without the key the limit is `1000`; `0` keeps every line. The cut happens at the start of a send because every send reaches that point, also after a previous SMTP send threw. So after a send the log holds up to the limit plus the lines of that send, which is never cut halfway.
+
+In debug mode the debug toolbar shows the default mailer's log in its `mails` tab ([Debugger Architecture](../debugger/architecture.md#where-each-tabs-data-comes-from)).
 
 ## Mail trap contract
 

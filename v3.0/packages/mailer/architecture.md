@@ -32,6 +32,7 @@ After that, it reads:
 - `mailer.default` for the default adapter name
 - `mailer.<adapter>` for adapter-specific constructor parameters
 - `mailer.mail_trap` during `send()` to decide whether to save or deliver
+- `mailer.transport_log_limit` during `send()` to bound the [transport log](contracts.md#transport-log)
 
 ## Wrapper behavior
 
@@ -45,10 +46,11 @@ That matters for adapter-specific features such as attachments: the wrapper does
 
 `MailerTrait::send()` does the same high-level work for every adapter:
 
-1. call `prepare()` to translate the fluent fields into transport-specific payload data
-2. choose `saveEmail()` when `mailer.mail_trap` is truthy, otherwise `sendEmail()`
-3. reset the common message fields immediately after the attempt
-4. log transport errors when the send failed
+1. cut the transport log to its limit
+2. call `prepare()` to translate the fluent fields into transport-specific payload data
+3. choose `saveEmail()` when `mailer.mail_trap` is on, otherwise `sendEmail()`
+4. reset the common message fields immediately after the attempt
+5. log transport errors when the send failed
 
 The reset happens on both success and failure, so you cannot call `send()` twice on the same composed message without rebuilding it.
 
