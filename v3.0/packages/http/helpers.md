@@ -50,7 +50,7 @@ The helper overwrites any previous value already stored under that session key.
 
 ### `back(array $data = [], int $code = StatusCode::FOUND): Response`
 
-This returns `response()->back($data, $code)`. It is the shorter form of `redirect(get_referrer() ?? base_url())`, and it also checks that the referrer belongs to your application:
+This returns `response()->back($data, $code)`. It is the shorter form of `redirect(get_referrer() ?? base_url())`:
 
 ```php
 return back();

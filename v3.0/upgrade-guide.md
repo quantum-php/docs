@@ -265,7 +265,7 @@ The starter project's `shared/config/lang.php` already has the new shape. For th
 
 3.1.1 adds `back()`, which sends the visitor back to the page they came from. Nothing breaks and there is nothing to change. Where your code writes `redirect(get_referrer() ?? base_url())`, you can use `back()` instead: it also refuses a referrer from another site. Modules generated from 3.1.1 use it; modules you generated before keep their code.
 
-See [Redirecting back](packages/http/response.md#redirecting-back) for how it chooses the address and how it keeps the old input.
+See [Redirecting back](packages/http/response.md#redirecting-back).
 
 ### 11. Check the upgrade
 
