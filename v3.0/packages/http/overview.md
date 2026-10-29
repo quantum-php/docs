@@ -9,7 +9,7 @@ At package level, it is built from two runtime objects:
 
 It also ships:
 
-- `Quantum\Http\Helpers\http.php` global helpers such as `request()`, `response()`, `redirect()`, and `old()`
+- `Quantum\Http\Helpers\http.php` global helpers such as `request()`, `response()`, `redirect()`, `back()`, and `old()`
 - `Quantum\Http\Enums\ContentType` and `Quantum\Http\Enums\StatusCode` constant sets
 - `Quantum\Http\Exceptions\HttpException` for package-specific runtime failures
 

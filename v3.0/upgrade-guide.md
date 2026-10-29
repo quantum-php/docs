@@ -261,7 +261,13 @@ return [
 
 The starter project's `shared/config/lang.php` already has the new shape. For the DeepL and Google Translate sections, see [Translate with DeepL or Google Translate](packages/lang/usage.md#translate-with-deepl-or-google-translate).
 
-### 10. Check the upgrade
+### 10. Redirect back with `back()`
+
+3.1.1 adds `back()`, which sends the visitor back to the page they came from. Nothing breaks and there is nothing to change. Where your code writes `redirect(get_referrer() ?? base_url())`, you can use `back()` instead: it also refuses a referrer from another site. Modules generated from 3.1.1 use it; modules you generated before keep their code.
+
+See [Redirecting back](packages/http/response.md#redirecting-back).
+
+### 11. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 
