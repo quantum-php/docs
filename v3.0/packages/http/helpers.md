@@ -48,11 +48,23 @@ This helper stores `$data` into the session under `ReservedKeys::PREV_REQUEST` a
 
 The helper overwrites any previous value already stored under that session key.
 
+### `back(array $data = [], int $code = StatusCode::FOUND): Response`
+
+This returns `response()->back($data, $code)`. It is the shorter form of `redirect(get_referrer() ?? base_url())`, and it also checks that the referrer belongs to your application:
+
+```php
+return back();
+
+return back($request->all());
+```
+
+The rules for where it redirects, and how the old input is kept, are on [Redirecting back](response.md#redirecting-back).
+
 ## Old input helper
 
 ### `old(string $key)`
 
-`old()` reads one key from the session entry created by `redirectWith()`.
+`old()` reads one key from the session entry created by `redirectWith()` or `back()`.
 
 Behavior is intentionally consumptive:
 
