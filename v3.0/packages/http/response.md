@@ -59,6 +59,32 @@ That means `hasHeader('Content-Type')` and `hasHeader('content-type')` are diffe
 
 It does not clear existing body data and does not force a content type.
 
+### Redirecting back
+
+After a form fails validation, or after an action on a list page, you usually want to send the visitor back to the page they came from. `back($data = [], $code = 302)` does that:
+
+```php
+return response()->back();
+```
+
+To keep what the visitor typed, pass it as the first argument. It is stored for the next request, and the form reads each value with [`old()`](helpers.md#old-input-helper), as after `redirectWith()`:
+
+```php
+return response()->back($request->all());
+```
+
+The `back()` helper does the same, see [Redirect helpers](helpers.md#redirect-helpers).
+
+`back()` goes to the referrer the browser sent, but only when it has the same scheme, host and port as `base_url()`. In every other case it goes to `base_url()`:
+
+- the request has no referrer, or an empty one
+- the referrer is on another site, so a page cannot use `back()` to send a visitor away
+- the referrer contains a backslash or user info (`user@host`)
+
+An empty `$data` stores nothing, so old input from an earlier `redirectWith()` is kept.
+
+Behind a proxy that terminates TLS, or where the `Host` header is not pinned, the detected `base_url()` can differ from the address visitors use. Set `app.base_url` in that case, so the comparison uses the right origin.
+
 ## Body formats
 
 The response body is stored as an internal array and later formatted based on the current content type.
