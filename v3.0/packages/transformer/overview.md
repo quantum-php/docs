@@ -16,6 +16,8 @@ There is no factory, container integration, registry, or built-in single-item wr
 
 ## Basic flow
 
+`UserTransformer` is a transformer of your own: write one class per shape of data you return.
+
 ```php
 use Quantum\Transformer\Contracts\TransformerInterface;
 use Quantum\Transformer\Transformer;

@@ -7,7 +7,7 @@ This package gives you two main workflows:
 
 ## Register an interface binding
 
-Use `register()` when application code depends on an interface or abstract class name.
+Use `register()` when application code depends on an interface or abstract class name. `MailerInterface` and `SmtpMailer` stand for an interface and a class of your own.
 
 ```php
 use App\Contracts\MailerInterface;
@@ -23,7 +23,7 @@ $mailer = Di::get(MailerInterface::class);
 
 ## Create a class without pre-registration
 
-Use `create()` when you want a fresh instance and do not need shared caching.
+Use `create()` when you want a fresh instance and do not need shared caching. `ReportBuilder` stands for a class of your own.
 
 ```php
 use App\Services\ReportBuilder;
@@ -40,7 +40,7 @@ That self-registration persists in the container registry, so a later `Di::get(R
 
 ## Seed a prebuilt instance
 
-Use `set()` when you already have an object and want the container to return it later.
+Use `set()` when you already have an object and want the container to return it later. `ClockInterface` stands for an interface of your own, and `FakeClock` for a test double of it.
 
 ```php
 use App\Contracts\ClockInterface;

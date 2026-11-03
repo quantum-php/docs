@@ -35,6 +35,8 @@ $callable(...$args);
 
 ## Usage Example
 
+`FooInterface`, `FooService` and `BarService` stand for classes of your own.
+
 ```php
 use Quantum\Di\Di;
 

@@ -30,6 +30,8 @@ Quantum provides a layered model system starting from a base `Model` class and e
 
 ## Usage Pattern
 
+Replace `YourModule`, `YourModel` and `your_table_name` with the names of your own module, model and table.
+
 ```php
 namespace Modules\YourModule\Models;
 
