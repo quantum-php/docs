@@ -81,7 +81,7 @@ If two-factor auth is enabled, sign-in does not finish immediately. The package 
 
 Auth depends on `AuthServiceInterface::userSchema()` to map logical auth keys to your real storage fields.
 
-The schema must define every key used by `Quantum\Auth\Enums\AuthKeys`, including names for:
+The schema must define a key for every case of the `Quantum\Auth\Enums\AuthKeys` enum, and the key is the value of the case, for example `accessToken`. The exact keys, with an example, are in the [user schema contract](contracts.md#user-schema-contract). They map:
 
 - username
 - password
