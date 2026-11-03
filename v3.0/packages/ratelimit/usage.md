@@ -2,10 +2,10 @@
 
 ## Add a throttle to a route
 
-Attach rate limiting directly to the route definition.
+Attach rate limiting directly to the route definition in the module's `routes/routes.php`.
 
 ```php
-Router::get('/api/posts', 'PostController', 'index')
+$route->get('api/posts', 'PostController', 'index')
     ->rateLimit(60, 60);
 ```
 
@@ -13,12 +13,12 @@ This is the standard entry point. The framework wires `RateLimitMiddleware` for 
 
 ## Apply one throttle to a route group
 
-When several routes should share the same rate-limit settings, attach `rateLimit(...)` to the group.
+When several routes should share the same rate-limit settings, attach `rateLimit(...)` to the group. The group syntax is on [Router usage](../router/usage.md#apply-shared-config-to-a-group).
 
 ```php
-Router::group('/api', function () {
-    Router::get('/posts', 'PostController', 'index');
-    Router::post('/posts', 'PostController', 'store');
+$route->group('api', function ($route) {
+    $route->get('posts', 'PostController', 'index');
+    $route->post('posts', 'PostController', 'store');
 })->rateLimit(120, 60);
 ```
 
