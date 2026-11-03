@@ -20,7 +20,7 @@ final class RequireEditor extends Middleware
 
     public function apply(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->isEditor()) {
+        if (!auth()->check() || !in_array(auth()->user()->role, ['admin', 'editor'], true)) {
             return redirect('/signin');
         }
 
@@ -28,6 +28,8 @@ final class RequireEditor extends Middleware
     }
 }
 ```
+
+`role` is a field of your user. `auth()->user()` exposes the fields that the user schema marks `visible`, see the [user schema contract](../auth/contracts.md#user-schema-contract).
 
 The constructor example matters because the manager instantiates middleware with the current request before `apply()` runs.
 
