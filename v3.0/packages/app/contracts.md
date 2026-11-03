@@ -127,10 +127,16 @@ class MyStage implements StageInterface
 }
 ```
 
-`Quantum\App\Pipeline` runs stages in order with one context, and optionally a closing stage:
+`Quantum\App\Pipeline` runs stages in order with one context, and optionally a closing stage. This is how the web adapter runs a request, with a `WebContext` (what each stage does is on [Web runtime order](architecture.md#web-runtime-order)):
 
 ```php
-(new Pipeline([new FirstStage(), new SecondStage()], new ClosingStage()))->run($context);
+(new Pipeline([
+    new HandlePreflightStage(),
+    new ResolveRouteStage(),
+    new HandleRouteNotFoundStage(),
+    new PrepareRequestStage(),
+    new DispatchRequestStage(),
+], new SendResponseStage()))->run($context);
 ```
 
 - The context type is a PHPDoc template (`Pipeline<TContext>`, `StageInterface<TContext>`), checked by PHPStan: running web stages with a console context, mixing stages of different kinds, or a stage without its `@implements` line fails static analysis. PHP itself only requires an `AppContext`.

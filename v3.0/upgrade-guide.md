@@ -137,11 +137,11 @@ $adapter->start();
 | `Quantum\App\Contracts\BootStageInterface` | `Quantum\App\Contracts\StageInterface` |
 | `AppAdapter`, `WebAppTrait`, `ConsoleAppTrait` | removed: the adapters implement `AppInterface` directly |
 
-**Custom stages.** A stage implements `StageInterface` and names the context it works with in its class docblock. The type is checked by PHPStan only, so the method signature stays the same:
+**Custom stages.** A stage implements `StageInterface` and names the context it works with in its class docblock. The type is checked by PHPStan only, so the method signature stays the same. `MyStage` stands for a stage of your own:
 
 ```php
 // before
-class WarmCacheStage implements BootStageInterface
+class MyStage implements BootStageInterface
 {
     public function process(AppContext $context): void
     {
@@ -149,13 +149,13 @@ class WarmCacheStage implements BootStageInterface
     }
 }
 
-(new BootPipeline([new WarmCacheStage()]))->run($context);
+(new BootPipeline([new MyStage()]))->run($context);
 
 // after
 /**
  * @implements StageInterface<AppContext>
  */
-class WarmCacheStage implements StageInterface
+class MyStage implements StageInterface
 {
     public function process(AppContext $context): void
     {
@@ -163,7 +163,7 @@ class WarmCacheStage implements StageInterface
     }
 }
 
-(new Pipeline([new WarmCacheStage()]))->run($context);
+(new Pipeline([new MyStage()]))->run($context);
 ```
 
 A stage that calls `$context->stop()` ends the run, and an optional closing stage, the second argument of `Pipeline`, runs last.
