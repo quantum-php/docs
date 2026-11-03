@@ -267,7 +267,31 @@ The starter project's `shared/config/lang.php` already has the new shape. For th
 
 See [Redirecting back](packages/http/response.md#redirecting-back).
 
-### 11. Check the upgrade
+### 11. Constant classes became enums
+
+3.1.1 turns six constant classes into PHP enums: `ReservedKeys`, `AuthKeys`, `Pagination` and, in `Quantum\Database\Enums`, `Type`, `Key` and `Relation`. The table actions of `Table` move to a new `TableAction` enum. **This is a breaking change.** An application that only writes `Relation::BELONGS_TO`, `Type::INT` or `Key::INDEX` keeps working, because the case names and values are the same. Code that treats these names as plain text needs a small change.
+
+An enum case is not its value. Where you need the text, read `->value`, and where text comes from outside, turn it into a case with `from()` or `tryFrom()`:
+
+```php
+$schema[AuthKeys::USERNAME->value];
+
+$relation = Relation::tryFrom('hasOne');
+```
+
+What to check:
+
+- **A case used as an array key, compared with text, or passed to a `string` parameter** needs `->value`. Code that reads the constants of `AuthKeys` with `ReflectionClass::getConstants()` uses `AuthKeys::cases()`.
+- **`Table::setAction()` and `Table::addIndex()`** take only the enum, `TableAction` and `Key`. A number or text such as `addIndex('name', 'unique')` throws a `TypeError`; write `Key::UNIQUE`.
+- **`Table::CREATE`, `Table::ALTER`, `Table::DROP` and `Table::RENAME`** are removed. Use `TableAction::CREATE`, `TableAction::ALTER`, `TableAction::DROP` and `TableAction::RENAME`, see [Supported table actions](packages/database/schema-builder.md#supported-table-actions).
+- **The `type` of a model relation** must be a `Relation` case. `'type' => 'hasOne'` is rejected, see [the relation type contract](packages/model/contracts.md#the-relation-type-is-a-relation-case).
+- **Column types need no change.** `addColumn()`, `modifyColumn()` and `Column` accept a `Type` case or the type as text, so `Type::INT` and `'integer'` both work, see [Column types](packages/database/schema-builder.md#column-types).
+- **`Pagination`** keeps its four names (`PAGINATION_CLASS`, `PAGINATION_CLASS_ACTIVE`, `PER_PAGE`, `PAGE`), read with `->value`, for example `Pagination::PER_PAGE->value`. The numbers `FIRST_PAGE_NUMBER`, `MINIMUM_PAGE_ITEMS_COUNT` and `EDGE_PADDING` moved to `PaginationLimit`, where they are constants read without `->value`.
+- **A subclass** that overrides `Table::setAction()` or `Table::addIndex()` must declare the enum types, and one that overrides `Table::addColumn()`, `Table::modifyColumn()` or the `Column` constructor must declare `Type|string`.
+
+The adapter types, `StatusCode`, `ContentType`, `Env` and `ExitCode` stay constant classes.
+
+### 12. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 
@@ -281,7 +305,8 @@ Then look for the names this guide replaced. Each hit is a section above:
 
 ```bash
 grep -rnF -e 'hook(' -e 'Quantum\Loader' -e 'BootPipeline' -e 'BootStageInterface' \
-  -e 'InitDebuggerStage' -e 'createApplication' -e '@OA\' shared modules helpers
+  -e 'InitDebuggerStage' -e 'createApplication' -e '@OA\' \
+  -e 'Table::CREATE' -e 'Table::ALTER' -e 'Table::DROP' -e 'Table::RENAME' shared modules helpers
 ```
 
 Finally, smoke-test one web request and one `php qt` command, with `app.debug` on and off, and read your log for the deprecation warnings from [section 3](#3-deprecations-are-logged-not-thrown).
