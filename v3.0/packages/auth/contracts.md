@@ -39,7 +39,27 @@ If the resolved service does not implement `AuthServiceInterface`, factory resol
 
 ## User schema contract
 
-`userSchema()` must return an array that includes a `name` entry for every logical key in `AuthKeys`.
+`userSchema()` must return an array with a `name` entry for every case of the `Quantum\Auth\Enums\AuthKeys` enum. The keys of the array are the values of the cases: `username`, `password`, `activationToken`, `resetToken`, `rememberToken`, `otp`, `otpExpiry`, `otpToken`, `accessToken` and `refreshToken`. The `name` is the real field in your storage:
+
+```php
+public function userSchema(): array
+{
+    return [
+        'username' => ['name' => 'email', 'visible' => true],
+        'password' => ['name' => 'password', 'visible' => false],
+        'activationToken' => ['name' => 'activation_token', 'visible' => false],
+        'resetToken' => ['name' => 'reset_token', 'visible' => false],
+        'rememberToken' => ['name' => 'remember_token', 'visible' => false],
+        'otp' => ['name' => 'otp', 'visible' => false],
+        'otpExpiry' => ['name' => 'otp_expires', 'visible' => false],
+        'otpToken' => ['name' => 'otp_token', 'visible' => false],
+        'accessToken' => ['name' => 'access_token', 'visible' => false],
+        'refreshToken' => ['name' => 'refresh_token', 'visible' => false],
+    ];
+}
+```
+
+The schema may hold more fields of your user, such as `firstname`, with a `name` and `visible` of their own.
 
 A field may also include `visible => true`.
 

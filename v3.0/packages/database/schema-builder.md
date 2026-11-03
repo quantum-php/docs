@@ -39,12 +39,14 @@ If the generated SQL is empty, nothing is executed.
 
 ## Supported table actions
 
-`Table` supports these action constants:
+The action of a `Table` is a case of the `Quantum\Database\Enums\TableAction` enum:
 
-- `CREATE`
-- `ALTER`
-- `DROP`
-- `RENAME`
+- `TableAction::CREATE`
+- `TableAction::ALTER`
+- `TableAction::DROP`
+- `TableAction::RENAME`
+
+`TableFactory` sets the action for you: `create()` sets `CREATE`, `get()` sets `ALTER`, `rename()` sets `RENAME` and `drop()` sets `DROP`. You only call `Table::setAction()` yourself when you build a `Table` by hand. It takes a `TableAction` case and nothing else: a number or text throws a `TypeError`.
 
 The generated SQL differs by action:
 
@@ -64,6 +66,34 @@ The fluent API can:
 - `addIndex($columnName, $indexType, $indexName = null)`
 - `dropIndex($indexName)`
 - `after($columnName)`
+
+### Column types
+
+The `$type` of `addColumn()` and `modifyColumn()` is a case of the `Quantum\Database\Enums\Type` enum, or the type as text. The cases are `INT`, `TINYINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `BOOL`, `CHAR`, `VARCHAR`, `TEXT`, `BINARY`, `BLOB`, `ENUM`, `DATE`, `DATETIME`, `TIMESTAMP`, `JSON` and `GEOMETRY`.
+
+Text is used as it is, in upper case, so any SQL type name works, including the ones `Type` has no case for:
+
+```php
+use Quantum\Database\Enums\Type;
+
+$table->addColumn('id', Type::INT, 11);
+$table->addColumn('views', 'bigint', 20);
+```
+
+### Index types
+
+The `$indexType` of `addIndex()` is a case of the `Quantum\Database\Enums\Key` enum: `PRIMARY`, `INDEX`, `UNIQUE`, `FULLTEXT` or `SPATIAL`. Only the enum is accepted: text such as `'unique'` throws a `TypeError`.
+
+`addIndex()` adds the index of an existing table, so it works on a table you got with `TableFactory::get()`:
+
+```php
+use Quantum\Database\Enums\Key;
+
+$table = $tableFactory->get('users');
+$table->addIndex('email', Key::UNIQUE, 'idx_email');
+```
+
+### Column modifiers
 
 After adding or modifying a column, `Table::__call()` forwards column modifiers to `Quantum\Database\Schemas\Column`.
 

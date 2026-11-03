@@ -5,9 +5,9 @@
 Rate limiting starts at the route definition or route group definition.
 
 ```php
-Router::group('/api', function () {
-    Router::get('/posts', 'PostController', 'index');
-    Router::get('/comments', 'CommentController', 'index');
+$route->group('api', function ($route) {
+    $route->get('posts', 'PostController', 'index');
+    $route->get('comments', 'CommentController', 'index');
 })->rateLimit(100, 60);
 ```
 

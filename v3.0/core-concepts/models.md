@@ -30,6 +30,8 @@ Quantum provides a layered model system starting from a base `Model` class and e
 
 ## Usage Pattern
 
+Replace `YourModule`, `YourModel` and `your_table_name` with the names of your own module, model and table.
+
 ```php
 namespace Modules\YourModule\Models;
 
@@ -91,9 +93,11 @@ Quantum models define relationships to other models using the `relations()` meth
 
 This method returns an array mapping related model classes to configuration arrays specifying:
 
-- `type`: Relation type (e.g., `Relation::BELONGS_TO`, `Relation::HAS_MANY`, `Relation::HAS_ONE`)
+- `type`: a `Relation` case (e.g., `Relation::BELONGS_TO`, `Relation::HAS_MANY`, `Relation::HAS_ONE`)
 - `foreign_key`: The foreign key column in the related model
 - `local_key`: The local key column in the current model
+
+The `type` must be a `Relation` case, and text such as `'belongsTo'` is not accepted, see [the relation type contract](../packages/model/contracts.md#the-relation-type-is-a-relation-case).
 
 ### Relationship Types
 

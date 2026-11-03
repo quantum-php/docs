@@ -16,6 +16,8 @@ return function ($route) {
 
 ## Use fully-qualified controllers when you want explicit classes
 
+`ReportController` stands for a controller of your own.
+
 ```php
 use App\Modules\Admin\Controllers\ReportController;
 

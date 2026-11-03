@@ -130,6 +130,8 @@ Behavior to remember:
 
 ## Use plain models for non-database payloads
 
+`PublishPayload` stands for a model of your own.
+
 ```php
 use Quantum\Model\Model;
 

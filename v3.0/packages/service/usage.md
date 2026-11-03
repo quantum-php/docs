@@ -2,6 +2,8 @@
 
 ## Create a service class
 
+`InvoiceService` is a service of your own; name yours after what it does.
+
 ```php
 namespace App\Modules\Billing\Services;
 
@@ -54,6 +56,8 @@ $service = ServiceFactory::create(InvoiceService::class, [
 For shared services, provide runtime args on the first `ServiceFactory::get()` call that creates the instance.
 
 ## Compose services with DI
+
+`MailerService` and `InvoiceRepository` stand for classes of your own.
 
 ```php
 class InvoiceService extends Service

@@ -8,7 +8,7 @@ The package exposes one global helper:
 transform(array $data, TransformerInterface $transformer): array
 ```
 
-It is a thin shortcut for `Quantum\Transformer\Transformer::transform()`.
+It is a thin shortcut for `Quantum\Transformer\Transformer::transform()`. `UserTransformer` is the transformer of your own from the [overview](overview.md#basic-flow).
 
 ```php
 $payload = transform($users, new UserTransformer());

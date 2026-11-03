@@ -19,8 +19,10 @@ The built-in adapters are:
 
 ## Basic example
 
+In a module's `routes/routes.php`, chain `rateLimit()` after the route. The route syntax is on [Router usage](../router/usage.md).
+
 ```php
-Router::get('/api/posts', 'PostController', 'index')
+$route->get('api/posts', 'PostController', 'index')
     ->rateLimit(60, 60);
 ```
 

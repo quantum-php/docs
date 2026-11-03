@@ -115,15 +115,19 @@ Each relation used by `joinTo()` must provide:
 
 Missing definitions raise dedicated `ModelException` variants.
 
+### The relation type is a `Relation` case
+
+The `type` of a relation must be a case of the `Quantum\Database\Enums\Relation` enum, for example `Relation::HAS_ONE`. The text `'hasOne'` is not accepted: join handling rejects it with the message "Relation type `hasOne` is not supported".
+
 ### Supported join relation types are narrower than the enum
 
-`Relation::BELONGS_TO_MANY` exists as a constant, but current join handling supports these relation types:
+`Relation::BELONGS_TO_MANY` is a case of the enum, but current join handling supports these relation types:
 
 - `Relation::HAS_ONE`
 - `Relation::HAS_MANY`
 - `Relation::BELONGS_TO`
 
-For join queries, keep relation definitions within that set.
+For join queries, keep relation definitions within that set. A join on `Relation::BELONGS_TO_MANY` is rejected with the same `ModelException`, "Relation type `belongsToMany` is not supported".
 
 ## Collection contracts
 
