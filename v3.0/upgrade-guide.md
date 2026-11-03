@@ -366,7 +366,7 @@ $route->get('home', function (): Quantum\Http\Response {
 - `Di::get()` no longer auto-registers dependencies.
 - Dependencies must be explicitly registered before retrieval.
 
-Typical pattern:
+Typical pattern, where `SomeService` stands for a service of your own:
 
 ```php
 if (!Di::isRegistered(SomeService::class)) {

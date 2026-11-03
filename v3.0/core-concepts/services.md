@@ -60,7 +60,7 @@ The `service(string $serviceClass, bool $singleton = false)` helper function pro
 
 ## Creating a New Service Example
 
-Here is a basic example of creating a new service in Quantum PHP Framework:
+Here is a basic example of creating a new service in Quantum PHP Framework. Replace `YourModule`, `YourModel` and `YourService` with the names of your own module, model and service:
 
 ```php
 namespace Modules\YourModule\Services;
