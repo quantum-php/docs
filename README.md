@@ -1,6 +1,6 @@
 # Quantum PHP Framework Documentation
 
-[![Quantum](https://quantumphp.io/assets/img/quantum-favicon.png)](https://quantumphp.io)
+[![Quantum](https://quantumphp.io/quantum-logo.png)](https://quantumphp.io)
 
 ## Quantum PHP Framework
 
