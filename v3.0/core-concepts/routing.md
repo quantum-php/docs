@@ -60,13 +60,15 @@ This means:
 - match `GET /`
 - run `MainController::index()`
 
-Each of these methods registers a route for its own HTTP method, so `patch()` handles `PATCH` requests:
+Each of these methods registers a route for its own HTTP method, so `put()`, `patch()` and `delete()` handle `PUT`, `PATCH` and `DELETE` requests:
 
 ```php
+$route->put('my-posts/amend/[uuid=:any]', 'PostManagementController', 'amend');
 $route->patch('posts/[id=:num]', 'PostController', 'update');
+$route->delete('my-posts/delete/[uuid=:any]', 'PostManagementController', 'delete');
 ```
 
-That is the same as writing `$route->add('posts/[id=:num]', 'PATCH', 'PostController', 'update')`. Like `POST`, `PUT` and `DELETE`, a `PATCH` request is checked for a CSRF token when the controller enables it (see [CSRF-aware controller dispatch](#csrf-aware-controller-dispatch)), and its body is read like a `PUT` or `POST` body (see [Request Handling](request.md)).
+Each of these is the same as writing the route with `add()`, for example `$route->add('posts/[id=:num]', 'PATCH', 'PostController', 'update')`. Like `POST`, these requests are checked for a CSRF token when the controller enables it (see [CSRF-aware controller dispatch](#csrf-aware-controller-dispatch)), and `PUT` and `PATCH` bodies are read like a `POST` body (see [Request Handling](request.md)).
 
 ## Multi-method routes
 
