@@ -11,6 +11,9 @@ return function ($route) {
     $route->get('posts/[id=:num]', 'PostController', 'show')
         ->middlewares(['Auth'])
         ->cacheable(true, 300);
+
+    $route->put('posts/[id=:num]', 'PostController', 'update')
+        ->middlewares(['Auth']);
 };
 ```
 
