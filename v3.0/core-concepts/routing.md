@@ -43,6 +43,7 @@ Quantum supports common route methods such as:
 - `get()`
 - `post()`
 - `put()`
+- `patch()`
 - `delete()`
 - `add()` for multiple methods
 
@@ -58,6 +59,14 @@ This means:
 
 - match `GET /`
 - run `MainController::index()`
+
+Each of these methods registers a route for its own HTTP method, so `patch()` handles `PATCH` requests:
+
+```php
+$route->patch('posts/[id=:num]', 'PostController', 'update');
+```
+
+That is the same as writing `$route->add('posts/[id=:num]', 'PATCH', 'PostController', 'update')`. Like `POST`, `PUT` and `DELETE`, a `PATCH` request is checked for a CSRF token when the controller enables it (see [CSRF-aware controller dispatch](#csrf-aware-controller-dispatch)), and its body is read like a `PUT` or `POST` body (see [Request Handling](request.md)).
 
 ## Multi-method routes
 
