@@ -26,7 +26,7 @@ The language is detected on every call but used only when the instance is create
 
 ### URL segment
 
-The URL strategy reads `request()->getSegment((int) config()->get('lang.url_segment'))`.
+The URL strategy reads `request()->getSegment(config()->getInt('lang.url_segment'))`. A `lang.url_segment` value that is not a whole number throws a `ConfigException`.
 
 There is one routing-specific adjustment: when the current route has a prefix and `lang.url_segment` is `1`, the factory increments the segment index to `2`. That keeps the language lookup aligned with prefixed routes.
 

@@ -29,12 +29,12 @@ The package needs no boot step: a tab exists from its first write. `debugbar()->
 
 ## Enablement
 
-`Debugger::isEnabled()` reads `config()->get('app.debug')` and validates it with `FILTER_VALIDATE_BOOLEAN`.
+`Debugger::isEnabled()` reads `config()->getBool('app.debug')`.
 
 Practical effect:
 
-- truthy values such as `true`, `1`, or `'true'` enable rendering
-- falsey values make `render()` return an empty string without collecting anything
+- `true`, `1`, `on` and `yes`, in any letter case, enable rendering
+- every other value, including a missing key, makes `render()` return an empty string without collecting anything
 
 ## What the package collects
 

@@ -34,6 +34,19 @@ $debug = $config->get('debug', false);
 
 Use this pattern for isolated tasks where one file should define the whole config payload.
 
+## Reading booleans and numbers
+
+A config value is whatever the PHP file put there, and often that is text. A line such as `'debug' => env('APP_DEBUG')` stores the string `'false'` when `.env` says `APP_DEBUG=false`, and PHP treats that string as true. Convert the value where you read it:
+
+```php
+$debug = config()->getBool('app.debug');
+$limit = config()->getInt('mailer.transport_log_limit', 1000);
+```
+
+`getBool()` returns `true` for `true`, `1`, `on` and `yes`, in any letter case, and `false` for everything else, including an empty value. `getInt()` returns the number, and throws a `ConfigException` when the value is not a whole number, so a typo such as `abc` shows up at once instead of silently becoming `0`. When the key is missing, or its value is `null`, both return the default: `false` and `0` unless you pass another. `get()` keeps returning the raw value.
+
+Both are methods of the `Config` class, so `config()` has them. They are available since 3.1.2; the exact rules are on the [contracts page](contracts.md#typed-reader-contract).
+
 ## Override values at runtime
 
 You can add or replace values after loading.
