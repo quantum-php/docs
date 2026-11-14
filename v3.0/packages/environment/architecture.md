@@ -24,6 +24,14 @@ Environment::load()
   -> cache loaded values in $envContent
 ```
 
+## How `Environment` is organised
+
+`Environment` implements `EnvironmentInterface` and keeps only its state and `load()`. The rest comes from three traits in `Quantum\Environment\Traits`:
+
+- `AppEnvTrait`: `getAppEnv()` and the `is...()` checks
+- `ValueTrait`: the readers `getValue()`, `getBool()`, `getInt()`, `hasKey()` and `getRow()`
+- `EnvFileTrait`: `updateRow()` and the file lookup and parsing
+
 ## `Environment` lifecycle
 
 `Environment` keeps three pieces of state that matter:
