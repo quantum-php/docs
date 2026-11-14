@@ -48,6 +48,7 @@ With `load()`, keys come from the file directly. With `import()`, the same file 
 
 - `Quantum\Config\Config` manages the in-memory store
 - `Quantum\Config\Contracts\ConfigInterface` defines the public API
+- `Quantum\Config\Traits` holds the code `Config` is built from: `ConfigFileTrait`, `ValueTrait` and `TypedValuesTrait`
 - `Quantum\Config\Setup` describes which file to load
 - `Quantum\Config\Helpers\config.php` exposes the shared helper
 - `Quantum\Config\Exceptions\ConfigException` reports missing files and import-name collisions

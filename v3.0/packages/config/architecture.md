@@ -12,6 +12,14 @@ Config sits between the PHP config files and the rest of the framework.
 
 After that, reads come from memory through `get()`, `has()`, and `all()`. `getBool()` and `getInt()` read through `get()` and convert the value on the way out.
 
+## How `Config` is organised
+
+`Config` implements `ConfigInterface` and keeps only its state and `load()`. The rest comes from three traits in `Quantum\Config\Traits`:
+
+- `ConfigFileTrait`: `import()`, `importIfExists()` and the file lookup
+- `ValueTrait`: `get()`, `has()`, `set()`, `delete()`, `all()` and `flush()`
+- `TypedValuesTrait`: the typed readers `getBool()` and `getInt()`
+
 ## Two storage modes
 
 ### `load()`
