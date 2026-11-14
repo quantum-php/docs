@@ -73,7 +73,11 @@ config()->import($setup);
 The `Quantum\Config\Setup` class acts as a descriptor for file loading.
 
 - **Module Defaulting**: When the `Setup` constructor is called without specifying a `module`, it implicitly defaults to `request()->getCurrentModule()`.
-  *Note:* In CLI or custom non-web contexts, this behavior may resolve configuration unexpectedly based on the current request state. For deterministic results, it is recommended to pass the `module` explicitly to the `Setup` constructor.
+  *Note:* In CLI or custom non-web contexts, this behavior may resolve configuration unexpectedly based on the current request state. For deterministic results, it is recommended to pass the `module` explicitly to the `Setup` constructor, as a named argument:
+
+  ```php
+  $setup = new Setup('config', 'app', module: 'Admin');
+  ```
 
 ### Path Resolution Table
 
@@ -84,7 +88,7 @@ When loading configurations, the framework resolves file locations using the fol
 | **1. Module Path** | `modules/{module}/{pathPrefix}/{fileName}.php` (`{pathPrefix}/{fileName}.php` under the base directory when there is no module) | Preserves case |
 | **2. Shared Fallback** | `shared/{lower(pathPrefix)}/{fileName}.php` | `pathPrefix` is forced to lowercase |
 
-Both paths are relative to the application base directory. *Note: The shared fallback only triggers if `hierarchical` is set to `true` in the `Setup` instance.* When neither file exists, `load()` and `import()` throw a `ConfigException`, and `importIfExists()` returns `false`.
+Both paths are relative to the application base directory. The shared fallback is on by default. Passing the `$hierarchical` argument to the `Setup` constructor, or calling `setHierarchy()`, is deprecated since 3.1.2 and raises `E_USER_DEPRECATED`; both will be removed in 3.2.0, and the fallback will then always be on. When neither file exists, `load()` and `import()` throw a `ConfigException`, and `importIfExists()` returns `false`.
 
 ## What to read next
 
