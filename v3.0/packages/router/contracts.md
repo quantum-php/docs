@@ -22,6 +22,8 @@ Contract:
 
 Methods are required.
 
+`get()`, `post()`, `put()`, `patch()` and `delete()` each register a route for one HTTP method (see [Basic route definitions](../../core-concepts/routing.md#basic-route-definitions)).
+
 `add()` accepts a pipe-delimited list (example: `GET|POST`) and normalizes values before matching.
 
 ## Naming

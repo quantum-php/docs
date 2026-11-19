@@ -291,7 +291,44 @@ What to check:
 
 The adapter types, `StatusCode`, `ContentType`, `Env` and `ExitCode` stay constant classes.
 
-### 12. Check the upgrade
+### 12. Typed `.env` and config values
+
+Everything in `.env` is text, so `'debug' => env('DEBUG', true)` stores the string `'false'` when `.env` says `DEBUG=false`. 3.1.2 adds readers that convert the value where you read it: `env_bool()` and `env_int()` for `.env`, and `config()->getBool()` and `config()->getInt()` for config values. Your config keeps working without them; use them in new config files. See [Reading booleans and numbers](packages/environment/usage.md#reading-booleans-and-numbers) for `.env` and [the same section for config](packages/config/usage.md#reading-booleans-and-numbers).
+
+The framework itself now reads its own settings this way, which changes two cases:
+
+- **A whole-number setting that is not a whole number throws.** `view_cache.ttl`, `mailer.transport_log_limit`, `lang.url_segment` and `logging.message.limit` used to turn text such as `abc` into `0`; now they throw a `ConfigException`. Fix the value in your config or `.env`.
+- **A setting set to `null` gets its default.** `app.debug`, `resource_cache`, `view_cache.ttl`, `view_cache.minify`, `mailer.mail_trap`, `mailer.transport_log_limit`, `lang.url_segment` and `logging.message.limit` read `null` as missing, where it used to mean `0` or `false`.
+
+The 3.1.2 starter project reads `debug`, `resource_cache` and the SMTP and Redis ports with `env_bool()` and `env_int()`. If you copy those lines into your project, `env_int()` rejects an empty value, so a `.env` with `MAIL_PORT=` empty throws when the mailer config loads: set it to a number, for example `MAIL_PORT=25`.
+
+### 13. The hierarchy flag of `Setup` is deprecated
+
+`Quantum\Config\Setup` always looks for a module's config file first and then falls back to `shared/config`. Turning that fallback off is deprecated and will be removed in 3.2.0: passing the third argument, `$hierarchical`, to the constructor, and calling `setHierarchy()`, raise `E_USER_DEPRECATED`, which is logged as described in [section 3](#3-deprecations-are-logged-not-thrown). Nothing changes in behavior.
+
+If you passed the argument only to reach the `module` argument after it, name the module instead:
+
+```php
+// before
+new Setup('config', 'app', true, 'Admin');
+
+// after
+new Setup('config', 'app', module: 'Admin');
+```
+
+See [Config Setup](advanced-features/configuration.md#config-setup).
+
+### 14. `cacheable()` takes effect
+
+`cacheable()` on a route or a group had no effect in 3.0 and 3.1.1: only the global `resource_cache` switch decided whether a page was cached. From 3.1.2 the route setting wins for its route. If your routes already call `cacheable()`, check that you still want it: `cacheable(true)` now caches the page even when `resource_cache` is off, and its TTL replaces `view_cache.ttl`. See [Per-route caching](packages/resourcecache/overview.md#per-route-caching).
+
+### 15. Other changes in 3.1.2
+
+- **Modules generated from 3.1.2 need the 3.1.2 starter project files.** The `DemoWeb` and `DemoApi` templates read their texts from topic files such as `auth.php` and `posts.php` in `shared/resources/lang/<lang>`, not only from `common.php`, and their config uses `env_bool()` and `env_int()`. Copy the lang files from the 3.1.2 starter project before you generate one of these modules. Modules you generated before keep their code and keep working.
+- **A class that extends `LocalFileSystemAdapter` and overrides `glob()`** must declare its return type, `array|false`.
+- **New:** `RouteBuilder::patch()` declares a `PATCH` route, next to `get()`, `post()`, `put()` and `delete()`. Nothing to change.
+
+### 16. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 
@@ -306,7 +343,8 @@ Then look for the names this guide replaced. Each hit is a section above:
 ```bash
 grep -rnF -e 'hook(' -e 'Quantum\Loader' -e 'BootPipeline' -e 'BootStageInterface' \
   -e 'InitDebuggerStage' -e 'createApplication' -e '@OA\' \
-  -e 'Table::CREATE' -e 'Table::ALTER' -e 'Table::DROP' -e 'Table::RENAME' shared modules helpers
+  -e 'Table::CREATE' -e 'Table::ALTER' -e 'Table::DROP' -e 'Table::RENAME' \
+  -e 'setHierarchy(' -e 'cacheable(' shared modules helpers
 ```
 
 Finally, smoke-test one web request and one `php qt` command, with `app.debug` on and off, and read your log for the deprecation warnings from [section 3](#3-deprecations-are-logged-not-thrown).

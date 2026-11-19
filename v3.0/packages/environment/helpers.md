@@ -1,6 +1,6 @@
 # Environment Helpers
 
-The package exposes five helper functions.
+The package exposes seven helper functions.
 
 ## `environment()`
 
@@ -28,6 +28,32 @@ Behavior:
 2. returns `getValue($var, $default)`
 
 Because it delegates to `getValue()`, it throws until the environment has been loaded.
+
+## `env_bool()`
+
+```php
+function env_bool(string $var, bool $default = false): bool
+```
+
+Behavior:
+
+1. resolves the shared `Environment` instance with `environment()`
+2. returns `getBool($var, $default)`
+
+Use it for flags such as `DEBUG`, where the raw text `'false'` would otherwise count as true. See [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
+
+## `env_int()`
+
+```php
+function env_int(string $var, int $default = 0): int
+```
+
+Behavior:
+
+1. resolves the shared `Environment` instance with `environment()`
+2. returns `getInt($var, $default)`
+
+It throws `EnvException::invalidValue()` when the value is not a whole number. See [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
 
 ## `server()`
 

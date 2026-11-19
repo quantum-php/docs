@@ -24,6 +24,7 @@ The `Environment` service implements a "one-shot" loading pattern.
 This helper function provides access to environment variables.
 
 - **Contract**: You must call `load()` before accessing any variables via `env()`. If the environment has not been loaded yet, calling `env()` will throw an `EnvException`.
+- **Typed values**: values from `.env` are text. To read a boolean or an integer, use `env_bool()` and `env_int()`; see [Reading booleans and numbers](../packages/environment/usage.md#reading-booleans-and-numbers).
 
 > **Warning**: In long-lived processes (like workers, daemons, or some test suites), be aware that once `load()` is executed, the environment state is fixed. Reloading variables requires the process or the service state to be reset.
 

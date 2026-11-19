@@ -43,6 +43,7 @@ Quantum supports common route methods such as:
 - `get()`
 - `post()`
 - `put()`
+- `patch()`
 - `delete()`
 - `add()` for multiple methods
 
@@ -58,6 +59,16 @@ This means:
 
 - match `GET /`
 - run `MainController::index()`
+
+Each of these methods registers a route for its own HTTP method, so `put()`, `patch()` and `delete()` handle `PUT`, `PATCH` and `DELETE` requests:
+
+```php
+$route->put('my-posts/amend/[uuid=:any]', 'PostManagementController', 'amend');
+$route->patch('posts/[id=:num]', 'PostController', 'update');
+$route->delete('my-posts/delete/[uuid=:any]', 'PostManagementController', 'delete');
+```
+
+Each of these is the same as writing the route with `add()`, for example `$route->add('posts/[id=:num]', 'PATCH', 'PostController', 'update')`. Like `POST`, these requests are checked for a CSRF token when the controller enables it (see [CSRF-aware controller dispatch](#csrf-aware-controller-dispatch)), and `PUT` and `PATCH` bodies are read like a `POST` body (see [Request Handling](request.md)).
 
 ## Multi-method routes
 
@@ -278,6 +289,8 @@ $route->get('page', 'PageController', 'show')->cacheable(true, 60);
 // Limit this endpoint to 100 requests per 60 seconds
 $route->get('api/posts', 'PostController', 'index')->rateLimit(100, 60);
 ```
+
+`cacheable()` overrides the global `resource_cache` switch for its route: `cacheable(true, 60)` caches the page for 60 seconds even when `resource_cache` is off, and `cacheable(false)` keeps a page out of the cache when it is on. See [Per-route caching](../packages/resourcecache/overview.md#per-route-caching).
 
 ### Group-level configuration
 

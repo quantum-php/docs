@@ -68,6 +68,22 @@ Keys use dot notation because the backing store is a dot-accessible data contain
 - returns the whole data container
 - returns `null` before anything has been loaded, imported, or set
 
+## Typed reader contract
+
+`getBool()` and `getInt()` read through `get()`. For how to use them, see [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
+
+```php
+public function getBool(string $key, bool $default = false): bool;
+public function getInt(string $key, int $default = 0): int;
+```
+
+- a missing key, or a key whose value is `null`, returns the default
+- `getBool()` returns `true` for `true`, `1`, `on` and `yes`, ignoring letter case, and `false` for every other value, including `false`, `0`, `off`, `no` and an empty value
+- `getInt()` returns the number for a whole number or whole-number text such as `587`, and throws `ConfigException::invalidValue()` for any other value, such as `abc`, `1.5` or an empty value
+- `get()` is not affected and keeps returning the raw value
+
+The methods belong to the `Config` class. `ConfigInterface` does not declare them, so code that depends on the interface alone cannot call them.
+
 ## Write contract
 
 ### `set(string $key, $value): void`
@@ -90,4 +106,5 @@ Keys use dot notation because the backing store is a dot-accessible data contain
 
 - a missing file in `load()` or `import()` raises `ConfigException` with the `Setup` exception message (by default ``File `<pathPrefix>/<fileName>` not found!``)
 - duplicate imported section names raise `ConfigException`
+- `getInt()` raises `ConfigException::invalidValue()` for a value that is not a whole number
 - helper resolution can fail if DI registration or resolution fails

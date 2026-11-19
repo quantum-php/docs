@@ -9,6 +9,7 @@ Use it when you want to load PHP config files, read values with dot notation, an
 - loads config arrays from PHP files described by a `Quantum\Config\Setup`
 - stores values in one dot-accessible container
 - supports two loading modes: `load()` for the root store and `import()` for named config sections, plus `importIfExists()` for optional files
+- reads a value as a boolean or a whole number with `getBool()` and `getInt()`
 - exposes a DI-backed `config()` helper for shared access
 
 ## Most applications use `import()`
@@ -47,6 +48,7 @@ With `load()`, keys come from the file directly. With `import()`, the same file 
 
 - `Quantum\Config\Config` manages the in-memory store
 - `Quantum\Config\Contracts\ConfigInterface` defines the public API
+- `Quantum\Config\Traits` holds the code `Config` is built from: `ConfigFileTrait`, `ValueTrait` and `TypedValuesTrait`
 - `Quantum\Config\Setup` describes which file to load
 - `Quantum\Config\Helpers\config.php` exposes the shared helper
 - `Quantum\Config\Exceptions\ConfigException` reports missing files and import-name collisions
