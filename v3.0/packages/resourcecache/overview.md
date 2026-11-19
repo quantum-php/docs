@@ -42,18 +42,41 @@ return response()->html($html);
 
 The package reads two config areas:
 
-- `resource_cache` controls whether cached responses are used
+- `resource_cache` turns cached responses on or off for the whole application
 - `view_cache` controls storage details
+
+A route can override both for its own page, see [Per-route caching](#per-route-caching).
 
 On `setup()`, the package lazily imports `config/view_cache.php` if it has not been loaded yet.
 
-The global `resource_cache` switch is read when you create the `ViewCache` instance. In most applications that config is already available during normal bootstrap. If you construct the cache earlier, create it after config bootstrap or call `enableCaching(true)` for that instance.
+Whether caching is on is decided when you create the `ViewCache` instance: from the matched route's `cacheable()` setting when it has one, otherwise from `resource_cache`. In a web request the framework creates the instance after the route is matched. If you construct the cache yourself earlier, create it after config bootstrap or call `enableCaching(true)` for that instance.
 
 Supported `view_cache` options used by this package:
 
 - `cache_dir` - base cache directory relative to `base_dir()`; defaults to `cache`
-- `ttl` - entry lifetime in seconds; defaults to `300`
+- `ttl` - entry lifetime in seconds; defaults to `300`; a route's `cacheable()` TTL replaces it for that route
 - `minify` - whether HTML is minified before saving; defaults to `false`
+
+### Per-route caching
+
+The global switch fits most pages, but not all of them. An account settings page must always show fresh data, even when the rest of the site is cached, while a page that is slow to render and rarely changes is worth caching even when caching is off elsewhere. Declare that on the route with `cacheable()`:
+
+```php
+return function ($route) {
+    // Cached for 10 minutes, even when resource_cache is off
+    $route->get('about', 'PageController', 'about')->cacheable(true, 600);
+
+    // Never cached, even when resource_cache is on
+    $route->get('account-settings', 'AccountController', 'form')->cacheable(false);
+};
+```
+
+- `cacheable(true)` caches the route's page whatever `resource_cache` says, and `cacheable(false)` leaves it uncached.
+- The second argument is the TTL in seconds for that route's page. Without it, the page uses `view_cache.ttl`.
+- Routes without `cacheable()` follow `resource_cache`.
+- Called after a group, `cacheable()` applies to every route of the group, see [Group-level configuration](../../core-concepts/routing.md#group-level-configuration).
+
+The route setting is read by `ViewCache` itself: its constructor takes `enabled` and `setup()` takes the TTL from `request()->getRouteCacheSettings()`, which is also available as `route_cache_settings()`.
 
 ## Cache layout
 

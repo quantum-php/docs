@@ -290,6 +290,8 @@ $route->get('page', 'PageController', 'show')->cacheable(true, 60);
 $route->get('api/posts', 'PostController', 'index')->rateLimit(100, 60);
 ```
 
+`cacheable()` overrides the global `resource_cache` switch for its route: `cacheable(true, 60)` caches the page for 60 seconds even when `resource_cache` is off, and `cacheable(false)` keeps a page out of the cache when it is on. See [Per-route caching](../packages/resourcecache/overview.md#per-route-caching).
+
 ### Group-level configuration
 
 You can also apply these settings to an entire group of routes:

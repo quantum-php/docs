@@ -13,11 +13,11 @@ Call `setup()` before reading or writing entries. That method:
 
 - loads `view_cache` config when needed
 - resolves the module-aware cache directory
-- applies `ttl`
+- applies the TTL: the matched route's `cacheable()` TTL when it has one, otherwise `view_cache.ttl`
 - applies the minification flag
 - creates the cache directory if it does not exist
 
-`__construct()` also reads the global `resource_cache` toggle into the instance immediately. If you want that flag to reflect config values, instantiate `ViewCache` after config bootstrap or adjust the instance with `enableCaching()`.
+`__construct()` decides immediately whether cached reads are on: from the matched route's `cacheable()` setting when the current request has one, otherwise from the global `resource_cache` toggle. If you want that flag to reflect the route and config values, instantiate `ViewCache` after config bootstrap and routing, or adjust the instance with `enableCaching()`.
 
 ## Key contract
 
