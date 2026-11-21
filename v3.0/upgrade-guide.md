@@ -1,6 +1,117 @@
 # Upgrade Guide
 
-This guide summarizes the changes to make when you upgrade a Quantum project. It has two parts: [3.0 to 3.1](#upgrading-from-30-to-31) and [2.x to 3.0](#upgrading-from-2x-to-30).
+This guide summarizes the changes to make when you upgrade a Quantum project. It has three parts: [3.1 to 3.2](#upgrading-from-31-to-32), [3.0 to 3.1](#upgrading-from-30-to-31) and [2.x to 3.0](#upgrading-from-2x-to-30).
+
+## Upgrading from 3.1 to 3.2
+
+3.2 raises the PHP minimum to 8.2 and moves the dependencies to their newest versions that run on it. Most applications only update `composer.json`; the sections below say where code or setup needs a change.
+
+### 1. Platform and dependencies
+
+**PHP 8.2 or newer.** An application on PHP 8.1 stays on 3.1.x. Check `php -v`, the `php` constraint in your `composer.json` (`^8.2`) and the PHP versions your CI runs.
+
+**The `gd` extension.** `gumlet/php-image-resize` 3, which `UploadedFile::modify()` uses, requires `ext-gd`, so Composer refuses to install the framework without it. `UploadedFile::modify()` itself works as before.
+
+**Your `composer.json`.** Require the framework with `"quantum/framework": "^3.2.0"`. A project created from the starter project also requires `symfony/process` and `symfony/yaml`: raise both to `^7.4`, because the framework's `symfony/console` 7.4 refuses `symfony/process` below 6.4 and Composer reports a conflict.
+
+```json
+"require": {
+    "php": "^8.2",
+    "quantum/framework": "^3.2.0",
+    "symfony/process": "^7.4",
+    "symfony/yaml": "^7.4"
+}
+```
+
+**Newer majors.** The framework requires `psr/log` 3, `firebase/php-jwt` 7 and the Symfony 7.4 line of `symfony/console`, `symfony/var-dumper` and `symfony/var-exporter`. If your `composer.json` pins one of them to an older major, for example `psr/log` `^2.0`, allow the newer one. Commands that extend `Quantum\Console\CliCommand` already have the signatures Symfony 7 expects.
+
+**No action needed:** `Pipeline`, `MatchedRoute` and `RouteFinder` are `readonly` classes now; they are `final`, so nothing extends them.
+
+### 2. The JWT key must be long enough
+
+`firebase/php-jwt` 7 rejects a signing key that is shorter than the algorithm's hash: 32 bytes for `HS256`, the default of `Quantum\Jwt\JwtToken`. The JWT authentication signs with `APP_KEY`, so with a shorter key every sign-in fails with `Provided key is too short`.
+
+Check the length of your `APP_KEY`. If it has fewer than 32 characters, generate a new one:
+
+```bash
+php qt core:key
+```
+
+The command asks before it replaces an existing key. Tokens issued with the old key no longer verify, so API clients must sign in again. See the [JWT overview](packages/jwt/overview.md) for the lengths of the other algorithms.
+
+### 3. Cache keys are typed
+
+The cache adapters implement `psr/simple-cache` 3 and declare its types, for example `get(string $key, mixed $default = null): mixed`.
+
+- A key passed to `get()`, `set()`, `has()` or `delete()` must be a string: `cache()->get(42)` throws a `TypeError`, so write `cache()->get('42')`.
+- `getMultiple()`, `setMultiple()` and `deleteMultiple()` accept any iterable, not only an array. They still accept numeric keys, and throw `Quantum\Cache\Exceptions\InvalidCacheKeyException` for a key that is neither a string nor an integer.
+- A cache adapter of your own that implements `Psr\SimpleCache\CacheInterface`, or a class that extends one of the built-in adapters and overrides these methods, must declare the same types.
+
+See the [cache contracts](packages/cache/contracts.md#key-contract) for the details.
+
+### 4. Register console commands with `addCommand()`
+
+Symfony 7.4 deprecates `Application::add()`, and the framework registers its commands with `Application::addCommand()`. Commands you register through the framework need no change. Code of your own that calls `add()` on the Symfony application logs a deprecation; switch it to `addCommand()`:
+
+```php
+// before: $application->add($command);
+$application->addCommand($command);
+```
+
+### 5. Publish the debug toolbar files again
+
+`php-debugbar/php-debugbar` 3 moved its browser files, and the toolbar loads the bundled `dist/debugbar.min.css` and `dist/debugbar.min.js`. A project that published the 2.x files shows the toolbar without its styles and scripts until you run:
+
+```bash
+php qt install:debugbar
+```
+
+The command copies the new files over the old ones and keeps your own files, such as `custom_debugbar.css`. See [`install:debugbar`](packages/console/built-in-commands.md#installdebugbar).
+
+### 6. OpenAPI generation
+
+`zircote/swagger-php` 7 removed the static `OpenApi\Generator::scan()`. `php qt install:openapi` needs no change, and the generated `spec.json` is the same. Code of your own that builds a spec calls the generator instead:
+
+```php
+use OpenApi\Generator;
+
+$openApi = (new Generator())->generate([$path]);
+```
+
+### 7. Tests in a project created from the starter project
+
+The starter project's tests run on PHPUnit 11.5. If your project keeps them, require `"phpunit/phpunit": "^11.5"` and `"mockery/mockery": "^1.6"` in `require-dev`, then:
+
+- remove the `verbose="true"` attribute from `phpunit.xml`; PHPUnit 11 no longer knows it and reports the file as a deprecated configuration
+- add a `<source>` section to `phpunit.xml` if you collect code coverage (`composer test` does); without it PHPUnit 11 does not process coverage and fails the run:
+
+```xml
+<source>
+    <include>
+        <directory suffix=".php">./shared</directory>
+    </include>
+</source>
+```
+
+- replace `@dataProvider` doc comments with the `#[DataProvider('...')]` attribute (`use PHPUnit\Framework\Attributes\DataProvider;`); PHPUnit 12 no longer reads doc comments.
+
+### 8. Check the upgrade
+
+Update the dependencies and run the checks you already use:
+
+```bash
+composer update
+vendor/bin/phpunit
+composer phpstan
+```
+
+Then look for the names this part replaced. Each hit is a section above:
+
+```bash
+grep -rnF -e 'Generator::scan(' -e '@dataProvider' -e 'verbose=' shared modules helpers tests phpunit.xml
+```
+
+Finally, open a page with `app.debug` on to check the toolbar, sign in once if you use JWT, and run one `php qt` command.
 
 ## Upgrading from 3.0 to 3.1
 

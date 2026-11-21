@@ -24,20 +24,22 @@ Resolution rules:
 
 `cache()` returns `Quantum\Cache\Cache`, which forwards calls to the active adapter.
 
-Supported public methods are the PSR-16 style methods implemented by the adapters:
+Supported public methods are the PSR-16 methods implemented by the adapters, with the types of `psr/simple-cache` 3:
 
-- `get($key, $default = null)`
-- `getMultiple($keys, $default = null)`
-- `has($key)`
-- `set($key, $value, $ttl = null)`
-- `setMultiple($values, $ttl = null)`
-- `delete($key)`
-- `deleteMultiple($keys)`
-- `clear()`
+- `get(string $key, mixed $default = null): mixed`
+- `getMultiple(iterable $keys, mixed $default = null): iterable`
+- `has(string $key): bool`
+- `set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool`
+- `setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool`
+- `delete(string $key): bool`
+- `deleteMultiple(iterable $keys): bool`
+- `clear(): bool`
 
 Calling a method the adapter does not implement throws `CacheException::methodNotSupported(...)`.
 
 ## Key contract
+
+A key is a string. Pass a number as text, `cache()->get('42')`: `cache()->get(42)` throws a `TypeError`, because the methods that take one key declare `string $key`.
 
 All built-in adapters transform the runtime key with:
 
@@ -69,13 +71,15 @@ For file and database storage, expiry is checked lazily on read or presence chec
 
 ## Batch contract
 
-Batch methods are stricter than the PSR interface suggests.
+`getMultiple()`, `setMultiple()` and `deleteMultiple()` accept any iterable: an array, a generator or an iterator. A value that is not iterable throws a `TypeError`.
 
-- `getMultiple()` requires an array of keys
-- `setMultiple()` requires an array of `key => value` pairs
-- `deleteMultiple()` requires an array of keys
+```php
+cache()->setMultiple(['user.1' => $first, 'user.2' => $second], 300);
 
-Passing another iterable type throws `InvalidArgumentException`.
+$users = cache()->getMultiple(['user.1', 'user.2']);
+```
+
+PHP turns a numeric string array key into an integer, so in `setMultiple(['42' => $value])` the key arrives as `42`. The batch methods turn integer keys back into strings, so numeric keys work as expected. Any other key that is not a string, such as `true`, `null` or an object, throws `Quantum\Cache\Exceptions\InvalidCacheKeyException`, which implements `Psr\SimpleCache\InvalidArgumentException`. The message names the type, for example `The cache key must be a string, bool given`.
 
 ## Data contract
 

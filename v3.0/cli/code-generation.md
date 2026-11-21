@@ -205,7 +205,7 @@ Quantum also includes:
 php qt install:debugbar
 ```
 
-This publishes the DebugBar resource files into the public assets directory so the toolbar can render correctly in a project that uses it.
+This publishes the DebugBar resource files into the public assets directory so the toolbar can render correctly in a project that uses it. See [`install:debugbar`](../packages/console/built-in-commands.md#installdebugbar) for what it copies and when to run it again.
 
 ## What generation usually does not mean here
 
