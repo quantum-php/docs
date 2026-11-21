@@ -2,6 +2,10 @@
 
 ## v3.0
 
+### About Quantum
+* [What is Quantum?](v3.0/introduction/what-is-quantum.md)
+* [Why Quantum?](v3.0/introduction/why-quantum.md)
+
 ### Getting Started
 * [Introduction](v3.0/getting-started/introduction.md)
 * [Installation](v3.0/installation.md)

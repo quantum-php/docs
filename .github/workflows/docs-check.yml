@@ -1,0 +1,25 @@
+name: Docs check
+
+# Checks the docs on every pull request into staging and master.
+
+on:
+  pull_request:
+    branches: [staging, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  summary:
+    name: SUMMARY.md matches the pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check SUMMARY.md
+        run: node scripts/check-summary.mjs
