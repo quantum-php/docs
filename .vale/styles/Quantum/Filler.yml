@@ -1,0 +1,10 @@
+extends: existence
+message: "Leave out '%s'."
+level: warning
+ignorecase: true
+tokens:
+  - simply
+  - just
+  - easily
+  - obviously
+  - please

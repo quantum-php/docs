@@ -1,0 +1,9 @@
+extends: existence
+message: "Describe the current behavior instead of its history ('%s'); the upgrade guide is the place for changes."
+level: warning
+ignorecase: true
+tokens:
+  - previously
+  - no longer
+  - nowadays
+  - anymore

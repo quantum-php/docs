@@ -49,3 +49,20 @@ jobs:
 
       - name: Check the Markdown rules
         run: npx --yes markdownlint-cli2@0.18.1
+
+  wording:
+    name: Wording (warnings on added lines)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the wording of the added lines
+        uses: errata-ai/vale-action@v3.0.0
+        with:
+          version: 3.28.1
+          files: README.md,SUMMARY.md,v3.0
+          separator: ","
+          sync: false
+          reporter: github-pr-annotations
+          filter_mode: added
+          fail_on_error: false
