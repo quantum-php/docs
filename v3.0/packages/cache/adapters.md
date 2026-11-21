@@ -154,5 +154,5 @@ All built-in adapters share these contracts:
 
 - stored keys are namespaced through `sha1($prefix . $key)`
 - `get()` returns the provided default when the key is missing, expired, or contains invalid serialized data
-- `getMultiple()`, `setMultiple()`, and `deleteMultiple()` require arrays and throw `InvalidArgumentException` for other iterables
+- `getMultiple()`, `setMultiple()`, and `deleteMultiple()` accept any iterable and reject keys that are not strings or integers (see the [batch contract](contracts.md#batch-contract))
 - `DateInterval` TTL values are converted to seconds at call time

@@ -108,7 +108,18 @@ Contract:
 
 ### `install:debugbar`
 
-Publishes DebugBar assets into `public/assets/DebugBar/Resources`.
+Publishes the browser files of `php-debugbar/php-debugbar` into `public/assets/DebugBar/Resources`, so the debug toolbar can load its styles and scripts. Run it once in a new project, and again after an upgrade that brings a new major version of the package.
+
+```bash
+php qt install:debugbar
+```
+
+Contract:
+
+- the files come from the package's `resources` folder, and the toolbar loads the bundled `dist/debugbar.min.css` and `dist/debugbar.min.js`
+- the command counts as already installed only when both bundled files exist; otherwise it copies again, over files an older version published, and keeps files the application added there, such as `custom_debugbar.css`
+- it creates `public/assets/DebugBar/Resources` when the folder is missing
+- it stops with a `FileSystemException` when the package folder cannot be found or a file cannot be copied, instead of reporting success
 
 ### `install:openapi <module>`
 

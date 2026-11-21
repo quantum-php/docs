@@ -29,6 +29,12 @@ A new `JwtToken` instance:
 
 If the environment layer is unavailable or `APP_KEY` cannot be resolved, construction fails through the Environment package.
 
+The key must be at least as long as the algorithm's hash: 32 bytes for `HS256`, 48 for `HS384` and 64 for `HS512`. A shorter key fails when a token is composed or read, with `Provided key is too short` from `firebase/php-jwt`. An `APP_KEY` generated with `php qt core:key` and its default length is 64 characters long, which is enough for all three:
+
+```bash
+php qt core:key
+```
+
 ## What counts as payload
 
 `compose()` only works after you add at least one payload entry.
