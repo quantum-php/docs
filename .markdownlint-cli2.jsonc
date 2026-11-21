@@ -1,0 +1,12 @@
+// Markdown rules for the docs (https://github.com/DavidAnson/markdownlint).
+// Run from the repository root: npx markdownlint-cli2
+{
+  "config": {
+    "default": true,
+    // Paragraphs are written as one line each.
+    "MD013": false,
+    // Package pages repeat headings such as "Examples" under different sections.
+    "MD024": { "siblings_only": true }
+  },
+  "globs": ["README.md", "SUMMARY.md", "v3.0/**/*.md"]
+}

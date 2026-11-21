@@ -61,4 +61,3 @@ The package has working defaults even when that config file is missing:
 - task directory: `base_dir()/cron`
 - lock directory: `base_dir()/runtime/cron/locks`
 - maximum lock age: `86400` seconds
-

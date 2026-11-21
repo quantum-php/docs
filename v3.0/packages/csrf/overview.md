@@ -40,4 +40,3 @@ That makes the default flow single-use.
 - successful validation removes the token from both session storage and the current request object
 - missing or mismatched tokens throw `CsrfException`
 - `csrf_token()` depends on `APP_KEY`; if that value is missing, the helper throws an app exception instead of returning a token
-

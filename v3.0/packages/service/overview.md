@@ -44,4 +44,3 @@ class PostService extends Service
 - Only classes extending `Quantum\Service\Service` are valid service targets.
 - `service($class)` is fresh-by-default.
 - Undefined method calls on services throw immediately.
-

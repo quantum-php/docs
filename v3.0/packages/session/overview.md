@@ -38,4 +38,3 @@ When no adapter is passed, Session uses `session.default` from `config/session.p
 - `get()` depends on `has()`, so those values resolve as `null`.
 - Use Session APIs for reads and writes instead of relying on backend storage format.
 - Regenerate session IDs after authentication or privilege changes.
-

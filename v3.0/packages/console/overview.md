@@ -34,4 +34,3 @@ The base class also gives you small terminal helpers such as `info()`, `error()`
 - Discovered commands must have a constructor that can be called without required arguments, because `CommandDiscovery` creates them with `newInstance()` and no parameters.
 - `CliCommand::execute()` always returns Symfony's success status after calling `exec()`. In practice, many command failures are printed as messages instead of returning a non-zero exit code.
 - Input and output objects are available only while the command is running. Calling `getArgument()`, `getOption()`, or output helpers before execution raises a runtime error.
-

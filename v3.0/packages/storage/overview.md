@@ -35,4 +35,3 @@ $uploadedFile->save(uploads_dir() . '/users');
 - Cloud adapters keep the same wrapper API, but backend semantics differ (especially naming vs ID-based access).
 - `UploadedFile` validation depends on local temporary upload files.
 - Image modifications are best for local saves.
-

@@ -44,4 +44,3 @@ That means archive name and adapter state are shared for that type inside the cu
 - source files passed to `addFile()` must already exist or the package throws
 - extraction returns `bool`, so failed extracts are not always raised as exceptions
 - some adapter-specific behavior differs, especially around partial extraction and archive cleanup
-

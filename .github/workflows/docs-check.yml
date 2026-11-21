@@ -36,3 +36,16 @@ jobs:
           lycheeVersion: v0.24.2
           args: --config lychee.toml README.md SUMMARY.md 'v3.0/**/*.md'
           fail: true
+
+  markdown:
+    name: Markdown structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the Markdown rules
+        run: npx --yes markdownlint-cli2@0.18.1

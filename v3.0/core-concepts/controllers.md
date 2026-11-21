@@ -190,6 +190,7 @@ That broader structure helps keep controllers from becoming too large.
 Quantum supports both styles clearly.
 
 ### Web controllers
+
 Usually:
 
 - prepare layouts
@@ -197,6 +198,7 @@ Usually:
 - return HTML
 
 ### API controllers
+
 Usually:
 
 - work with JSON responses

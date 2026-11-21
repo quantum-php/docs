@@ -63,4 +63,3 @@ See [Rules](rules.md) for the full rule set and the important caveats for each c
 - Rules do not short-circuit. If one field has three failing rules, all three errors are collected.
 - Some rules depend on other packages at runtime, especially `exists`, `unique`, `captcha`, and translated error output.
 - File rules expect `Quantum\Storage\UploadedFile` values. A missing upload is not skipped automatically.
-

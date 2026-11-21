@@ -15,6 +15,7 @@ That means when you run commands such as `php qt serve`, you are using the frame
 The console command system is split across the core framework and the starter project.
 
 ### In `framework`
+
 The core framework provides:
 
 - the base command class: `Quantum\Console\CliCommand`
@@ -35,6 +36,7 @@ The core framework provides:
   - `core:version`
 
 ### In `project`
+
 The starter project adds its own project-level commands under:
 
 ```text
@@ -215,6 +217,7 @@ This is important because it shows that Quantum commands are not limited to tiny
 In `CliCommand`, command arguments and options are declared as arrays.
 
 ### Arguments
+
 Argument definitions use values such as:
 
 - `required`
@@ -230,6 +233,7 @@ protected array $args = [
 ```
 
 ### Options
+
 Option definitions use values such as:
 
 - `none`
@@ -289,11 +293,11 @@ Tasks are discovered by scanning PHP files within the configured `cron.path` dir
 
 When `cron:run` is invoked, the `CronManager`:
 
-1.  **Task Discovery**: Scans the configured cron directory for task files.
-2.  **Locking Mechanism**: Utilizes `CronLock` to manage task exclusivity.
-    *   **Acquire/Release**: Prevents concurrent execution of the same task.
-3.  **Run Statistics**: Returns an array of execution statistics including `total`, `executed`, `skipped`, `failed`, and `locked` task counts.
-4.  **Bypass**: Use `--force` with `cron:run` to bypass lock acquisition and release.
+1. **Task Discovery**: Scans the configured cron directory for task files.
+2. **Locking Mechanism**: Utilizes `CronLock` to manage task exclusivity.
+    - **Acquire/Release**: Prevents concurrent execution of the same task.
+3. **Run Statistics**: Returns an array of execution statistics including `total`, `executed`, `skipped`, `failed`, and `locked` task counts.
+4. **Bypass**: Use `--force` with `cron:run` to bypass lock acquisition and release.
 
 *Note: The scheduler requires a system-level crontab entry to trigger `php qt cron:run` periodically.*
 

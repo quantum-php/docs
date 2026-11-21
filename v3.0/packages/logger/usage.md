@@ -68,17 +68,17 @@ $messages = logger()->getAdapter()->getMessages();
 
 ## Pick the right backend
 
-### Use `single` when:
+### Use `single` when
 
 - you want one stable file such as `storage/logs/app.log`
 - external tooling already tails or rotates one known file
 
-### Use `daily` when:
+### Use `daily` when
 
 - you want one log file per day
 - you prefer date-based separation without external naming logic
 
-### Rely on debug-mode `message` when:
+### Rely on debug-mode `message` when
 
 - you are troubleshooting a page locally
 - you want its logs in the debug toolbar instead of on disk

@@ -18,6 +18,7 @@ If your project is still using the starter default `sleekdb` adapter, migration 
 ## Migration Actions
 
 Supported actions include:
+
 - create
 - alter
 - rename

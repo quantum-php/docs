@@ -74,9 +74,11 @@ That is especially helpful when debugging or onboarding into an older project.
 There are two big reasons.
 
 ### 1. It teaches the framework's intended workflow
+
 When a framework ships CLI commands, those commands usually reflect how the framework expects developers to work.
 
 ### 2. It reduces manual repetition
+
 You can always create files and folders manually, but the CLI helps you stay aligned with the framework's conventions.
 
 That becomes more valuable as the project grows.

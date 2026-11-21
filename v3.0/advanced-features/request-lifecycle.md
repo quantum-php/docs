@@ -130,12 +130,15 @@ That is the request lifecycle in action.
 A few mistakes are common.
 
 ### Confusing routing with execution
+
 Routes describe the destination. They do not do all the work themselves.
 
 ### Forgetting middleware in the middle
+
 Many people jump straight from route to controller. In real apps, middleware often sits in between.
 
 ### Treating views as independent from controllers
+
 Views are usually part of the response chosen by the controller, not a separate routing destination.
 
 ## What to read next

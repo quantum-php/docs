@@ -42,4 +42,3 @@ After setup:
 - Production logging happens in the web exception path.
 - Uncaught web exceptions use a 500 response.
 - Source snippets appear when the filesystem adapter can read local source files.
-

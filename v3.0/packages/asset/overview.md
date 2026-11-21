@@ -53,4 +53,3 @@ Lower positions render first inside the same asset type. Assets without an expli
 - CSS and JavaScript are rendered separately.
 - The helper returns one shared manager instance for the current process, so registered assets stay in memory until you flush them.
 - `assets()` only accepts the built-in type keys: `css` and `js`.
-

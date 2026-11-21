@@ -29,4 +29,3 @@ cookie()->delete('theme');
 - `time` is treated as seconds from now; `0` creates a session cookie
 - `has()` treats empty values as missing, so `''`, `0`, `'0'`, `false`, and `null` do not count as present
 - `get()` depends on `has()`, so those values come back as `null`
-

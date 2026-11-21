@@ -3,10 +3,12 @@
 ## v3.0
 
 ### About Quantum
+
 * [What is Quantum?](v3.0/introduction/what-is-quantum.md)
 * [Why Quantum?](v3.0/introduction/why-quantum.md)
 
 ### Getting Started
+
 * [Introduction](v3.0/getting-started/introduction.md)
 * [Installation](v3.0/installation.md)
 * [Quickstart](v3.0/getting-started/quickstart.md)
@@ -15,6 +17,7 @@
 * [Upgrade Guide](v3.0/upgrade-guide.md)
 
 ### Core Concepts
+
 * [Routing](v3.0/core-concepts/routing.md)
 * [Request](v3.0/core-concepts/request.md)
 * [Controllers](v3.0/core-concepts/controllers.md)
@@ -25,6 +28,7 @@
 * [Modules](v3.0/core-concepts/modules.md)
 
 ### Advanced Features
+
 * [Request Lifecycle](v3.0/advanced-features/request-lifecycle.md)
 * [Configuration](v3.0/advanced-features/configuration.md)
 * [Environment](v3.0/advanced-features/environment.md)
@@ -33,6 +37,7 @@
 * [Dependency Injection](v3.0/advanced-features/dependency-injection.md)
 
 ### CLI
+
 * [CLI Overview](v3.0/cli/overview.md)
 * [The qt Command-Line Tool](v3.0/cli/qt-command-line-tool.md)
 * [Development Server](v3.0/cli/development-server.md)
@@ -40,6 +45,7 @@
 * [Console Commands](v3.0/cli/console-commands.md)
 
 ### Packages
+
 * App
   * [Overview](v3.0/packages/app/overview.md)
   * [Architecture](v3.0/packages/app/architecture.md)
@@ -259,4 +265,3 @@
   * [Contracts](v3.0/packages/view/contracts.md)
   * [Helpers](v3.0/packages/view/helpers.md)
   * [Usage](v3.0/packages/view/usage.md)
-
