@@ -103,6 +103,7 @@ Examples from the upstream templates include:
 The upstream templates show several common middleware responsibilities.
 
 ### Authentication
+
 Example:
 
 - `Auth`
@@ -110,6 +111,7 @@ Example:
 This checks whether the user is authenticated before allowing access.
 
 ### Guest-only access
+
 Example:
 
 - `Guest`
@@ -117,6 +119,7 @@ Example:
 This prevents authenticated users from visiting routes meant only for guests, such as sign-in pages.
 
 ### Authorization and ownership
+
 Examples:
 
 - `Editor`
@@ -126,11 +129,13 @@ Examples:
 These restrict actions based on role or ownership.
 
 ### Request validation
+
 Some middleware classes validate incoming data before allowing the request to continue.
 
 The `Editor` middleware template is a good example. It validates request fields and uploaded image constraints before continuing.
 
 ### HTTP basic auth
+
 The Toolkit template includes `BasicAuth`, which protects routes using HTTP basic authentication.
 
 ## Web and API middleware behave differently
@@ -138,6 +143,7 @@ The Toolkit template includes `BasicAuth`, which protects routes using HTTP basi
 The upstream templates show an important pattern.
 
 ### Web middleware
+
 Often redirects the user when access fails.
 
 For example:
@@ -147,6 +153,7 @@ For example:
 - flash validation errors and redirect back
 
 ### API middleware
+
 Usually returns JSON errors instead.
 
 For example:

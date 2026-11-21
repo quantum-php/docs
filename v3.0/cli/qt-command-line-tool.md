@@ -36,11 +36,13 @@ That tells Quantum to boot as a console app instead of as a web app.
 From the upstream console boot flow, this is the basic sequence.
 
 ### 1. `qt` starts the console app
+
 The starter project calls `AppFactory::create(AppType::CONSOLE, __DIR__)`.
 
 That gives Quantum a base directory and tells it to use the console application path.
 
 ### 2. Quantum builds the console adapter
+
 In core, console mode uses `ConsoleAppAdapter`.
 
 Before anything else, it sets up:
@@ -52,6 +54,7 @@ Before anything else, it sets up:
 So `qt` is not a shell wrapper around random scripts. It boots a real console application.
 
 ### 3. Helpers load and core commands are registered
+
 Next, Quantum loads the helper functions and registers the framework's built-in commands from:
 
 ```text
@@ -69,9 +72,11 @@ These include commands such as:
 - `core:key`
 
 ### 4. Quantum loads the project
+
 Then Quantum loads what commands usually rely on: `.env`, the app config, and the error handler. It also names the console application from `app.name` and `app.version`.
 
 ### 5. App commands are registered
+
 Last, Quantum registers project-level commands from:
 
 ```text
@@ -86,6 +91,7 @@ That means `qt` can run both:
 - custom commands defined by your project
 
 ### 6. The command is validated and executed
+
 The console app reads the first CLI argument as the command name.
 
 If the command does not exist, Quantum throws ``Command `<name>` is not defined``.

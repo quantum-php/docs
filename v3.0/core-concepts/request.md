@@ -25,7 +25,7 @@ Uploaded files are handled through the `setUploadedFiles` method, which follows 
 
 1. **`$_FILES` Normalization**: PHP's native `$_FILES` global is processed via the `handleFiles()` method, which iterates over all top-level keys in `$_FILES` and normalizes both single and multi-file payloads.
 2. **Multipart Raw Files**: Files extracted during raw multipart parsing are merged into the collection if present.
-3. **Resulting Collection**: The finalized files collection contains the normalized keys from `$_FILES` merged with any files extracted by the raw multipart parser. 
+3. **Resulting Collection**: The finalized files collection contains the normalized keys from `$_FILES` merged with any files extracted by the raw multipart parser.
 
 See the [Advanced Request Lifecycle](../advanced-features/request-lifecycle.md) for further technical details on the parsing contract.
 

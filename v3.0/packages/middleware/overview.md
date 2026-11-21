@@ -56,4 +56,3 @@ A middleware can:
 - The resolved class extends `Quantum\Middleware\Middleware`.
 - Missing classes raise `MiddlewareException`; wrong base types raise the shared base exception for invalid inheritance.
 - Rate limiting, when present on the route, always runs before module middleware.
-

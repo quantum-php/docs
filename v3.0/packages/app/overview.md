@@ -56,4 +56,3 @@ Practical effect:
 - changing the base directory in a later call does not create a new instance for the same type
 
 If you need a fresh runtime for the same type, call `AppFactory::destroy($type)` before creating it again.
-

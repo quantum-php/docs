@@ -114,4 +114,3 @@ That makes the built-in cache a good fit for per-visitor HTML. For shared page c
 ### Enable minification when the HTML minifier package is available
 
 When minification is enabled, `set()` expects the `voku\helper\HtmlMin` package to be installed. If it is missing, the write raises a resource-cache exception.
-

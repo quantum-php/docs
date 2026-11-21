@@ -98,7 +98,6 @@ $route->get('post/[id=:num]', 'PostController', 'show');
 $route->get('post/[id1=:num]', 'PostController', 'show');
 ```
 
-
 ### Pattern variations
 
 - **Optional segments**: Append `?` to the segment (e.g., `verify/[code=:any]?`)
@@ -120,7 +119,6 @@ $route->add('verify/[code=:alpha:10]?', 'GET|POST', 'AuthController', 'verify');
 
 The router also exposes helper functions for current route information, including route parameters.
 
-
 ## Named routes
 
 A route can be given a name:
@@ -133,7 +131,7 @@ Named routes make it easier to refer to important endpoints by intention instead
 
 > **Note**: Route name uniqueness is enforced **per module**, not globally. This allows you to safely use identical route names in different modules.
 
-**Example: Reusing route names**
+### Example: Reusing route names
 
 ```php
 // In the Api module
@@ -142,7 +140,6 @@ $route->get('data', 'ApiController', 'data')->name('list');
 // In the Web module (Safe, same name, different module)
 $route->get('list', 'WebController', 'list')->name('list');
 ```
-
 
 ## Route groups
 
@@ -200,7 +197,7 @@ Quantum supports both:
 If a route is closure-based, the dispatcher invokes the closure directly.
 If a route uses a controller, the dispatcher instantiates the controller and calls the action method.
 
-**Important**: Both closure handlers and controller actions must return an instance of `Quantum\Http\Response`. 
+**Important**: Both closure handlers and controller actions must return an instance of `Quantum\Http\Response`.
 
 The dispatcher enforces this contract via `requireResponse(...)` and will throw a runtime exception if the handler returns any other type.
 
@@ -217,7 +214,6 @@ $route->get('profile', function() {
     return '...content...'; // String returned, not a Response object
 });
 ```
-
 
 ## Controller lifecycle hooks
 
@@ -256,7 +252,7 @@ The router follows a "first-hit" matching strategy. Route registration order is 
 
 > **Best Practice**: Always declare specific (static) routes before broad (dynamic) or catch-all routes to avoid unexpected dispatch behavior.
 
-**Example: Overlapping routes**
+### Example: Overlapping routes
 
 ```php
 // If this route is declared first, it will always match
@@ -317,4 +313,3 @@ After routing, the next best topics are:
 - [Controllers](controllers.md)
 - [Middleware](middleware.md)
 - [Request Handling](request.md)
-

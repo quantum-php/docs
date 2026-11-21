@@ -6,7 +6,7 @@
 
 Quantum is a lightweight, high-performance PHP framework built with simplicity, modularity, and developer experience in mind. Designed for both beginners and professionals, it allows rapid development of web applications using a clean and expressive syntax.
 
-[![](https://github.com/quantum-php/framework/actions/workflows/php.yml/badge.svg)](https://github.com/quantum-php/framework/actions/workflows/php.yml)[![](https://codecov.io/gh/quantum-php/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/quantum-php/framework)[![](https://scrutinizer-ci.com/g/quantum-php/framework/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/quantum-php/framework)[![](https://img.shields.io/github/license/quantum-php/framework)](https://github.com/quantum-php/framework/blob/master/LICENSE)[![](https://img.shields.io/packagist/v/quantum/framework)](https://packagist.org/packages/quantum/framework)
+[![Build](https://github.com/quantum-php/framework/actions/workflows/php.yml/badge.svg)](https://github.com/quantum-php/framework/actions/workflows/php.yml)[![Coverage](https://codecov.io/gh/quantum-php/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/quantum-php/framework)[![Code quality](https://scrutinizer-ci.com/g/quantum-php/framework/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/quantum-php/framework)[![License](https://img.shields.io/github/license/quantum-php/framework)](https://github.com/quantum-php/framework/blob/master/LICENSE)[![Latest version](https://img.shields.io/packagist/v/quantum/framework)](https://packagist.org/packages/quantum/framework)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fquantum-php%2Fdocs?ref=badge_shield)
 ***
 
@@ -76,20 +76,20 @@ Quantum is a modern MVC/HMVC framework that provides the core tools needed to bu
 
 ### Features
 
-* MVC & HMVC architecture
-* Powerful routing with support for RESTful routes
-* Built-in authentication & CSRF protection
-* Modular structure with organized services and modules
-* Environment-based configuration system
-* Templating system with escaping and layout support
-* File uploads, storage and file system abstraction
-* Mailer integration
-* Multiple database adapter support (Idiorm, SleekDB)
-* Flexible caching system with multiple drivers (File, Database, Redis, Memcache)
-* Simple and extendable testing setup
-* Localization and translation support
-* CLI tools for rapid scaffolding and dev tasks
-* JWT support for APIs
+- MVC & HMVC architecture
+- Powerful routing with support for RESTful routes
+- Built-in authentication & CSRF protection
+- Modular structure with organized services and modules
+- Environment-based configuration system
+- Templating system with escaping and layout support
+- File uploads, storage and file system abstraction
+- Mailer integration
+- Multiple database adapter support (Idiorm, SleekDB)
+- Flexible caching system with multiple drivers (File, Database, Redis, Memcache)
+- Simple and extendable testing setup
+- Localization and translation support
+- CLI tools for rapid scaffolding and dev tasks
+- JWT support for APIs
 
 ***
 

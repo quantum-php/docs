@@ -56,4 +56,3 @@ This package is a good fit when:
 - The transformer object must implement `TransformerInterface`.
 - The package only transforms arrays of items. If you need to transform one record, wrap it in an array or call your transformer directly.
 - The package does not validate or normalize transformer output. Each `transform()` call may return any value.
-

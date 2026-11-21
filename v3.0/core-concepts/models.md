@@ -105,7 +105,7 @@ The `type` must be a `Relation` case, and text such as `'belongsTo'` is not acce
 - `Relation::HAS_MANY`: This model has many related models (one-to-many).
 - `Relation::HAS_ONE`: This model has a single related model (one-to-one).
 
-### Example:
+### Example
 
 ```php
 public function relations(): array

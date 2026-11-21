@@ -39,4 +39,3 @@ The factory keeps one resolved `Captcha` wrapper per adapter name for the life o
 - visible vs invisible is adapter state; if you call `setType()`, later calls on the same reused helper instance keep that type until you change it again
 - verification returns only `true` or `false`; provider error details are reduced to the first stored error code from `getErrorMessage()`
 - tokens older than 60 seconds are treated as replay attacks even if the provider response is otherwise successful
-

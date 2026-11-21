@@ -1,0 +1,68 @@
+name: Docs check
+
+# Checks the docs on every pull request into staging and master.
+
+on:
+  pull_request:
+    branches: [staging, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  summary:
+    name: SUMMARY.md matches the pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Check SUMMARY.md
+        run: node scripts/check-summary.mjs
+
+  links:
+    name: Links and anchors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the links between the pages
+        uses: lycheeverse/lychee-action@v2.9.0
+        with:
+          lycheeVersion: v0.24.2
+          args: --config lychee.toml README.md SUMMARY.md 'v3.0/**/*.md'
+          fail: true
+
+  markdown:
+    name: Markdown structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Check the Markdown rules
+        run: npx --yes markdownlint-cli2@0.18.1
+
+  wording:
+    name: Wording (warnings on added lines)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the wording of the added lines
+        uses: errata-ai/vale-action@v3.0.0
+        with:
+          version: 3.28.1
+          files: README.md,SUMMARY.md,v3.0
+          separator: ","
+          sync: false
+          reporter: github-pr-annotations
+          filter_mode: added
+          fail_on_error: false

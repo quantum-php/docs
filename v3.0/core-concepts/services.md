@@ -55,7 +55,6 @@ The `service(string $serviceClass, bool $singleton = false)` helper function pro
 - **`$singleton = false` (default)**: Returns a fresh instance of the service via `ServiceFactory::create()`, which invokes `Di::create()` to resolve dependencies.
 - **`$singleton = true`**: Returns a shared instance of the service via `ServiceFactory::get()`, which invokes `Di::get()` to return a singleton from the DI container.
 
-
 ---
 
 ## Creating a New Service Example

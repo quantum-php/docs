@@ -76,4 +76,3 @@ Helpers like `base_dir()` and `public_dir()` require `AppContext` to be set. Cal
 ### Constructor-heavy console commands
 
 The console adapter instantiates discovered command classes directly. If a command requires constructor arguments, it will not fit the built-in registration flow.
-

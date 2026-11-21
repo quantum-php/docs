@@ -1,0 +1,11 @@
+extends: substitution
+message: "Write '%s' instead of '%s'."
+level: warning
+ignorecase: false
+swap:
+  QuantumPHP: Quantum
+  Github: GitHub
+  Phpunit: PHPUnit
+  phpunit: PHPUnit
+  Phpstan: PHPStan
+  phpstan: PHPStan

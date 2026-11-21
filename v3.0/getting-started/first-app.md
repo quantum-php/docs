@@ -138,15 +138,19 @@ That is enough to continue through the docs without losing context.
 A few common points are worth clearing up early.
 
 ### 1. Routes do not contain the full application logic
+
 Routes should describe request mapping, not become the entire app.
 
 ### 2. Controllers are not views
+
 Controllers prepare and coordinate. Views handle presentation.
 
 ### 3. HTML and JSON are both valid first outputs
+
 Your first app does not have to be page-only. Quantum supports both traditional web flows and API-style responses.
 
 ### 4. Middleware is part of the request path
+
 Even in small apps, middleware often appears quickly for auth, guest access, validation, or ownership checks.
 
 ## Suggested next reading

@@ -34,9 +34,9 @@ Modules are part of the application startup flow, not just a project-organizatio
 
 The framework's module loader manages application startup in two phases:
 
-1.  **Dependency Registration**: During initialization, the loader scans modules listed in `shared/config/modules.php` and loads dependencies from `modules/<ModuleName>/config/dependencies.php` **only for modules marked as enabled**.
+1. **Dependency Registration**: During initialization, the loader scans modules listed in `shared/config/modules.php` and loads dependencies from `modules/<ModuleName>/config/dependencies.php` **only for modules marked as enabled**.
 
-2.  **Route Loading**: After dependencies are registered, the loader loads route definitions from `modules/<ModuleName>/routes/routes.php` **only for modules marked as enabled**.
+2. **Route Loading**: After dependencies are registered, the loader loads route definitions from `modules/<ModuleName>/routes/routes.php` **only for modules marked as enabled**.
 
 Modules directly affect both bootstrap behavior and route availability.
 
@@ -75,6 +75,7 @@ This is where module-specific service bindings are declared.
 The templates make the module shape clear.
 
 ### Default API module template
+
 Includes areas such as:
 
 - `Controllers/`
@@ -82,6 +83,7 @@ Includes areas such as:
 - `routes/`
 
 ### Default Web module template
+
 Includes areas such as:
 
 - `Controllers/`
@@ -90,6 +92,7 @@ Includes areas such as:
 - `assets/`
 
 ### Demo module templates
+
 Demo templates also include:
 
 - `DTOs/`

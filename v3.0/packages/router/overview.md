@@ -42,4 +42,3 @@ Supported parameter types:
 - Short controller names resolve inside the current module; fully-qualified class names opt into an explicit target.
 - Controllers are instantiated directly, so action parameters are the right place for DI-backed request values.
 - Route names stay unique inside a module.
-

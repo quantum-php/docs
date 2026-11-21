@@ -48,4 +48,3 @@ If you need trusted HTML to pass through unchanged, wrap that value in `RawParam
 - The factory returns a shared `View` instance, so params, layout state, and layout asset definitions continue across helper calls in the same container lifecycle.
 - `getContent()` returns the body from the most recent full `render()`. Partial renders keep that previous full-render content in place.
 - The package delegates template lookup and adapter selection to the Renderer package.
-

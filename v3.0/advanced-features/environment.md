@@ -15,7 +15,7 @@ The `Environment` service implements a "one-shot" loading pattern.
 
 ### `load()`
 
-- **One-shot**: Once the environment is loaded, subsequent calls to `load()` are no-ops. 
+- **One-shot**: Once the environment is loaded, subsequent calls to `load()` are no-ops.
 - **Initialization**: It reads `app_env` from `shared/config/env.php`, picks the matching `.env` file, validates that both files exist (`EnvException` otherwise), loads the variables, and marks the environment as loaded.
 - The boot does this for you; you call it yourself only in custom bootstraps or tests.
 
@@ -43,7 +43,6 @@ The `Server` class provides a controlled gateway to the server state.
 | `ip()` | Precedence: `HTTP_CLIENT_IP` -> `HTTP_X_FORWARDED_FOR` -> `REMOTE_ADDR`. |
 
 > **Proxy/Security Caveat**: The `ip()` method trusts headers provided by the client (proxies/load balancers). In production environments, ensure your entry point configures the application to support only trusted proxies.
-
 
 ```php
 use Quantum\Environment\Environment;

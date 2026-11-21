@@ -40,4 +40,3 @@ The factory keeps one resolved `Cache` instance per adapter name for the life of
 - `clear()` is backend-wide for the configured store. It is not limited to the current prefix or to keys created by one caller.
 - batch methods accept arrays only, even though the PSR signatures say `iterable`
 - expiry cleanup is lazy for file and database storage: expired entries are removed when they are checked
-

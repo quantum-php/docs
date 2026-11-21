@@ -21,7 +21,7 @@ The `Config` class loads configuration files described by a `Quantum\Config\Setu
 ## API Methods
 
 - `load(Setup $setup)`: Load all configuration files.
-- `import(Setup $setup)`: Import additional config files. 
+- `import(Setup $setup)`: Import additional config files.
 - `importIfExists(Setup $setup)`: Import a config file only when it exists; returns `false` otherwise.
   - *Note:* The `filename` defined in the `Setup` object is strictly used as the top-level key for the imported data. `Config::import()` always structures imported data as `[$fileName => $data]`. Empty or `null` filenames are not supported and will result in implicit namespacing under an empty or null key; always provide a unique, non-empty filename to ensure proper access and collision detection.
 - `get(string $key, $default = null)`: Retrieve a config value.
@@ -97,5 +97,3 @@ After configuration fundamentals, continue with:
 - [Environment](environment.md)
 - [Dependency Injection](dependency-injection.md)
 - [Modules](../core-concepts/modules.md)
-
-

@@ -60,4 +60,3 @@ With `load()`, keys come from the file directly. With `import()`, the same file 
 - `import()` always stores loaded data under the `Setup` filename.
 - Import collisions are only guarded by that top-level filename. Re-importing the same truthy filename throws a `ConfigException`.
 - For predictable imports, use a real non-empty filename in `Setup`.
-

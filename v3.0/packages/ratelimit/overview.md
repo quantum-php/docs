@@ -70,4 +70,3 @@ Blocked responses use this payload:
 - Unsupported adapter names fail with `RateLimitException::adapterNotSupported(...)`.
 - Adapter configuration is loaded from `config/rate_limit.php` the first time the factory is used.
 - Storage backends report errors differently: file storage returns a blocked hit when lock/state access fails, while Redis client issues may surface as runtime exceptions.
-

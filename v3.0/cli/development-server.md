@@ -71,12 +71,15 @@ That is a much smoother onboarding path.
 ## Common mistakes
 
 ### Running the command outside the project directory
+
 If you are not inside the correct project folder, the command may fail or behave unexpectedly.
 
 ### Forgetting to finish installation first
+
 If dependencies or setup steps are missing, the app may not boot correctly.
 
 ### Treating the development server like production infrastructure
+
 This command is for local development. Production deployment should use a proper web server setup.
 
 ## What to do after the server works
