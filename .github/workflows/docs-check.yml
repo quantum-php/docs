@@ -23,3 +23,16 @@ jobs:
 
       - name: Check SUMMARY.md
         run: node scripts/check-summary.mjs
+
+  links:
+    name: Links and anchors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the links between the pages
+        uses: lycheeverse/lychee-action@v2.9.0
+        with:
+          lycheeVersion: v0.24.2
+          args: --config lychee.toml README.md SUMMARY.md 'v3.0/**/*.md'
+          fail: true

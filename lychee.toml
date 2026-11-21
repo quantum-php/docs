@@ -1,0 +1,7 @@
+# Link check for the docs (https://lychee.cli.rs).
+# Checks the links between the pages and the headings they point to (#anchor).
+# Links to other sites are skipped, so a slow site cannot fail a pull request.
+
+offline = true
+include_fragments = "anchor-only"
+no_progress = true
