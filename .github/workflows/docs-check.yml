@@ -15,9 +15,9 @@ jobs:
     name: SUMMARY.md matches the pages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
 
@@ -28,7 +28,7 @@ jobs:
     name: Links and anchors
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check the links between the pages
         uses: lycheeverse/lychee-action@v2.9.0
@@ -41,9 +41,9 @@ jobs:
     name: Markdown structure
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
 
@@ -54,7 +54,7 @@ jobs:
     name: Wording (warnings on added lines)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check the wording of the added lines
         uses: errata-ai/vale-action@v3.0.0
