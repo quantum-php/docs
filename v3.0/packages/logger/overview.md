@@ -64,6 +64,6 @@ In debug mode, `Logger::log()` bypasses threshold filtering and reports every ca
 - The active log threshold is stored in static `LoggerConfig` state, so resolving a logger updates process-wide logging behavior.
 - `LoggerFactory` caches one `Logger` instance per adapter name inside the factory service.
 - The `message` adapter is not available outside debug mode.
-- File adapters only use the `trace` context key for output formatting. Other context values are ignored by file logging.
+- File adapters write the context after the message as JSON, and a `trace` that is text on its own lines; see [File output format](adapters.md#file-output-format). Everything in the context reaches the log file.
 - The package does not validate arbitrary custom level strings. Stick to standard PSR log levels for predictable filtering and output.
 - The `daily` adapter picks its `<YYYY-MM-DD>.log` file when the adapter is created. In long-running workers, recreate/re-resolve the logger after midnight if you need strict daily rollover.

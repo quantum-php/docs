@@ -43,15 +43,11 @@ In debug mode, the opposite happens in the web app: the factory forces `message`
 
 So adapter selection is environment-sensitive, not purely call-driven.
 
-## File logging uses only one special context key
+## File logging writes the context
 
-For file adapters, the only context key that changes output is:
+The message is `string|Stringable`, as PSR-3 defines; an array message throws a `TypeError`. Structured data goes in the context: the file adapters write it after the message as one line of JSON, and a `trace` that is text on the following lines. A context value that cannot be converted never makes the log call fail. See [File output format](adapters.md#file-output-format) for the exact format.
 
-- `trace`
-
-It is appended verbatim after the formatted message.
-
-No placeholder interpolation or structured context rendering happens.
+No placeholder interpolation happens: `{key}` in the message is written as it is.
 
 ## The `message` adapter ignores the context
 

@@ -95,7 +95,22 @@ The starter project's tests run on PHPUnit 11.5. If your project keeps them, req
 
 - replace `@dataProvider` doc comments with the `#[DataProvider('...')]` attribute (`use PHPUnit\Framework\Attributes\DataProvider;`); PHPUnit 12 no longer reads doc comments.
 
-### 8. Check the upgrade
+### 8. Log lines carry the context
+
+The `single` and `daily` log adapters write the context of a log call after the message, as one line of JSON; they ignored it before:
+
+```text
+[2026-11-23 14:02:11] Info: Order paid {"order":1042}
+```
+
+- A line without a context is unchanged. A tool that parses your log lines with a fixed pattern must allow the JSON at the end.
+- Everything you pass in the context reaches the log file: check your log calls for passwords, tokens or full request payloads.
+- The message stays text: `logger()->info([...])` throws a `TypeError`, as in 3.1. Put structured data in the context.
+- A log adapter of your own that uses `Quantum\Logger\Traits\LoggerTrait` and passes an array to `formatMessage()` gets a `TypeError`: pass a string.
+
+See [File output format](packages/logger/adapters.md#file-output-format).
+
+### 9. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 

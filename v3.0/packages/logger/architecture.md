@@ -72,11 +72,11 @@ This matters because the threshold is not stored per logger instance.
 File adapters use a shared formatter that:
 
 1. prepends a timestamp and capitalized level
-2. JSON-encodes array messages
-3. appends `context['trace']` when present
+2. appends the context as one line of JSON, without a `trace` that is text
+3. appends a `trace` that is text on its own lines
 4. appends the final string to the target file
 
-All other context keys are ignored by file adapters.
+The JSON conversion catches its own errors, so a context value that fails to convert replaces the context with a marker instead of stopping the log call. See [File output format](adapters.md#file-output-format).
 
 ## Message adapter flow
 

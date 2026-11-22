@@ -43,17 +43,22 @@ That writes the formatted message first and then appends the trace block.
 
 ## Log a structured payload
 
-When you want file logs to capture structured data, call the logger instance directly:
+Say what happened in the message and put the data in the context:
 
 ```php
-logger()->info([
+logger()->info('Catalog sync queued', [
     'job' => 'catalog-sync',
-    'status' => 'queued',
     'items' => 48,
 ]);
 ```
 
-File adapters JSON-format array messages before writing them. The global level helpers accept string messages, so `logger()` is the better fit for this style.
+A file adapter writes the context as JSON after the message:
+
+```text
+[2026-11-23 14:02:11] Info: Catalog sync queued {"job":"catalog-sync","items":48}
+```
+
+The message must be text, as PSR-3 defines: `logger()->info([...])` throws a `TypeError`. The global helpers take a context too, for example `info('Catalog sync queued', ['items' => 48])`. See [File output format](adapters.md#file-output-format) for how exceptions, a `trace` and other values are written.
 
 ## Check what was logged in debug mode
 
