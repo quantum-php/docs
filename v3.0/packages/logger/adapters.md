@@ -89,6 +89,21 @@ Both file adapters use the same line format:
 [YYYY-MM-DD HH:MM:SS] Level: message
 ```
 
-If you pass `['trace' => $trace]`, the trace is appended on the next line before the final newline.
+When the call passes a context, it follows the message on the same line as one line of JSON:
 
-If you pass an array message, the package JSON-encodes it with pretty printing before writing.
+```php
+logger()->info('Order paid', ['order' => 1042, 'status' => 'paid']);
+```
+
+```text
+[2026-11-23 14:02:11] Info: Order paid {"order":1042,"status":"paid"}
+```
+
+A few keys and values are written in their own way:
+
+- `trace` that is text (a string or a `Stringable` object, such as `$exception->getTraceAsString()`) goes on the next lines, after the message and its context, instead of into the JSON. A `trace` that is not text, such as the array of `$exception->getTrace()`, stays in the JSON.
+- An exception at the top level of the context is written as its `class`, `message`, `file` and `line`, and a `Stringable` value as its text.
+- Slashes and non-ASCII characters are written as they are, invalid UTF-8 becomes `�`, and a value JSON cannot encode, such as a resource, becomes `null`.
+- When a context value throws while it is converted, `{"context":"not encodable"}` replaces the context, so the log call still writes its line.
+
+Without a context, the line is only the message. Everything you put in the context reaches the log file, so leave passwords and tokens out of it.
