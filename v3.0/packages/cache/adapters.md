@@ -111,6 +111,8 @@ $cache->set('feed.home', $html, 120);
 - the adapter opens one Memcached client and adds the configured server
 - if `getStats()` fails, adapter construction throws a cache exception
 - values are stored as serialized strings with the normalized TTL
+- a TTL of more than 30 days is sent to Memcached as an absolute time, because Memcached reads a larger number of seconds as a Unix timestamp, so long TTLs work like short ones
+- a TTL of `0` or less deletes the item; `set()` returns `false` only when the delete fails for another reason than a missing item
 
 ### Caveats
 

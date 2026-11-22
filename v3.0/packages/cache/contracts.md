@@ -69,6 +69,8 @@ Behavior:
 
 For file and database storage, expiry is checked lazily on read or presence checks.
 
+A TTL of `0` or less, or a `DateInterval` in the past, means the item is already expired, as PSR-16 defines: `get()` returns the default and `has()` returns `false` right after `set()`. Redis and Memcached delete the item at once; file and database storage keep it with an expiry in the past and delete it on the next read or presence check.
+
 ## Batch contract
 
 `getMultiple()`, `setMultiple()` and `deleteMultiple()` accept any iterable: an array, a generator or an iterator. A value that is not iterable throws a `TypeError`.
@@ -79,7 +81,7 @@ cache()->setMultiple(['user.1' => $first, 'user.2' => $second], 300);
 $users = cache()->getMultiple(['user.1', 'user.2']);
 ```
 
-PHP turns a numeric string array key into an integer, so in `setMultiple(['42' => $value])` the key arrives as `42`. The batch methods turn integer keys back into strings, so numeric keys work as expected. Any other key that is not a string, such as `true`, `null` or an object, throws `Quantum\Cache\Exceptions\InvalidCacheKeyException`, which implements `Psr\SimpleCache\InvalidArgumentException`. The message names the type, for example `The cache key must be a string, bool given`.
+PHP turns a numeric string array key into an integer, so in `setMultiple(['42' => $value])` the key arrives as `42`. The batch methods turn integer keys back into strings, so numeric keys work as expected. The array `getMultiple()` returns follows the same PHP rule, so a numeric key comes back as an integer key: `getMultiple(['42'])` returns `[42 => …]`. Any other key that is not a string, such as `true`, `null` or an object, throws `Quantum\Cache\Exceptions\InvalidCacheKeyException`, which implements `Psr\SimpleCache\InvalidArgumentException`. The message names the type, for example `The cache key must be a string, bool given`.
 
 ## Data contract
 
