@@ -110,7 +110,23 @@ The `single` and `daily` log adapters write the context of a log call after the 
 
 See [File output format](packages/logger/adapters.md#file-output-format).
 
-### 9. Check the upgrade
+### 9. `Setup` takes the module as its third argument
+
+The hierarchy flag of `Quantum\Config\Setup`, deprecated in 3.1.2, is removed: the `$hierarchical` constructor argument, `setHierarchy()` and `getHierarchy()`. A module's config file that does not exist always falls back to `shared/config`.
+
+The constructor is now `Setup($pathPrefix, $fileName, $module, $exceptionMessage)`, so the module and the exception message move up one position. Name the module instead of passing the flag:
+
+```php
+// before
+new Setup('config', 'app', true, 'Admin');
+
+// after
+new Setup('config', 'app', module: 'Admin');
+```
+
+An old call does not always fail. In a file that declares `strict_types`, it throws a `TypeError`. Without it, PHP turns `true` into the module `1` and `false` into no module, which means the current request's module, and the module name becomes the exception message, so the config is read from `shared` or from the wrong module. Calls that pass only the first two arguments, or the module as a named argument, need no change.
+
+### 10. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 
@@ -123,7 +139,8 @@ composer phpstan
 Then look for the names this part replaced. Each hit is a section above:
 
 ```bash
-grep -rnF -e 'Generator::scan(' -e '@dataProvider' -e 'verbose=' shared modules helpers tests phpunit.xml
+grep -rnF -e 'Generator::scan(' -e '@dataProvider' -e 'verbose=' -e 'setHierarchy(' -e 'getHierarchy(' shared modules helpers tests phpunit.xml
+grep -rnE "new Setup\([^,]+,[^,]+, *(true|false)" shared modules helpers tests
 ```
 
 Finally, open a page with `app.debug` on to check the toolbar, sign in once if you use JWT, and run one `php qt` command.

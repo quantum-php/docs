@@ -88,7 +88,7 @@ When loading configurations, the framework resolves file locations using the fol
 | **1. Module Path** | `modules/{module}/{pathPrefix}/{fileName}.php` (`{pathPrefix}/{fileName}.php` under the base directory when there is no module) | Preserves case |
 | **2. Shared Fallback** | `shared/{lower(pathPrefix)}/{fileName}.php` | `pathPrefix` is forced to lowercase |
 
-Both paths are relative to the application base directory. The shared fallback is on by default. Passing the `$hierarchical` argument to the `Setup` constructor, or calling `setHierarchy()`, is deprecated since 3.1.2 and raises `E_USER_DEPRECATED`; both will be removed in 3.2.0, and the fallback will then always be on. When neither file exists, `load()` and `import()` throw a `ConfigException`, and `importIfExists()` returns `false`.
+Both paths are relative to the application base directory, and the shared fallback is always on. When neither file exists, `load()` and `import()` throw a `ConfigException`, and `importIfExists()` returns `false`.
 
 ## What to read next
 
