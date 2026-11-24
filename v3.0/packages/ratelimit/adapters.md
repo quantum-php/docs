@@ -29,6 +29,8 @@ return [
 ];
 ```
 
+Each adapter receives its own part of this config as a read-only `ConfigSection` (see [Read one part of the config](../config/usage.md#read-one-part-of-the-config)). `ttl`, and `port` for Redis, are required: the adapter reads them as [whole numbers](../config/contracts.md#typed-reader-contract) when it is built.
+
 ## File adapter
 
 `FileRateLimitAdapter` stores one JSON state file per rate-limit key and uses a lock file to serialize updates.

@@ -33,6 +33,10 @@ The adapter then:
 
 The remember cookie lifetime comes from `auth.session.remember_lifetime`. If that setting is absent, the default is `2592000` seconds (30 days).
 
+### When the settings are read
+
+The adapter reads `two_fa`, `otp_expires` and `session.remember_lifetime` once, when it is built. An invalid value, such as an `otp_expires` that is not a [whole number](../config/contracts.md#typed-reader-contract), therefore fails there, also while two-factor authentication is off, and never halfway through a sign-in. An auth adapter of your own that uses `Quantum\Auth\Traits\AuthTrait` implements `readConfig(ConfigSection $config)` to read its settings the same way.
+
 On sign-out, the adapter deletes the session user, regenerates the session ID, clears the stored remember token, and deletes the cookie.
 
 ### Two-factor caveat

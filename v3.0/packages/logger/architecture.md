@@ -33,7 +33,7 @@ After that, the factory reads:
 
 - `logging.default` for the default adapter name
 - `logging.<adapter>.level` for the severity threshold
-- `logging.<adapter>` for adapter-specific constructor parameters
+- `logging.<adapter>` for the adapter's own settings, passed to the adapter as a read-only `ConfigSection`
 - `logging.message.limit` for the number of messages the `message` adapter keeps
 
 ## Debug-mode override

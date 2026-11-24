@@ -39,13 +39,25 @@ Use this pattern for isolated tasks where one file should define the whole confi
 A config value is whatever the PHP file put there, and often that is text. A line such as `'debug' => env('APP_DEBUG')` stores the string `'false'` when `.env` says `APP_DEBUG=false`, and PHP treats that string as true. Convert the value where you read it:
 
 ```php
-$debug = config()->getBool('app.debug');
+$debug = config()->getBool('app.debug', false);
 $limit = config()->getInt('mailer.transport_log_limit', 1000);
+$port = config()->getInt('cache.redis.port');
 ```
 
-`getBool()` returns `true` for `true`, `1`, `on` and `yes`, in any letter case, and `false` for everything else, including an empty value. `getInt()` returns the number, and throws a `ConfigException` when the value is not a whole number, so a typo such as `abc` shows up at once instead of silently becoming `0`. When the key is missing, or its value is `null`, both return the default: `false` and `0` unless you pass another. `get()` keeps returning the raw value.
+Text such as `'587'` becomes `587`, and a typo such as `abc` throws a `ConfigException` at once instead of silently becoming `0`. The default says whether a key is optional: with one, as for `app.debug`, a key that is not set gives the default; without one, as for the Redis port, the key is required and the reader throws. The exact rules, including what counts as not set, are in the [typed reader contract](contracts.md#typed-reader-contract).
 
-Both are methods of the `Config` class, so `config()` has them. They are available since 3.1.2; the exact rules are on the [contracts page](contracts.md#typed-reader-contract).
+## Read one part of the config
+
+`section()` returns the values under a key as a read-only `ConfigSection`. Framework factories use it to hand each adapter its own settings, and it reads with the same methods:
+
+```php
+$redis = config()->section('cache.redis');
+
+$host = $redis->get('host');
+$port = $redis->getInt('port');
+```
+
+The section is a read-only copy; the [section contract](contracts.md#section-contract) lists what that guarantees.
 
 ## Override values at runtime
 

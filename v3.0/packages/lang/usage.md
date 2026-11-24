@@ -142,7 +142,7 @@ What gets translated depends on `use_source_catalog`:
 - **`false`:** the key itself is the text. `t('Welcome back, {%1}!', [$name])` fills the placeholder and sends `Welcome back, Anna!` to the provider.
 - **`true`:** the text comes from your translation files in `source_locale`, so `t('custom.test')` reads `custom.test` from `resources/lang/en/` and sends that. A key with no source text, or a request whose language is the source language itself, is answered from the files without calling the provider. `source_locale` is required in this mode.
 
-With `cache.enabled`, every answer is stored through the Cache package adapter named in `cache.default`, for `ttl` seconds, so the same text in the same language is sent to the provider only once.
+With `cache.enabled`, every answer is stored through the Cache package adapter named in `cache.default`, for `ttl` seconds, so the same text in the same language is sent to the provider only once. When `ttl` is not set, the cache adapter's own default TTL applies.
 
 Errors to expect:
 

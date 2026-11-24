@@ -12,13 +12,29 @@ Config sits between the PHP config files and the rest of the framework.
 
 After that, reads come from memory through `get()`, `has()`, and `all()`. `getBool()` and `getInt()` read through `get()` and convert the value on the way out.
 
-## How `Config` is organised
+## How `Config` and `ConfigSection` are organised
 
-`Config` implements `ConfigInterface` and keeps only its state and `load()`. The rest comes from three traits in `Quantum\Config\Traits`:
+Two classes read config, and they share the reading code:
 
-- `ConfigFileTrait`: `import()`, `importIfExists()` and the file lookup
-- `ValueTrait`: `get()`, `has()`, `set()`, `delete()`, `all()` and `flush()`
-- `TypedValuesTrait`: the typed readers `getBool()` and `getInt()`
+- `Config` is the application config. It loads and imports the config files itself (`load()`, `import()`, `importIfExists()` and the file lookup) and implements `ConfigInterface`.
+- `ConfigSection` is one read-only part of it, such as `cache.redis`. It is `final` and has no method that loads or changes values.
+
+The shared code lives in `Quantum\Config\Traits`:
+
+- `ReadTrait`: `get()`, `has()`, `all()` and `section()`, used by both classes
+- `TypedValuesTrait`: the typed readers `getBool()` and `getInt()`, used by both classes
+- `WriteTrait`: `set()`, `delete()` and `flush()`, used by `Config` only
+
+## Sections
+
+An adapter needs its own settings, not the whole config, and it should not be able to change them. So a factory cuts out the adapter's part and passes it in:
+
+```php
+// CacheFactory, with $adapter = 'redis'
+$cacheAdapter = new $adapterClass(config()->section('cache.' . $adapter));
+```
+
+`section()` copies the values under the key into a new `ConfigSection`. What that copy guarantees is listed in the [section contract](contracts.md#section-contract).
 
 ## Two storage modes
 

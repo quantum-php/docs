@@ -20,6 +20,8 @@ The adapter reads these keys from `mailer.smtp`:
 ]
 ```
 
+A missing or empty `port`, such as `MAIL_PORT=` in `.env`, uses 25, PHPMailer's default.
+
 ### Extra methods
 
 SMTP is the only adapter with extra composition methods:

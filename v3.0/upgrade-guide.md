@@ -126,7 +126,41 @@ new Setup('config', 'app', module: 'Admin');
 
 An old call does not always fail. In a file that declares `strict_types`, it throws a `TypeError`. Without it, PHP turns `true` into the module `1` and `false` into no module, which means the current request's module, and the module name becomes the exception message, so the config is read from `shared` or from the wrong module. Calls that pass only the first two arguments, or the module as a named argument, need no change.
 
-### 10. Check the upgrade
+### 10. Config readers and adapter settings
+
+**`getBool()` and `getInt()` without a default require the key.** A key that is missing, `null` or empty text (such as `MAIL_PORT=` in `.env`) throws `ConfigException::missingKey()`; it gave `false` or `0`. Pass a default where a key is optional:
+
+```php
+// before
+$beta = config()->getBool('features.beta');
+
+// after
+$beta = config()->getBool('features.beta', false);
+```
+
+The exact rules are in the [typed reader contract](packages/config/contracts.md#typed-reader-contract).
+
+**`config()->all()` returns an array,** a copy, and `[]` when the config is empty. Code that called methods on the result, such as `config()->all()->get('app.name')`, uses `config()->get('app.name')`, and a check for `null` checks for `[]`.
+
+**Adapters receive a `ConfigSection`.** The framework's factories pass it for you. Code that builds an adapter itself wraps its array:
+
+```php
+use Quantum\Config\ConfigSection;
+
+// before: new RedisAdapter(['host' => '127.0.0.1', 'port' => 6379, 'ttl' => 60, 'prefix' => 'app']);
+$cache = new RedisAdapter(new ConfigSection(['host' => '127.0.0.1', 'port' => 6379, 'ttl' => 60, 'prefix' => 'app']));
+```
+
+Ports, TTLs and lifetimes are read as whole numbers, so a typo such as `abc` now throws instead of becoming `0`, and a missing cache or rate limit `ttl` or `port` throws when the adapter is built. The auth adapters require their config again and read `two_fa`, `otp_expires` and `session.remember_lifetime` when they are built.
+
+**Code of your own that uses the framework's traits:**
+
+- `Quantum\Config\Traits\ValueTrait` is renamed `WriteTrait` and keeps `set()`, `delete()` and `flush()`; reading moved to `ReadTrait`. `ConfigFileTrait` is removed, its code is part of `Config`.
+- A class that implements `ConfigInterface` adds `section(string $key): ConfigSection` and returns an array from `all()`.
+- A log adapter that uses `LoggerTrait` declares `initialize(ConfigSection $config)`.
+- An auth adapter that uses `AuthTrait` implements `readConfig(ConfigSection $config)`, see [When the settings are read](packages/auth/adapters.md#when-the-settings-are-read).
+
+### 11. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 
@@ -139,8 +173,9 @@ composer phpstan
 Then look for the names this part replaced. Each hit is a section above:
 
 ```bash
-grep -rnF -e 'Generator::scan(' -e '@dataProvider' -e 'verbose=' -e 'setHierarchy(' -e 'getHierarchy(' shared modules helpers tests phpunit.xml
+grep -rnF -e 'Generator::scan(' -e '@dataProvider' -e 'verbose=' -e 'setHierarchy(' -e 'getHierarchy(' -e 'Config\Traits\ValueTrait' -e 'ConfigFileTrait' -e '->all()->' shared modules helpers tests phpunit.xml
 grep -rnE "new Setup\([^,]+,[^,]+, *(true|false)" shared modules helpers tests
+grep -rnE -e "->(getBool|getInt)\('[^']+'\)" shared modules helpers tests
 ```
 
 Finally, open a page with `app.debug` on to check the toolbar, sign in once if you use JWT, and run one `php qt` command.
