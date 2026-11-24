@@ -39,13 +39,29 @@ Use this pattern for isolated tasks where one file should define the whole confi
 A config value is whatever the PHP file put there, and often that is text. A line such as `'debug' => env('APP_DEBUG')` stores the string `'false'` when `.env` says `APP_DEBUG=false`, and PHP treats that string as true. Convert the value where you read it:
 
 ```php
-$debug = config()->getBool('app.debug');
+$debug = config()->getBool('app.debug', false);
 $limit = config()->getInt('mailer.transport_log_limit', 1000);
+$port = config()->getInt('cache.redis.port');
 ```
 
-`getBool()` returns `true` for `true`, `1`, `on` and `yes`, in any letter case, and `false` for everything else, including an empty value. `getInt()` returns the number, and throws a `ConfigException` when the value is not a whole number, so a typo such as `abc` shows up at once instead of silently becoming `0`. When the key is missing, or its value is `null`, both return the default: `false` and `0` unless you pass another. `get()` keeps returning the raw value.
+`getBool()` returns `true` for `true`, `1`, `on` and `yes`, in any letter case, and `false` for everything else. `getInt()` returns the number, and throws a `ConfigException` when the value is not a whole number, so a typo such as `abc` shows up at once instead of silently becoming `0`.
 
-Both are methods of the `Config` class, so `config()` has them. They are available since 3.1.2; the exact rules are on the [contracts page](contracts.md#typed-reader-contract).
+The default says whether a key is optional. With a default, as for `app.debug` above, a key that is not set gives the default. Without one, as for the Redis port, the key is required: when it is not set, the reader throws "The config key `cache.redis.port` is missing." A key counts as not set when it is missing, `null`, or empty text, which is what `.env` gives for a line such as `MAIL_PORT=`. `get()` keeps returning the raw value.
+
+Both are methods of `Config` and `ConfigSection`, so `config()` has them. The exact rules are on the [contracts page](contracts.md#typed-reader-contract).
+
+## Read one part of the config
+
+`section()` returns the values under a key as a read-only `ConfigSection`. Framework factories use it to hand each adapter its own settings, and it reads with the same methods:
+
+```php
+$redis = config()->section('cache.redis');
+
+$host = $redis->get('host');
+$port = $redis->getInt('port');
+```
+
+The section is a copy: it cannot be changed, and later changes to the config do not reach it. A key that is missing gives an empty section, so read with a default or check `has()` when the part is optional.
 
 ## Override values at runtime
 

@@ -1,6 +1,6 @@
 # Config Contracts
 
-This page covers the behavior other code can rely on when using `Quantum\Config\Config`.
+This page covers the behavior other code can rely on when using `Quantum\Config\Config` and `Quantum\Config\ConfigSection`.
 
 ## Load contract
 
@@ -53,8 +53,8 @@ $config->importIfExists($setup): bool
 
 ### `get(string $key, $default = null)`
 
-- returns the stored value when the key exists
-- returns the provided default when the key is missing
+- returns the stored value when the key exists, `null` and empty text included
+- returns the provided default only when the key is missing
 
 Keys use dot notation because the backing store is a dot-accessible data container.
 
@@ -63,33 +63,57 @@ Keys use dot notation because the backing store is a dot-accessible data contain
 - returns `true` when the key exists in the current store
 - returns `false` when the store is empty or the key is missing
 
-### `all(): ?Data`
+### `all(): array`
 
-- returns the whole data container
-- returns `null` before anything has been loaded, imported, or set
+- returns all values as an array, a copy: changing it does not change the config
+- returns `[]` before anything has been loaded, imported, or set
+
+### `section(string $key): ConfigSection`
+
+- returns the values under the key as a new, read-only `ConfigSection`
+- returns an empty section when the key is missing or its value is not an array
+- the section keeps the values it was created with: later changes to the config do not reach it
 
 ## Typed reader contract
 
 `getBool()` and `getInt()` read through `get()`. For how to use them, see [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
 
 ```php
-public function getBool(string $key, bool $default = false): bool;
-public function getInt(string $key, int $default = 0): int;
+public function getBool(string $key, ?bool $default = null): bool;
+public function getInt(string $key, ?int $default = null): int;
 ```
 
-- a missing key, or a key whose value is `null`, returns the default
-- `getBool()` returns `true` for `true`, `1`, `on` and `yes`, ignoring letter case, and `false` for every other value, including `false`, `0`, `off`, `no` and an empty value
-- `getInt()` returns the number for a whole number or whole-number text such as `587`, and throws `ConfigException::invalidValue()` for any other value, such as `abc`, `1.5` or an empty value
+- a key that is missing, `null`, or empty text (such as `KEY=` in `.env`) is not set
+- a key that is not set returns the default when one is passed, and throws `ConfigException::missingKey()` ("The config key `x` is missing.") when none is passed, so a reader without a default states a required key
+- `getBool()` returns `true` for `true`, `1`, `on` and `yes`, ignoring letter case, and `false` for every other value, including `false`, `0`, `off` and `no`
+- `getInt()` returns the number for a whole number or whole-number text such as `587`, and throws `ConfigException::invalidValue()` for any other value, such as `abc` or `1.5`
 - `get()` is not affected and keeps returning the raw value
 
-The methods belong to the `Config` class. `ConfigInterface` does not declare them, so code that depends on the interface alone cannot call them.
+`Config` and `ConfigSection` both have these methods. `ConfigInterface` does not declare them, so code that depends on the interface alone cannot call them.
+
+## Section contract
+
+`Quantum\Config\ConfigSection` is the read-only part of the config that adapters receive. `config()->section('cache.redis')` returns one, and `new ConfigSection([...])` builds one from an array:
+
+```php
+use Quantum\Config\ConfigSection;
+
+$section = new ConfigSection(['host' => '127.0.0.1', 'port' => '6379']);
+
+$section->getInt('port'); // 6379
+```
+
+- it has `get()`, `has()`, `all()`, `section()`, `getBool()` and `getInt()`, with the rules above
+- it has no `load()`, `import()`, `set()`, `delete()` or `flush()`, and the class is `final`
+- arrays are copied, so a section and the arrays it returns never change each other
+- objects stored in the config, such as closures or services, are not cloned: they are shared
 
 ## Write contract
 
 ### `set(string $key, $value): void`
 
 - creates the store if needed
-- writes or overwrites the value at the given key
+- writes or overwrites the value at the given key; a dotted key such as `cache.redis` nests the value
 
 ### `delete(string $key): void`
 
@@ -99,7 +123,7 @@ The methods belong to the `Config` class. `ConfigInterface` does not declare the
 ### `flush(): void`
 
 - clears the entire in-memory store
-- makes `all()` return `null` again
+- makes `all()` return `[]` again
 - allows a later `load()` call to run again
 
 ## Failure behavior
@@ -107,4 +131,5 @@ The methods belong to the `Config` class. `ConfigInterface` does not declare the
 - a missing file in `load()` or `import()` raises `ConfigException` with the `Setup` exception message (by default ``File `<pathPrefix>/<fileName>` not found!``)
 - duplicate imported section names raise `ConfigException`
 - `getInt()` raises `ConfigException::invalidValue()` for a value that is not a whole number
+- `getBool()` and `getInt()` without a default raise `ConfigException::missingKey()` for a key that is not set
 - helper resolution can fail if DI registration or resolution fails

@@ -29,7 +29,8 @@ The `Config` class loads configuration files described by a `Quantum\Config\Setu
 - `set(string $key, $value)`: Set or overwrite config value.
 - `delete(string $key)`: Remove a config key.
 - `flush()`: Clear all loaded config data.
-- `all()`: Retrieve all configs as dot-accessible object.
+- `all()`: Retrieve all config values as an array (a copy).
+- `section(string $key)`: Retrieve the values under a key as a read-only `ConfigSection`, the shape adapters receive their settings in.
 
 ## Environment Support
 

@@ -10,6 +10,7 @@ Use it when you want to load PHP config files, read values with dot notation, an
 - stores values in one dot-accessible container
 - supports two loading modes: `load()` for the root store and `import()` for named config sections, plus `importIfExists()` for optional files
 - reads a value as a boolean or a whole number with `getBool()` and `getInt()`
+- hands one part of the config, such as `cache.redis`, to an adapter as a read-only `ConfigSection`
 - exposes a DI-backed `config()` helper for shared access
 
 ## Most applications use `import()`
@@ -46,9 +47,10 @@ With `load()`, keys come from the file directly. With `import()`, the same file 
 
 ## Package shape
 
-- `Quantum\Config\Config` manages the in-memory store
+- `Quantum\Config\Config` manages the in-memory store and loads the config files
+- `Quantum\Config\ConfigSection` is a read-only part of the config, the shape adapters receive their settings in
 - `Quantum\Config\Contracts\ConfigInterface` defines the public API
-- `Quantum\Config\Traits` holds the code `Config` is built from: `ConfigFileTrait`, `ValueTrait` and `TypedValuesTrait`
+- `Quantum\Config\Traits` holds the shared code: `ReadTrait` and `TypedValuesTrait` read values for both classes, `WriteTrait` changes values in `Config` only
 - `Quantum\Config\Setup` describes which file to load
 - `Quantum\Config\Helpers\config.php` exposes the shared helper
 - `Quantum\Config\Exceptions\ConfigException` reports missing files and import-name collisions
