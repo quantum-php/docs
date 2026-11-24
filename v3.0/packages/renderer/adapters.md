@@ -22,7 +22,7 @@ return [
 ];
 ```
 
-The package passes `view.<adapter>` into the adapter constructor.
+The factory passes the `view.<adapter>` part of the config to the adapter as a read-only `ConfigSection` (see [Read one part of the config](../config/usage.md#read-one-part-of-the-config)). An adapter built by hand without one gets an empty section.
 
 In the current starter project, the default config is:
 
@@ -60,7 +60,7 @@ makes `$post` and `$title` available inside `posts/show.php`.
 
 - Missing files throw a renderer exception.
 - Parameter keys become PHP variables, so avoid keys that collide with names already used inside the template.
-- The adapter accepts a config array but does not apply any built-in HTML-specific options during rendering.
+- The adapter accepts its config section but does not apply any built-in HTML-specific options during rendering.
 
 ## Twig adapter
 
@@ -73,7 +73,7 @@ Use it when you want Twig syntax and Twig environment options while keeping Quan
 - resolves `<view>.php` from the same module-first lookup path
 - points Twig's filesystem loader at the directory that contains that file
 - creates a new Twig `Environment` for the render call
-- passes the provided config array into Twig as environment options
+- passes every option of its config section, `all()`, into Twig as environment options
 - renders `<view>.php` with the given params
 
 For the built-in adapter, top-level logical names such as `home` or `invoice` are the clearest fit. Those map directly to files such as `Views/home.php` and `Views/invoice.php`.

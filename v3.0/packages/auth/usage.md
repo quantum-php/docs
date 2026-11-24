@@ -58,7 +58,7 @@ Result shape depends on the adapter:
 - session adapter: `true` and the user is written to session
 - JWT adapter: fresh `accessToken` and `refreshToken` values
 
-If the code expires, verification fails with an auth exception. OTP expiry defaults to 2 minutes unless `otp_expires` is configured.
+If the code expires, verification fails with an auth exception. OTP expiry defaults to 2 minutes unless `otp_expires` is configured (see [When the settings are read](adapters.md#when-the-settings-are-read)).
 
 ## Registration and activation
 

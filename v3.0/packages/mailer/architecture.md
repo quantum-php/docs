@@ -30,7 +30,7 @@ The practical effect is:
 After that, it reads:
 
 - `mailer.default` for the default adapter name
-- `mailer.<adapter>` for adapter-specific constructor parameters
+- `mailer.<adapter>` for the adapter's own settings, passed to the adapter as a read-only `ConfigSection`
 - `mailer.mail_trap` during `send()` to decide whether to save or deliver
 - `mailer.transport_log_limit` during `send()` to bound the [transport log](contracts.md#transport-log)
 

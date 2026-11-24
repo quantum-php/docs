@@ -9,6 +9,10 @@ Quantum's cache package exposes one API across four backends. Pick the adapter b
 - Use `memcached` for an external shared cache server.
 - Use `redis` for an external shared cache database.
 
+## Config values
+
+Each adapter receives its own part of the config, such as `cache.redis`, as a read-only `ConfigSection` (see [Read one part of the config](../config/usage.md#read-one-part-of-the-config)). `ttl`, and `port` for Memcached and Redis, are required: the adapter reads them as [whole numbers](../config/contracts.md#typed-reader-contract) when it is built.
+
 ## File adapter
 
 Use the file adapter when local disk storage is enough.
