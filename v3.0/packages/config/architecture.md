@@ -34,7 +34,7 @@ An adapter needs its own settings, not the whole config, and it should not be ab
 $cacheAdapter = new $adapterClass(config()->section('cache.' . $adapter));
 ```
 
-`section()` copies the values under the key into a new `ConfigSection`. Later changes to the config do not reach a section that already exists, and changing an array a section returns does not change the section. Objects stored in the config, such as closures or services, are not cloned: a section shares them. A key that is missing, or whose value is not an array, gives an empty section.
+`section()` copies the values under the key into a new `ConfigSection`. What that copy guarantees is listed in the [section contract](contracts.md#section-contract).
 
 ## Two storage modes
 

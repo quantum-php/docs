@@ -70,9 +70,7 @@ Keys use dot notation because the backing store is a dot-accessible data contain
 
 ### `section(string $key): ConfigSection`
 
-- returns the values under the key as a new, read-only `ConfigSection`
-- returns an empty section when the key is missing or its value is not an array
-- the section keeps the values it was created with: later changes to the config do not reach it
+- returns the values under the key as a new `ConfigSection`, described in the [section contract](#section-contract)
 
 ## Typed reader contract
 
@@ -105,6 +103,8 @@ $section->getInt('port'); // 6379
 
 - it has `get()`, `has()`, `all()`, `section()`, `getBool()` and `getInt()`, with the rules above
 - it has no `load()`, `import()`, `set()`, `delete()` or `flush()`, and the class is `final`
+- `section()` gives an empty section when the key is missing or its value is not an array
+- a section keeps the values it was created with: later changes to the config do not reach it
 - arrays are copied, so a section and the arrays it returns never change each other
 - objects stored in the config, such as closures or services, are not cloned: they are shared
 

@@ -50,7 +50,7 @@ With `load()`, keys come from the file directly. With `import()`, the same file 
 - `Quantum\Config\Config` manages the in-memory store and loads the config files
 - `Quantum\Config\ConfigSection` is a read-only part of the config, the shape adapters receive their settings in
 - `Quantum\Config\Contracts\ConfigInterface` defines the public API
-- `Quantum\Config\Traits` holds the shared code: `ReadTrait` and `TypedValuesTrait` read values for both classes, `WriteTrait` changes values in `Config` only
+- `Quantum\Config\Traits` holds the code both classes share (see [Architecture](architecture.md#how-config-and-configsection-are-organised))
 - `Quantum\Config\Setup` describes which file to load
 - `Quantum\Config\Helpers\config.php` exposes the shared helper
 - `Quantum\Config\Exceptions\ConfigException` reports missing files and import-name collisions
