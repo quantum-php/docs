@@ -20,7 +20,9 @@ $debug = env_bool('DEBUG');
 $port = env_int('MAIL_PORT', 25);
 ```
 
-`env_bool()` returns `true` for `true`, `1`, `on` and `yes`, in any letter case, and `false` for everything else, including an empty value. `env_int()` returns the number, and throws an `EnvException` when the text is not a whole number, so a typo in `.env` shows up at once instead of silently becoming `0`. When the key is missing, both return the default: `false` and `0` unless you pass another. `env()` keeps returning the raw text.
+`env_bool()` returns `true` for `true`, `1`, `on` and `yes`, in any letter case, and `false` for any other text. `env_int()` returns the number, and throws an `EnvException` when the text is not a whole number, so a typo in `.env` shows up at once instead of silently becoming `0`.
+
+A key that is missing or empty counts as not set, and both return the default: `false` and `0` unless you pass another. A `.env` file often lists keys with no value yet, such as `TWO_FA=`, so with `env_bool('TWO_FA', true)` that line keeps two-factor authentication on. Write `TWO_FA=false` to turn it off. `env()` keeps returning the raw text, the empty string included.
 
 The same readers are methods of the shared instance, `environment()->getBool('DEBUG')` and `environment()->getInt('MAIL_PORT')`. Like `env()`, they work only after the environment has been loaded. They are available since 3.1.2; the exact rules are on the [contracts page](contracts.md#typed-reader-contract).
 
@@ -49,6 +51,7 @@ Use this carefully:
 - mutability is off by default
 - the target file must already have been selected and loaded
 - updates modify the real `.env` file under `App::getBaseDir()`
+- an existing line is found in the forms listed under [Mutation model](architecture.md#mutation-model), and a comment after the value stays
 
 ## Reading request metadata
 

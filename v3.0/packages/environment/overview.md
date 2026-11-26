@@ -13,7 +13,7 @@ The package is built from these parts:
 
 - `Quantum\Environment\Environment` selects and loads one `.env` file
 - `Quantum\Environment\Contracts\EnvironmentInterface` declares the public methods of `Environment`
-- `Quantum\Environment\Traits` holds the code `Environment` is built from: `AppEnvTrait`, `ValueTrait` and `EnvFileTrait`
+- `Quantum\Environment\Traits` holds the code `Environment` is built from: `AppEnvTrait`, `ReadTrait` and `WriteTrait`
 - `Quantum\Environment\Server` wraps a snapshot of `$_SERVER`
 - `Quantum\Environment\Helpers\env.php` exposes `environment()`, `env()`, `env_bool()` and `env_int()`
 - `Quantum\Environment\Helpers\server.php` exposes `server()`, `get_user_ip()`, and a `getallheaders()` fallback

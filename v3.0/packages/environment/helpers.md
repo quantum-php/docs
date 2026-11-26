@@ -40,7 +40,7 @@ Behavior:
 1. resolves the shared `Environment` instance with `environment()`
 2. returns `getBool($var, $default)`
 
-Use it for flags such as `DEBUG`, where the raw text `'false'` would otherwise count as true. See [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
+Use it for flags such as `DEBUG`, where the raw text `'false'` would otherwise count as true. A missing or empty value returns the default. See [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
 
 ## `env_int()`
 
@@ -53,7 +53,7 @@ Behavior:
 1. resolves the shared `Environment` instance with `environment()`
 2. returns `getInt($var, $default)`
 
-It throws `EnvException::invalidValue()` when the value is not a whole number. See [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
+A missing or empty value returns the default. It throws `EnvException::invalidValue()` when the value is not a whole number. See [Reading booleans and numbers](usage.md#reading-booleans-and-numbers).
 
 ## `server()`
 
