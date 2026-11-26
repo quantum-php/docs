@@ -178,7 +178,23 @@ TWO_FA=false
 
 **Code of your own that uses the Environment traits:** `Quantum\Environment\Traits\ValueTrait` is renamed `ReadTrait`, `EnvFileTrait` is removed, and `updateRow()` is in the new `WriteTrait`. A class that uses them declares what they use, as `Environment` does: the properties `$loaded`, `$envContent`, `$isMutable` and `$appEnv`, and the methods `getEnvFilePath()` and `getEnvFileName()`.
 
-### 12. Check the upgrade
+### 12. Remember-me with two-factor sign-in
+
+This section applies to the session auth adapter with `two_fa` on. Nothing changes with two-factor authentication off, or with the JWT adapter.
+
+**The remember cookie is set when the OTP is verified.** `signin()` with "remember me" issued the remember token before the OTP step, so a browser that never entered the OTP could be signed in by its cookie later. `signin()` now only keeps the request in the browser's session, and `verifyOtp()` issues the token and cookie once the OTP is accepted. Call `verifyOtp()` in the same browser as `signin()`, as the starter project's verify page does. See [Remember-me behavior](packages/auth/adapters.md#remember-me-behavior).
+
+**Sign remembered browsers out once.** Remember tokens issued before the upgrade are not revoked, and one from a sign-in whose OTP was never entered can still sign in. After upgrading, clear the field your `userSchema()` maps `rememberToken` to, for all users, in whatever storage your auth service uses. With the `users` table of the starter project's migration:
+
+```sql
+UPDATE users SET remember_token = NULL;
+```
+
+Remembered users then sign in once more, with their OTP.
+
+**A new session ID after the sign-in.** `verifyOtp()` and a sign-in through the remember cookie give the session a new ID, as `signin()` without two-factor authentication already did. The session data is kept, so code that does not store the session ID itself needs no change.
+
+### 13. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 
