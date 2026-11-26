@@ -26,11 +26,11 @@ Environment::load()
 
 ## How `Environment` is organised
 
-`Environment` implements `EnvironmentInterface` and keeps only its state and `load()`. The rest comes from three traits in `Quantum\Environment\Traits`:
+`Environment` implements `EnvironmentInterface` and loads the `.env` file itself: it holds the state, `setMutable()`, `load()` and the private methods that pick and parse the file. Reading and writing each have their own trait in `Quantum\Environment\Traits`:
 
 - `AppEnvTrait`: `getAppEnv()` and the `is...()` checks
-- `ValueTrait`: the readers `getValue()`, `getBool()`, `getInt()`, `hasKey()` and `getRow()`
-- `EnvFileTrait`: `updateRow()` and the file lookup and parsing
+- `ReadTrait`: the readers `getValue()`, `getBool()`, `getInt()`, `hasKey()` and `getRow()`
+- `WriteTrait`: `updateRow()`. It needs the path and name of the file, so it declares `getEnvFilePath()` and `getEnvFileName()` abstract, and `Environment` provides them
 
 ## `Environment` lifecycle
 
@@ -64,12 +64,13 @@ There is no validation that `app_env` matches one of the `Env` constants.
 When the key already exists, the method:
 
 1. reads the whole environment file
-2. replaces the exact `KEY=currentValue` line with `KEY=newValue`
-3. writes the full file back
+2. finds the key and its current value as the file writes them: `KEY="value"` (also over several lines), `KEY='value'`, `KEY=value` up to a space or `#`, or `KEY` and `KEY=` without a value
+3. replaces that part with `KEY=newValue`, so a comment after the value stays
+4. writes the full file back
 
-When the key does not exist, it appends a new `KEY=value` line.
+When the key does not exist, it appends a new `KEY=value` line. In both cases the new value is written as it is given, without quotes. A `$` or `\` in it stays as typed, but a space makes the file fail to load on the next request, and text after a `#` is read as a comment, so pass such values only after checking them.
 
-Because the replacement pattern is built from the current cached value, the method is designed for values that still match the file content exactly.
+The search starts from the value as the `.env` parser read it. When the file writes that value in another form, the line is not found, the file stays unchanged and only the cached value changes. That happens for `export KEY=value`, a space after `=`, an escape such as `\"` or `\n` inside double quotes, and `${VAR}`. If the replacement itself fails, `updateRow()` throws `EnvException::fileNotFound()` and does not write the file.
 
 ## `Server` lifecycle
 

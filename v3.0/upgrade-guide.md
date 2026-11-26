@@ -160,7 +160,25 @@ Ports, TTLs and lifetimes are read as whole numbers, so a typo such as `abc` now
 - A log adapter that uses `LoggerTrait` declares `initialize(ConfigSection $config)`.
 - An auth adapter that uses `AuthTrait` implements `readConfig(ConfigSection $config)`, see [When the settings are read](packages/auth/adapters.md#when-the-settings-are-read).
 
-### 11. Check the upgrade
+### 11. Empty `.env` values and the Environment traits
+
+**An empty `.env` value gives the default.** `env_bool()` and `env_int()`, and `environment()->getBool()` and `getInt()`, treat `KEY=` and a `KEY` line without `=` as not set, the same as a missing key. `env_bool()` gave `false` and `env_int()` threw an `EnvException`. So a setting whose default is on, and whose line is empty, is now on. The auth config of the `DemoWeb` and `DemoApi` module templates reads `env_bool('TWO_FA', true)`, so an empty `TWO_FA=` leaves two-factor authentication on. Write the value you mean:
+
+```bash
+# before: turned two-factor authentication off
+TWO_FA=
+
+# after
+TWO_FA=false
+```
+
+`env()` still returns the raw value. The config readers stay strict on purpose, see the [`.env` readers](packages/environment/contracts.md#typed-reader-contract).
+
+**`updateRow()` finds the line as the file writes it,** quoted or without a value, and keeps a comment after the value, so `php qt core:key` now also replaces a quoted `APP_KEY="..."`. The forms it finds are listed under [Mutation model](packages/environment/architecture.md#mutation-model).
+
+**Code of your own that uses the Environment traits:** `Quantum\Environment\Traits\ValueTrait` is renamed `ReadTrait`, `EnvFileTrait` is removed, and `updateRow()` is in the new `WriteTrait`. A class that uses them declares what they use, as `Environment` does: the properties `$loaded`, `$envContent`, `$isMutable` and `$appEnv`, and the methods `getEnvFilePath()` and `getEnvFileName()`.
+
+### 12. Check the upgrade
 
 Update the dependencies and run the checks you already use:
 
@@ -173,10 +191,13 @@ composer phpstan
 Then look for the names this part replaced. Each hit is a section above:
 
 ```bash
-grep -rnF -e 'Generator::scan(' -e '@dataProvider' -e 'verbose=' -e 'setHierarchy(' -e 'getHierarchy(' -e 'Config\Traits\ValueTrait' -e 'ConfigFileTrait' -e '->all()->' shared modules helpers tests phpunit.xml
+grep -rnF -e 'Generator::scan(' -e '@dataProvider' -e 'verbose=' -e 'setHierarchy(' -e 'getHierarchy(' -e 'Config\Traits\ValueTrait' -e 'ConfigFileTrait' -e '->all()->' -e 'Environment\Traits\ValueTrait' -e 'EnvFileTrait' shared modules helpers tests phpunit.xml
 grep -rnE "new Setup\([^,]+,[^,]+, *(true|false)" shared modules helpers tests
 grep -rnE -e "->(getBool|getInt)\('[^']+'\)" shared modules helpers tests
+grep -nE '^[A-Z0-9_]+= *$' .env
 ```
+
+The last command lists the empty values in `.env`. A hit matters only when the key is read with `env_bool()` or `env_int()` and a default.
 
 Finally, open a page with `app.debug` on to check the toolbar, sign in once if you use JWT, and run one `php qt` command.
 

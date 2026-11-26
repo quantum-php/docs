@@ -27,10 +27,12 @@ public function getBool(string $key, bool $default = false): bool;
 public function getInt(string $key, int $default = 0): int;
 ```
 
-- a missing key returns the default
-- `getBool()` returns `true` for `true`, `1`, `on` and `yes`, ignoring letter case, and `false` for every other value, including `false`, `0`, `off`, `no` and an empty value
-- `getInt()` returns the number for whole-number text such as `587`, and throws `EnvException::invalidValue()` for any other text, such as `abc`, `1.5` or an empty value
+- a key that is missing, empty (`KEY=`) or written without a value (`KEY` with no `=`) is not set and returns the default
+- `getBool()` returns `true` for `true`, `1`, `on` and `yes`, ignoring letter case, and `false` for every other value, including `false`, `0`, `off` and `no`
+- `getInt()` returns the number for whole-number text such as `587`, and throws `EnvException::invalidValue()` for any other text, such as `abc` or `1.5`
 - `getValue()` and `env()` are not affected and keep returning the raw value
+
+The `.env` readers and the config readers differ on purpose. A `.env` file is outside input and often incomplete, so `env_bool()` and `env_int()` are forgiving: a missing or empty value returns the default, or `false` and `0`. Config files belong to the application, so `config()->getBool()` and `config()->getInt()` without a default state a required key, and throw `ConfigException::missingKey()` when it is not set. See the [config readers](../config/contracts.md#typed-reader-contract).
 
 ## One-shot load contract
 
@@ -56,6 +58,8 @@ The package does not silently skip missing environment files.
 If mutability is off, the method throws `EnvException::environmentImmutable()`.
 
 If loading has not happened yet, it throws `EnvException::environmentNotLoaded()`.
+
+For a key that exists, `updateRow()` replaces only the key and its value, keeps a comment after the value, and writes the new value as it is given. A line it cannot find in the form the value was read is left unchanged; the forms it finds are listed under [Mutation model](architecture.md#mutation-model). It never writes an empty file: when the replacement fails, it throws `EnvException::fileNotFound()`.
 
 ## Environment-name contract
 
@@ -129,4 +133,4 @@ The package defines three local exception factories in `EnvException`:
 - `environmentNotLoaded()`
 - `invalidValue()`, raised by `getInt()` and `env_int()` for text that is not a whole number
 
-It also calls `fileNotFound(...)`, inherited from the shared base exception layer, when the selected `.env` file is absent.
+It also calls `fileNotFound(...)`, inherited from the shared base exception layer, when the selected `.env` file is absent, and from `updateRow()` when the file cannot be read or the replacement fails.

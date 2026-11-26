@@ -87,6 +87,8 @@ public function getInt(string $key, ?int $default = null): int;
 - `getInt()` returns the number for a whole number or whole-number text such as `587`, and throws `ConfigException::invalidValue()` for any other value, such as `abc` or `1.5`
 - `get()` is not affected and keeps returning the raw value
 
+The `.env` readers and the config readers differ on purpose. A `.env` file is outside input and often incomplete, so `env_bool()` and `env_int()` are forgiving: a missing or empty value returns the default, or `false` and `0`. Config files belong to the application, so `config()->getBool()` and `config()->getInt()` without a default state a required key, and throw `ConfigException::missingKey()` when it is not set. See the [`.env` readers](../environment/contracts.md#typed-reader-contract).
+
 `Config` and `ConfigSection` both have these methods. `ConfigInterface` does not declare them, so code that depends on the interface alone cannot call them.
 
 ## Section contract
