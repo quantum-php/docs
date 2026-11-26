@@ -55,8 +55,10 @@ $result = auth()->verifyOtp($otp, $otpToken);
 
 Result shape depends on the adapter:
 
-- session adapter: `true` and the user is written to session
+- session adapter: `true`; the user is written to the session under a new session ID, and when `signin()` was called with "remember me", this is the step that sets the remember cookie
 - JWT adapter: fresh `accessToken` and `refreshToken` values
+
+Call `verifyOtp()` in the same browser that called `signin()`, as the starter project's verify page does: the "remember me" request is kept in that browser's session. See [Remember-me behavior](adapters.md#remember-me-behavior).
 
 If the code expires, verification fails with an auth exception. OTP expiry defaults to 2 minutes unless `otp_expires` is configured (see [When the settings are read](adapters.md#when-the-settings-are-read)).
 
